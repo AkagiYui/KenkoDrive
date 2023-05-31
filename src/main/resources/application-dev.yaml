@@ -1,0 +1,7 @@
+spring:
+  jpa:
+    # 开启 SQL 日志
+    show-sql: true
+  config:
+    # 导入 .env.yml 配置，该配置文件优先级最高
+    import: optional:classpath:.env.yaml

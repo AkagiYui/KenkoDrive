@@ -1,0 +1,18 @@
+# 该文件为基础配置，请不要修改该文件
+server:
+  # 端口号
+  port: 6677
+spring:
+  application:
+    # 服务名称
+    name: kenko-drive
+  profiles:
+    # 激活 生产环境 配置
+    active: prod
+  jpa:
+    hibernate:
+      # 自动修正数据表
+      ddl-auto: update
+  datasource:
+    # 数据库驱动
+    driver-class-name: com.mysql.cj.jdbc.Driver
