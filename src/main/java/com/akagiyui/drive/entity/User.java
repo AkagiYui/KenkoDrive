@@ -3,6 +3,7 @@ package com.akagiyui.drive.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -12,6 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table
+@Accessors(chain = true)
 public class User extends BaseEntity {
     /**
      * 用户名

@@ -1,5 +1,6 @@
 package com.akagiyui.drive.entity;
 
+import com.akagiyui.drive.util.SnowFlakeIdGenerator;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,7 +31,7 @@ public abstract class BaseEntity implements Serializable {
     @GeneratedValue(generator = "snowflakeId")
     @GenericGenerator(
             name = "snowflakeId",
-            strategy = "com.akagiyui.drive.util.SnowFlakeIdGenerator"
+            type = SnowFlakeIdGenerator.class
     )
     String id;
 
