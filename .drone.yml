@@ -1,0 +1,52 @@
+kind: pipeline
+type: docker
+name: deploy backend
+
+trigger:
+  branch: [master]
+  event: [push]
+
+clone:
+  retries: 3
+  depth: 1
+
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
+  - name: gradle-cache
+    host:
+      path: /srv/gradle/caches
+
+steps:
+  - name: test
+    image: gradle:jdk17-alpine
+    failure: ignore
+    volumes:
+      - name: gradle-cache
+        path: /home/gradle/.gradle
+    environment:
+      spring.datasource.url:
+        from_secret: MYSQL_URI
+    commands:
+      - gradle test
+
+  - name: build
+    image: gradle:jdk17-alpine
+    volumes:
+      - name: gradle-cache
+        path: /home/gradle/.gradle
+    commands:
+      - gradle bootJar
+
+  - name: deploy prod
+    image: docker:dind
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
+    environment:
+      MYSQL_URI:
+        from_secret: MYSQL_URI
+    commands:
+      - docker build -t akagiyui/kenko-drive-backend:latest .
+      - docker run -p 16677:6677 -e spring.datasource.url=$MYSQL_URI -d --name kenko_drive akagiyui/kenko-drive-backend:latest
