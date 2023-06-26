@@ -6,7 +6,9 @@ import com.akagiyui.drive.exception.TooManyRequestsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,21 +25,24 @@ import static com.akagiyui.drive.component.ResponseEnum.*;
 public class CustomExceptionHandler {
 
     /**
-     * 404 异常处理
+     * 404 API未找到
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseResult<?> noRouteException(NoHandlerFoundException ignored) {
+    @ExceptionHandler({
+            NoHandlerFoundException.class,
+            HttpRequestMethodNotSupportedException.class,
+    })
+    public ResponseResult<?> noRouteException(Exception ignored) {
         return ResponseResult.response(NOT_FOUND);
     }
 
 
     /**
-     * 400 请求体错误异常处理
+     * 400 请求体错误
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseResult<?> jsonParseException(HttpMessageNotReadableException e) {
+    @ExceptionHandler({HttpMessageNotReadableException.class, MissingServletRequestParameterException.class})
+    public ResponseResult<?> jsonParseException(Exception e) {
         // 目前可预见的是 JSON 解析错误
         Throwable cause = e.getCause();
         if (cause != null) {
@@ -51,7 +56,7 @@ public class CustomExceptionHandler {
     }
 
     /**
-     * 400 请求过快异常处理
+     * 429 请求过快
      */
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
     @ExceptionHandler(TooManyRequestsException.class)
@@ -60,7 +65,7 @@ public class CustomExceptionHandler {
     }
 
     /**
-     * 全局异常处理
+     * 其他异常
      */
     @ExceptionHandler(Exception.class)
     public ResponseResult<?> unknownException(Exception e) {
