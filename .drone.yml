@@ -48,5 +48,4 @@ steps:
       MYSQL_URI:
         from_secret: MYSQL_URI
     commands:
-      - docker build -t akagiyui/kenko-drive-backend:latest .
-      - docker run -p 16677:6677 -e spring.datasource.url=$MYSQL_URI -d --name kenko_drive akagiyui/kenko-drive-backend:latest
+      - docker compose up -d --build
