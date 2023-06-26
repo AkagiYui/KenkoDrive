@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 public class AfterInitRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
-        System.out.println("====================== ApplicationRun ======================");
+        System.out.println("====================== ApplicationStarted ======================");
     }
 }
