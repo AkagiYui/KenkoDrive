@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 /**
+ * 添加用户 请求
  * @author AkagiYui
  */
 @Data
