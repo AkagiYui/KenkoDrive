@@ -48,15 +48,6 @@ public class UserController {
     }
 
     /**
-     * 获取所有用户
-     * @return 用户列表
-     */
-    @GetMapping
-    Iterable<User> findAll() {
-        return userService.find();
-    }
-
-    /**
      * 分页查询用户
      *
      * @param index 页码
