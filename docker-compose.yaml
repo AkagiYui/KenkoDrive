@@ -1,0 +1,9 @@
+version: '3.1'
+
+services:
+    kenko-drive:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+          - spring.datasource.url=${MYSQL_URI}

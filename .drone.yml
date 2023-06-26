@@ -31,7 +31,7 @@ steps:
     commands:
       - gradle test
 
-  - name: build
+  - name: build jar package
     image: gradle:jdk17-alpine
     volumes:
       - name: gradle-cache
@@ -39,7 +39,7 @@ steps:
     commands:
       - gradle bootJar
 
-  - name: deploy prod
+  - name: build and deploy container
     image: docker:dind
     volumes:
       - name: dockersock
