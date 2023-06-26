@@ -1,7 +1,7 @@
 package com.akagiyui.drive.exception;
 
 /**
- * 请求太快异常
+ * 请求过快异常
  *
  * @author AkagiYui
  */

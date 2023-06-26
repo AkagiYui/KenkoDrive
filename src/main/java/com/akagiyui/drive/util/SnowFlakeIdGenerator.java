@@ -12,7 +12,6 @@ import java.io.Serializable;
  * 雪花算法ID生成器
  * @author AkagiYui
  */
-@SuppressWarnings("unused")
 public class SnowFlakeIdGenerator implements IdentifierGenerator {
     /**
      * 雪花算法生成器

@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * 添加用户 请求
+ *
  * @author AkagiYui
  */
 @Data
@@ -41,6 +42,9 @@ public class AddUserRequest {
     @NotBlank(message = "Email cannot be empty")
     private String email;
 
+    /**
+     * 转换为用户实体
+     */
     public User toUser() {
         return new User()
                 .setUsername(username)

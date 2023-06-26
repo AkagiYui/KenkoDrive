@@ -11,24 +11,28 @@ import lombok.experimental.Accessors;
  * @author AkagiYui
  */
 @Data
+@Accessors(chain = true)
 @Entity
 @Table
-@Accessors(chain = true)
 public class User extends BaseEntity {
     /**
      * 用户名
      */
-    String username;
+    private String username;
     /**
      * 密码
      */
-    String password;
+    private String password;
     /**
      * 昵称
      */
-    String nickname;
+    private String nickname;
     /**
      * 邮箱
      */
-    String email;
+    private String email;
+    /**
+     * 已禁用
+     */
+    private Boolean disabled;
 }

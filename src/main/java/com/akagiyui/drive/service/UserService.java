@@ -1,7 +1,11 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.entity.filter.UserFilter;
 import com.akagiyui.drive.entity.request.AddUserRequest;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * 用户服务接口
@@ -23,10 +27,16 @@ public interface UserService {
     User register(User user);
 
     /**
+     * 分页查询用户
+     * @return 用户列表
+     */
+    Page<User> find(int index, int size, UserFilter userFilter);
+
+    /**
      * 获取所有用户
      * @return 用户列表
      */
-    Iterable<User> findAll();
+    List<User> find();
 
     /**
      * 新增用户
