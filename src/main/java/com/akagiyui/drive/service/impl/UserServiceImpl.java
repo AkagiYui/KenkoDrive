@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(String id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
 
     @Override
@@ -61,6 +61,15 @@ public class UserServiceImpl implements UserService {
             user.setNickname(user.getUsername());
         }
         repository.save(user.toUser());
+        return true;
+    }
+
+    @Override
+    public boolean delete(String id) {
+        if (!repository.existsById(id)) {
+            throw new CustomException(ResponseEnum.NOT_FOUND);
+        }
+        repository.deleteById(id);
         return true;
     }
 }

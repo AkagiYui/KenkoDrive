@@ -43,4 +43,11 @@ public interface UserService {
      * @param user 用户
      */
     boolean addUser(AddUserRequest user);
+
+    /**
+     * 删除用户
+     * @param id 用户ID
+     * @return 删除结果
+     */
+    boolean delete(String id);
 }

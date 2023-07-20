@@ -73,4 +73,14 @@ public class UserController {
                 .setTotal(userPage.getTotalElements())
                 .setList(studentResponseList);
     }
+
+    /**
+     * 根据 ID 删除用户
+     *
+     * @param id 用户 ID
+     */
+    @DeleteMapping("/{id}")
+    public Boolean delete(@PathVariable String id) {
+        return userService.delete(id);
+    }
 }
