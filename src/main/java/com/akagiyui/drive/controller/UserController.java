@@ -56,8 +56,8 @@ public class UserController {
      */
     @GetMapping({"", "/"})
     public PageResponse<UserInfoResponse> getPage(
-            @RequestParam Integer index,
-            @RequestParam Integer size,
+            @RequestParam(defaultValue = "0") Integer index,
+            @RequestParam(defaultValue = "10") Integer size,
             @ModelAttribute UserFilter filter
     ) {
         Page<User> userPage = userService.find(index, size, filter);
