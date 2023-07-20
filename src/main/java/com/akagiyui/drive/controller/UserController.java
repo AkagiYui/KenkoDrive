@@ -54,7 +54,7 @@ public class UserController {
      * @param size 每页大小
      * @return 用户分页响应
      */
-    @GetMapping("")
+    @GetMapping({"", "/"})
     public PageResponse<UserInfoResponse> getPage(
             @RequestParam Integer index,
             @RequestParam Integer size,
