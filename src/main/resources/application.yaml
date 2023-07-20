@@ -25,3 +25,6 @@ spring:
       maximum-pool-size: 10
       # 连接性测试查询
       connection-test-query: SELECT 1
+application:
+  # 应用版本号
+  version: ${version?:unknown}

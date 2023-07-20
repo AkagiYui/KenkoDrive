@@ -42,3 +42,10 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+processResources {
+    // 替换配置文件中的占位符
+    filesMatching('application.yaml') {
+        expand(project.properties)
+    }
+}

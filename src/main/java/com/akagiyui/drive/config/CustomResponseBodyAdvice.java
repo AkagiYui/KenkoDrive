@@ -5,17 +5,21 @@ import lombok.NonNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.List;
 
 /**
  * 包装类处理
  * @author AkagiYui
  */
 @RestControllerAdvice
-public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, WebMvcConfigurer {
 
     /**
      * 相应数据包装
@@ -46,5 +50,11 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(@NonNull MethodParameter returnType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 把String类型的转换器去掉，不使用String类型的转换器，防止过早转换发生异常
+        converters.removeIf(httpMessageConverter -> httpMessageConverter.getClass() == StringHttpMessageConverter.class);
     }
 }
