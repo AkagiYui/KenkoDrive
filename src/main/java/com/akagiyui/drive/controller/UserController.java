@@ -4,7 +4,6 @@ import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.entity.filter.UserFilter;
 import com.akagiyui.drive.entity.request.AddUserRequest;
 import com.akagiyui.drive.entity.response.PageResponse;
-import com.akagiyui.drive.entity.response.UserInfoPage;
 import com.akagiyui.drive.entity.response.UserInfoResponse;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
@@ -66,7 +65,7 @@ public class UserController {
                 .map(UserInfoResponse::fromUser)
                 .collect(Collectors.toList());
 
-        return new UserInfoPage()
+        return new PageResponse<UserInfoResponse>()
                 .setPage(index)
                 .setSize(size)
                 .setPageCount(userPage.getTotalPages())

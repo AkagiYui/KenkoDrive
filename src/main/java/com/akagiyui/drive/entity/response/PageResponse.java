@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
-public abstract class PageResponse<T> {
+public class PageResponse<T> {
     /**
      * 当前页
      */
