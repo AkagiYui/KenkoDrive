@@ -16,3 +16,12 @@ spring:
   datasource:
     # 数据库驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      # 线程最长持续时间
+      max-lifetime: 30000
+      # 最小空闲线程
+      minimum-idle: 3
+      # 最大线程数
+      maximum-pool-size: 10
+      # 连接性测试查询
+      connection-test-query: SELECT 1
