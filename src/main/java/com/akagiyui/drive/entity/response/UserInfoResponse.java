@@ -13,6 +13,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class UserInfoResponse {
     /**
+     * 用户id
+     */
+    private String id;
+    /**
      * 用户名
      */
     private String username;
@@ -34,6 +38,7 @@ public class UserInfoResponse {
      */
     public static UserInfoResponse fromUser(User user) {
         return new UserInfoResponse()
+                .setId(user.getId())
                 .setUsername(user.getUsername())
                 .setNickname(user.getNickname())
                 .setEmail(user.getEmail())
