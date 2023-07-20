@@ -23,17 +23,17 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    implementation 'cn.hutool:hutool-core:5.8.16'
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // ORM 框架
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis' // Redis 操作
+    implementation 'org.springframework.boot:spring-boot-starter-mail' // 邮件发送
+    implementation 'org.springframework.boot:spring-boot-starter-security' // 认证 & 授权
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // 模板引擎
+    implementation 'org.springframework.boot:spring-boot-starter-validation' // 参数校验
+    implementation 'org.springframework.boot:spring-boot-starter-web' // Web 开发
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Thymeleaf Spring Security
+    implementation 'cn.hutool:hutool-core:5.8.16' // Hutool 工具包
+    compileOnly 'org.projectlombok:lombok' // Lombok
+    runtimeOnly 'com.mysql:mysql-connector-j' // MySQL 驱动
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
