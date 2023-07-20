@@ -1,6 +1,6 @@
 package com.akagiyui.drive.config;
 
-import com.akagiyui.drive.entity.ResponseResult;
+import com.akagiyui.drive.model.ResponseResult;
 import com.akagiyui.drive.exception.CustomException;
 import com.akagiyui.drive.exception.TooManyRequestsException;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,10 @@
 package com.akagiyui.drive.controller;
 
 import com.akagiyui.drive.entity.User;
-import com.akagiyui.drive.entity.filter.UserFilter;
-import com.akagiyui.drive.entity.request.AddUserRequest;
-import com.akagiyui.drive.entity.response.PageResponse;
-import com.akagiyui.drive.entity.response.UserInfoResponse;
+import com.akagiyui.drive.model.filter.UserFilter;
+import com.akagiyui.drive.model.request.AddUserRequest;
+import com.akagiyui.drive.model.response.PageResponse;
+import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;

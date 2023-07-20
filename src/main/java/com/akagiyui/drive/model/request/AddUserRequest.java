@@ -1,4 +1,4 @@
-package com.akagiyui.drive.entity.request;
+package com.akagiyui.drive.model.request;
 
 import com.akagiyui.drive.entity.User;
 import jakarta.validation.constraints.Email;

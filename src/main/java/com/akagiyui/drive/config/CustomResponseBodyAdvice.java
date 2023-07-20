@@ -1,6 +1,6 @@
 package com.akagiyui.drive.config;
 
-import com.akagiyui.drive.entity.ResponseResult;
+import com.akagiyui.drive.model.ResponseResult;
 import lombok.NonNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;

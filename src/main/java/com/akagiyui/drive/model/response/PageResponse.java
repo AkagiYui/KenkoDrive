@@ -1,4 +1,4 @@
-package com.akagiyui.drive.entity.response;
+package com.akagiyui.drive.model.response;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

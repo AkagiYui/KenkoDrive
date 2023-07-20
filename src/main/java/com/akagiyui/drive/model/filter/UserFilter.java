@@ -1,4 +1,4 @@
-package com.akagiyui.drive.entity.filter;
+package com.akagiyui.drive.model.filter;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

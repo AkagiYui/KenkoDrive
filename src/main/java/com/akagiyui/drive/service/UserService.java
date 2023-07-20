@@ -1,8 +1,8 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.User;
-import com.akagiyui.drive.entity.filter.UserFilter;
-import com.akagiyui.drive.entity.request.AddUserRequest;
+import com.akagiyui.drive.model.filter.UserFilter;
+import com.akagiyui.drive.model.request.AddUserRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
