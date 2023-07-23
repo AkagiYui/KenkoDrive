@@ -1,10 +1,14 @@
 package com.akagiyui.drive.model;
 
 import com.akagiyui.drive.component.ResponseEnum;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
+import org.springframework.http.HttpStatus;
 
 /**
  * 响应包装体
+ *
  * @author AkagiYui
  */
 @Data
@@ -24,11 +28,12 @@ public class ResponseResult<T> {
 
     /**
      * 通用响应
+     *
      * @param code 状态码
-     * @param msg 消息
+     * @param msg  消息
      * @param data 数据
+     * @param <T>  数据类型
      * @return 响应体
-     * @param <T> 数据类型
      */
     public static <T> ResponseResult<T> response(Integer code, String msg, T data) {
         ResponseResult<T> result = new ResponseResult<>();
@@ -40,6 +45,7 @@ public class ResponseResult<T> {
 
     /**
      * 通用响应
+     *
      * @param status 状态枚举
      * @return 响应体
      */
@@ -49,6 +55,7 @@ public class ResponseResult<T> {
 
     /**
      * 通用响应
+     *
      * @param status 状态枚举
      * @return 响应体
      */
@@ -58,6 +65,7 @@ public class ResponseResult<T> {
 
     /**
      * 成功响应
+     *
      * @param data 数据
      * @return 响应体
      */
@@ -68,10 +76,29 @@ public class ResponseResult<T> {
 
     /**
      * 无数据成功响应
+     *
      * @return 响应体
      */
     public static ResponseResult<?> success() {
         return success(null);
     }
 
+    /**
+     * 写入响应
+     *
+     * @param res    响应
+     * @param code   状态码
+     * @param status 状态枚举
+     */
+    public static void writeResponse(HttpServletResponse res, HttpStatus code, ResponseEnum status) {
+        res.setStatus(code.value());
+        res.setContentType("application/json;charset=UTF-8");
+        res.setCharacterEncoding("UTF-8");
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            res.getWriter().write(objectMapper.writeValueAsString(response(status)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
