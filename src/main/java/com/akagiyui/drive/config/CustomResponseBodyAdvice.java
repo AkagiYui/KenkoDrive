@@ -4,6 +4,7 @@ import com.akagiyui.drive.model.ResponseResult;
 import lombok.NonNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -33,10 +34,6 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, Web
      */
     @Override
     public Object beforeBodyWrite(Object body, @NonNull MethodParameter returnType, @NonNull MediaType selectedContentType, @NonNull Class<? extends HttpMessageConverter<?>> selectedConverterType, @NonNull ServerHttpRequest request, @NonNull ServerHttpResponse response) {
-        if (body instanceof ResponseResult) {
-            // 如果返回的数据已经是包装过的，就不需要再次包装
-            return body;
-        }
         // 包装返回的数据
         return ResponseResult.success(body);
     }
@@ -47,8 +44,18 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, Web
      * @param converterType 返回的数据类型
      * @return 是否需要执行 beforeBodyWrite 方法
      */
+    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean supports(@NonNull MethodParameter returnType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
+        Class<?> parameterType = returnType.getParameterType();
+        // 如果返回文件，就不需要包装
+        if (parameterType == ResponseEntity.class) {
+            return false;
+        }
+        // 如果返回的数据已经是包装过的，就不需要再次包装
+        if (parameterType == ResponseResult.class) {
+            return false;
+        }
         return true;
     }
 
