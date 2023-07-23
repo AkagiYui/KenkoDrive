@@ -25,6 +25,15 @@ spring:
       maximum-pool-size: 10
       # 连接性测试查询
       connection-test-query: SELECT 1
+  servlet:
+    # 请求大小限制
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 application:
-  # 应用版本号
+  # 应用版本号，自动从 build.gradle 中获取
   version: ${version?:unknown}
+  storage:
+    local:
+      # 本地文件存储目录
+      root: ./data
