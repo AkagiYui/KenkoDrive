@@ -24,4 +24,10 @@ public interface StorageService {
      * 文件是否存在
      */
     boolean exists(String key);
+
+    /**
+     * 删除文件
+     */
+    @Async
+    void deleteFile(String key);
 }

@@ -82,4 +82,11 @@ public class FileInfoServiceImpl implements FileInfoService {
         fileInfo.setDownloadCount(fileInfo.getDownloadCount() + 1);
         fileInfoRepository.save(fileInfo);
     }
+
+    @Override
+    public void deleteFile(String id) {
+        FileInfo fileInfo = getFileInfo(id);
+        storageService.deleteFile(fileInfo.getStorageKey());
+        fileInfoRepository.delete(fileInfo);
+    }
 }

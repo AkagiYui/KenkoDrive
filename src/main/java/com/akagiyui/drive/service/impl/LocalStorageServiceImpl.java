@@ -64,4 +64,15 @@ public class LocalStorageServiceImpl implements StorageService {
         File file = new File(root + File.separator + key);
         return file.exists();
     }
+
+    @Override
+    public void deleteFile(String key) {
+        File file = new File(root + File.separator + key);
+        if (!file.exists()) {
+            throw new CustomException(ResponseEnum.NOT_FOUND);
+        }
+        if (!file.delete()) {
+            throw new RuntimeException("删除文件失败");
+        }
+    }
 }

@@ -25,4 +25,9 @@ public interface FileInfoService {
      * 记录下载
      */
     void recordDownload(FileInfo fileInfo);
+
+    /**
+     * 删除文件
+     */
+    void deleteFile(String id);
 }

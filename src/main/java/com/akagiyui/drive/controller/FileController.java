@@ -77,4 +77,16 @@ public class FileController {
                 .headers(headers)
                 .body(fileStream);
     }
+
+    /**
+     * 删除文件
+     * @param id 文件id
+     * @return 是否成功
+     */
+    @DeleteMapping("/{id}")
+    public boolean deleteFile(@PathVariable String id) {
+        // todo 权限校验
+        fileInfoService.deleteFile(id);
+        return true;
+    }
 }
