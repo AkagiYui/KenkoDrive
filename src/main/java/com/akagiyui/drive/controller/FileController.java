@@ -65,6 +65,7 @@ public class FileController {
         // 获取文件
         FileInfo fileInfo = fileInfoService.getFileInfo(id);
         InputStreamResource fileStream = storageService.getFile(fileInfo.getStorageKey());
+        fileInfoService.recordDownload(fileInfo);
 
         // 设置响应头
         HttpHeaders headers = new HttpHeaders();

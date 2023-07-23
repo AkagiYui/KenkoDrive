@@ -76,4 +76,10 @@ public class FileInfoServiceImpl implements FileInfoService {
         }
         return fileInfos;
     }
+
+    @Override
+    public void recordDownload(FileInfo fileInfo) {
+        fileInfo.setDownloadCount(fileInfo.getDownloadCount() + 1);
+        fileInfoRepository.save(fileInfo);
+    }
 }

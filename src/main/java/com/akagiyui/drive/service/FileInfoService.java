@@ -20,4 +20,9 @@ public interface FileInfoService {
       * 保存文件
       */
      List<FileInfo> saveFile(List<MultipartFile> files);
+
+    /**
+     * 记录下载
+     */
+    void recordDownload(FileInfo fileInfo);
 }
