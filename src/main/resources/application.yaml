@@ -30,6 +30,26 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
+  mail:
+    host: smtp.mail_server.com
+    port: 465
+    username: mail_user
+    password: mail_password
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
 application:
   # 应用版本号，自动从 build.gradle 中获取
   version: ${version?:unknown}
@@ -37,3 +57,7 @@ application:
     local:
       # 本地文件存储目录
       root: ./data
+  email:
+    verify:
+      # 邮箱验证码超时（分钟）
+      timeout: 10

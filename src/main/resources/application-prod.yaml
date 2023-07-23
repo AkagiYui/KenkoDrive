@@ -8,3 +8,6 @@ spring:
   # !!!在生产环境中，你至少需要正确配置以下内容，使系统能够正常运行!!!
   datasource:
     url: jdbc:mysql://localhost:3306/drive
+  data:
+    redis:
+      host: redis

@@ -1,12 +1,16 @@
 package com.akagiyui.drive.controller;
 
+import com.akagiyui.drive.component.limiter.Limit;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
+import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
+import com.akagiyui.drive.model.request.RegisterConfirmRequest;
 import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -81,5 +85,26 @@ public class UserController {
     @DeleteMapping("/{id}")
     public Boolean delete(@PathVariable String id) {
         return userService.delete(id);
+    }
+
+    /**
+     * 获取邮件验证码
+     * @param verifyRequest 预注册请求体
+     * @return 是否成功
+     */
+    @PostMapping("/register/email")
+    @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1)
+    public boolean getEmailVerifyCode(@RequestBody @Valid EmailVerifyCodeRequest verifyRequest) {
+        return userService.sendEmailVerifyCode(verifyRequest);
+    }
+
+    /**
+     * 确认注册
+     * @param registerConfirmRequest 注册请求体
+     * @return 是否成功
+     */
+    @PostMapping("/register")
+    public boolean confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
+        return userService.confirmRegister(registerConfirmRequest);
     }
 }
