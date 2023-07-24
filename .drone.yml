@@ -47,7 +47,7 @@ steps:
       - name: dockersock
         path: /var/run/docker.sock
       - name: application-config
-        path: /app/config
+        path: /drone/src/config
     environment:
       MYSQL_URI:
         from_secret: MYSQL_URI
