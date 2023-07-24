@@ -4,6 +4,8 @@ spring:
   data:
     redis:
       host: redis
+  mail:
+    host: smtp.163.com
 application:
   storage:
     local:
