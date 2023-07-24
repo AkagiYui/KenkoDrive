@@ -13,9 +13,7 @@ logging:
   # 日志级别
   level:
     # 默认日志级别
-    root: debug
-    jdk.event.security: info
-    com.zaxxer.hikari.pool: info
-    org.apache.catalina.session: info
+    root: info
+    com.akagiyui: trace
     org.hibernate.SQL: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace

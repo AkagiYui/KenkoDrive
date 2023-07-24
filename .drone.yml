@@ -4,7 +4,6 @@ name: default
 
 trigger:
   branch: [master]
-  event: [push]
 
 clone:
   retries: 3
