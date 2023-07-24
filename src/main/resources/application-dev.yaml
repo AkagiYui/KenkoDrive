@@ -2,6 +2,20 @@ spring:
   jpa:
     # 开启 SQL 日志
     show-sql: true
+    properties:
+      hibernate:
+        # 格式化 SQL 日志
+        format_sql: true
   config:
     # 导入 .env.yml 配置，该配置文件优先级最高
     import: optional:classpath:.env.yaml
+logging:
+  # 日志级别
+  level:
+    # 默认日志级别
+    root: debug
+    jdk.event.security: info
+    com.zaxxer.hikari.pool: info
+    org.apache.catalina.session: info
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace

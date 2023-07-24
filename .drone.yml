@@ -48,4 +48,4 @@ steps:
       MYSQL_URI:
         from_secret: MYSQL_URI
     commands:
-      - docker compose up -p kenko-drive -d --build application
+      - docker compose -p kenko-drive -d --build application up
