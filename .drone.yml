@@ -45,7 +45,7 @@ steps:
       - name: gradle-cache
         path: /home/gradle/.gradle
     commands:
-      - gradle test
+      - gradle test --stacktrace --scan
 
   - name: build jar package
     image: gradle:jdk17-alpine
