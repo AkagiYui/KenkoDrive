@@ -10,7 +10,7 @@ services:
     environment:
       - spring.datasource.url=${MYSQL_URI}
     volumes:
-      - /srv/kenko-drive/data:/data
+      - /srv/kenko-drive/data:/app/data
     restart: always
     depends_on:
       - redis
