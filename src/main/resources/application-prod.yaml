@@ -5,6 +5,9 @@ spring:
   lifecycle:
     # 等待请求结束超时时长
     timeout-per-shutdown-phase: 30s
+  config:
+    # 导入生产环境配置
+    import: optional:file:.env-prod.yaml
   # !!!在生产环境中，你至少需要正确配置以下内容，使系统能够正常运行!!!
   datasource:
     # 数据库驱动
@@ -13,9 +16,6 @@ spring:
     redis:
       # redis 地址
       host: REDIS_HOST
-  config:
-    # 导入生产环境配置
-    import: optional:.env-prod.yaml
   mail:
     # 邮件服务器地址
     host: MAIL_SERVER
