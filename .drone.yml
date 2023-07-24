@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: default
+name: not-default-name
 
 trigger:
   branch: [master]
