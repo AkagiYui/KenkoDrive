@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: not-default-name
+name: default
 
 trigger:
   branch: [master]
@@ -48,4 +48,4 @@ steps:
       MYSQL_URI:
         from_secret: MYSQL_URI
     commands:
-      - docker compose up -d --build
+      - docker compose up -p kenko-drive -d --build application

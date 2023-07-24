@@ -62,6 +62,6 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, Web
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         // 把String类型的转换器去掉，不使用String类型的转换器，防止过早转换发生异常
-        converters.removeIf(httpMessageConverter -> httpMessageConverter.getClass() == StringHttpMessageConverter.class);
+        converters.removeIf(converter -> converter.getClass() == StringHttpMessageConverter.class);
     }
 }
