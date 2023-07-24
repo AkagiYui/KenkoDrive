@@ -7,8 +7,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "16677:6677"
-    environment:
-      - spring.datasource.url=${MYSQL_URI}
     volumes:
       - /srv/kenko-drive/data:/app/data
     restart: always

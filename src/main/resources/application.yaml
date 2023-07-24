@@ -50,3 +50,4 @@ application:
     verify:
       # 邮箱验证码超时（分钟）
       timeout: 10
+    from: "Kenko Drive"

@@ -20,16 +20,30 @@ volumes:
     host:
       path: /srv/kenko-drive/config
 
+services:
+  - name: mysql
+    image: mysql:8
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+  - name: redis
+    image: redis:7-alpine
+
 steps:
+  - name: test mysql healthcheck
+    image: mysql:8
+    commands:
+      - while ! mysqladmin ping -h mysql -u test -ptest --silent; do sleep 1; done
+      - mysql -h mysql -u test -ptest -e "SELECT 1;"
+
   - name: test and create cache
     image: gradle:jdk17-alpine
     failure: ignore
     volumes:
       - name: gradle-cache
         path: /home/gradle/.gradle
-    environment:
-      spring.datasource.url:
-        from_secret: MYSQL_URI
     commands:
       - gradle test
 
@@ -48,8 +62,5 @@ steps:
         path: /var/run/docker.sock
       - name: application-config
         path: /drone/src/config
-    environment:
-      MYSQL_URI:
-        from_secret: MYSQL_URI
     commands:
       - docker compose -p kenko-drive up -d --build application
