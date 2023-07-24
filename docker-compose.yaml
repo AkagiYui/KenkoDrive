@@ -12,6 +12,9 @@ services:
     volumes:
       - /srv/kenko-drive/data:/data
     restart: always
+    depends_on:
+      - redis
+
   redis:
     image: redis:7-alpine
     volumes:
