@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.io.IOException;
-
 import static com.akagiyui.drive.component.ResponseEnum.*;
 
 
@@ -111,7 +109,7 @@ public class CustomExceptionHandler {
     public RequestRejectedHandler requestRejectedHandler() {
         return new HttpStatusRequestRejectedHandler() {
             @Override
-            public void handle(HttpServletRequest request, HttpServletResponse response, RequestRejectedException requestRejectedException) throws IOException {
+            public void handle(HttpServletRequest request, HttpServletResponse response, RequestRejectedException requestRejectedException) {
                 ResponseResult.writeResponse(response, HttpStatus.BAD_REQUEST, ResponseEnum.BAD_REQUEST);
             }
         };

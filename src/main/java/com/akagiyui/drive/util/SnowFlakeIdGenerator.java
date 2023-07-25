@@ -16,7 +16,7 @@ public class SnowFlakeIdGenerator implements IdentifierGenerator {
     /**
      * 雪花算法生成器
      */
-    static Snowflake snowflake = IdUtil.getSnowflake();
+    private final static Snowflake SNOWFLAKE = IdUtil.getSnowflake();
 
     /**
      * 生成ID
@@ -27,6 +27,6 @@ public class SnowFlakeIdGenerator implements IdentifierGenerator {
      */
     @Override
     public Serializable generate(SharedSessionContractImplementor sharedSessionContractImplementor, Object o) throws HibernateException {
-        return snowflake.nextIdStr();
+        return SNOWFLAKE.nextIdStr();
     }
 }

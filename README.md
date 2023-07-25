@@ -4,9 +4,11 @@
 
 在线演示地址：[drive.akagiyui.com](https://drive.akagiyui.com)
 
+API 文档：https://apifox.com/apidoc/project-2811497
+
 前端仓库：[KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue)
 
-## 功能一览
+## 用户功能一览
 
 - [x] 用户注册
 - [x] 用户登录
@@ -16,7 +18,6 @@
 - [ ] 用户文件删除
 - [ ] 文件分享
 - [ ] 分享文件下载
-- [ ] 速度限制
 - [ ] 文件夹
 - [ ] 文件夹分享
 - [ ] 游客广场
@@ -28,15 +29,37 @@
 - [ ] 用户登录地理位置统计
 - [ ] 文件类型统计
 - [ ] 流量统计
-- [ ] Minio 对象存储
 - [ ] 违规检查
+
+## 技术功能一览
+
+- [x] 请求频率限制
+- [x] 邮件发送
+- [x] 参数校验
+- [ ] 短信发送
+- [ ] 日志记录
+- [ ] Minio 对象存储
+- [ ] 速度限制
+- [ ] 流量限制
+- [ ] 验证码机制
+
+## 技术栈
+
+- [x] MySQL 数据库
+- [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
+- [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
+- [x] [Docker 容器化部署](docker-compose.yaml)
+- [x] [Drone CI/CD 自动化部署](.drone.yml)
+- [x] [JPA ORM 框架](src/main/java/com/akagiyui/drive/repository)
+- [x] [AOP 切面编程](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
 
 ## RoadMap
 
-|   需求   | 状态  |    完成时间    |
-|:------:|:---:|:----------:|
-| 前端自动部署 | 已完成 | 2023年6月1日  |
-| 后端自动部署 | 已完成 | 2023年6月26日 |
+|   需求    | 状态  |    完成时间    |
+|:-------:|:---:|:----------:|
+| 前端自动部署  | 已完成 | 2023年6月1日  |
+| 后端自动部署  | 已完成 | 2023年6月26日 |
+| 用户注册/登录 | 已完成 | 2023年7月25日 |
 
 ## 鸣谢
 

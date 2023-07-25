@@ -1,10 +1,12 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
 import com.akagiyui.drive.model.request.RegisterConfirmRequest;
+import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -56,7 +58,7 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 用户是否存在
-     * @param username 用户名
+     * @param id 用户ID
      * @return 是否存在
      */
     boolean isExist(String id);
@@ -66,6 +68,20 @@ public interface UserService extends UserDetailsService {
      * @return 用户
      */
     User getUser();
+
+    /**
+     * 从 redis 或数据库获取当前用户，如果 redis 中不存在则从数据库中获取，并将用户信息存入 redis
+     * @param userId 用户ID
+     * @return 用户
+     */
+    LoginUserDetails getUserDetails(String userId);
+
+    /**
+     * 将用户信息存入 redis
+     * @param userDetails 用户信息
+     * @return 是否成功
+     */
+    boolean cacheUserDetails(LoginUserDetails userDetails);
 
     /**
      * 发送邮箱验证码
@@ -87,5 +103,19 @@ public interface UserService extends UserDetailsService {
      */
     String encryptPassword(String username, String password);
 
+    /**
+     * 加密密码
+     * @param username 用户名
+     * @param password 密码明文
+     * @param raw 是否不通过加密器加密
+     * @return 密码密文
+     */
     String encryptPassword(String username, String password, boolean raw);
+
+    /**
+     * 更新用户信息
+     * @param userInfo 用户信息
+     * @return 是否成功
+     */
+    boolean updateInfo(UpdateUserInfoRequest userInfo);
 }

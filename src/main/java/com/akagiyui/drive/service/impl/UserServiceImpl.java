@@ -10,6 +10,7 @@ import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
 import com.akagiyui.drive.model.request.RegisterConfirmRequest;
+import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
 import com.akagiyui.drive.repository.UserRepository;
 import com.akagiyui.drive.service.MailService;
 import com.akagiyui.drive.service.UserService;
@@ -53,6 +54,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     MailService mailService;
+
+    @Value("${application.jwt.timeout}")
+    private long timeout;
 
     @Resource
     @Lazy
@@ -119,6 +123,25 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
         return userDetails.getUser();
+    }
+
+    @Override
+    public LoginUserDetails getUserDetails(String userId) {
+        String redisKey = String.format("user:%s", userId);
+        LoginUserDetails userDetails = redisCache.get(redisKey);
+        if (userDetails == null) {
+            User user = findUserById(userId);
+            userDetails = new LoginUserDetails(user, List.of("ROLE_USER"));
+            cacheUserDetails(userDetails);
+        }
+        return userDetails;
+    }
+
+    @Override
+    public boolean cacheUserDetails(LoginUserDetails userDetails) {
+        String redisKey = String.format("user:%s", userDetails.getUser().getId());
+        redisCache.set(redisKey, userDetails);
+        return redisCache.expire(redisKey, timeout, TimeUnit.HOURS);
     }
 
     @Override
@@ -193,6 +216,21 @@ public class UserServiceImpl implements UserService {
             return username + password;
         }
         return encryptPassword(username, password);
+    }
+
+    @Override
+    public boolean updateInfo(UpdateUserInfoRequest userInfo) {
+        User user = getUser();
+        if (StringUtils.hasText(userInfo.getNickname())) {
+            user.setNickname(userInfo.getNickname());
+        }
+        if (StringUtils.hasText(userInfo.getEmail())) {
+            user.setEmail(userInfo.getEmail());
+        }
+        repository.save(user);
+
+        cacheUserDetails(new LoginUserDetails(user, List.of("ROLE_USER"))); // 缓存用户信息
+        return true;
     }
 
     /**

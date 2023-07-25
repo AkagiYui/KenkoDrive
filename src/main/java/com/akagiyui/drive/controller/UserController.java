@@ -6,6 +6,7 @@ import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
 import com.akagiyui.drive.model.request.RegisterConfirmRequest;
+import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
 import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.UserService;
@@ -115,5 +116,13 @@ public class UserController {
     @GetMapping("/info")
     public UserInfoResponse getUserInfo() {
         return UserInfoResponse.fromUser(userService.getUser());
+    }
+
+    /**
+     * 更新当前用户信息
+     */
+    @PutMapping("/info")
+    public boolean updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
+        return userService.updateInfo(userInfo);
     }
 }

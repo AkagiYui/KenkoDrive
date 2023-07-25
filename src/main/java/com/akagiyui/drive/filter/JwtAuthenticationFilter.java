@@ -1,6 +1,7 @@
-package com.akagiyui.drive.component;
+package com.akagiyui.drive.filter;
 
 
+import com.akagiyui.drive.component.JwtUtils;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
@@ -30,9 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Resource
     UserService userService;
 
-    @Resource
-    RedisCache redisCache;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         // 获取 Token
@@ -43,21 +41,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtUtils.verifyJwt(token)) {
                 // 获取用户 ID
                 String userId = jwtUtils.getUserId(token);
-                if (userId != null && userService.isExist(userId)) { // todo 性能优化，不需要每次都去数据库查询
-                    // 从 redis 中获取用户信息
-                    String redisKey = "user:" + userId;
-                    LoginUserDetails userDetails = redisCache.get(redisKey);
-                    // 在 redis 中没有找到用户信息 todo 从数据库中获取用户信息
+                if (userId != null) {
+                    // 从 redis 或数据库中获取用户信息
+                    LoginUserDetails userDetails = userService.getUserDetails(userId);
                     if (userDetails != null) {
                         // 放入 Spring Security 上下文
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // todo ?
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // todo 解释
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
             }
-
         }
         filterChain.doFilter(request, response);
     }

@@ -1,15 +1,18 @@
 package com.akagiyui.drive.config;
 
 
-import com.akagiyui.drive.component.*;
+import com.akagiyui.drive.component.JwtUtils;
+import com.akagiyui.drive.component.ResponseEnum;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.filter.CustomPasswordHandleFilter;
+import com.akagiyui.drive.filter.JwtAuthenticationFilter;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.ResponseResult;
 import com.akagiyui.drive.model.response.LoginResponse;
+import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -29,8 +32,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Spring Security 配置类
@@ -58,12 +59,9 @@ public class SecurityConfig {
     JwtUtils jwtUtils;
 
     @Resource
-    RedisCache redisCache;
+    UserService userService;
 
-    @Value("${application.jwt.timeout}")
-    private long timeout;
-
-    public static String LOGIN_URL = "/user/token";
+    public final static String LOGIN_URL = "/user/token";
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -106,7 +104,6 @@ public class SecurityConfig {
                 .build();
     }
 
-
     /**
      * 配置跨域
      *
@@ -127,6 +124,9 @@ public class SecurityConfig {
         return new CorsFilter(source);
     }
 
+    /**
+     * 认证失败处理
+     */
     private void onAuthenticationFailure(
             HttpServletRequest httpServletRequest,
             HttpServletResponse response,
@@ -135,19 +135,18 @@ public class SecurityConfig {
         ResponseResult.writeResponse(response, HttpStatus.UNAUTHORIZED, ResponseEnum.UNAUTHORIZED);
     }
 
+    /**
+     * 认证成功处理
+     */
     private void onAuthenticationSuccess(
             HttpServletRequest httpServletRequest,
             HttpServletResponse response,
             Authentication authentication
     ) {
         LoginUserDetails loginUserDetails = (LoginUserDetails) authentication.getPrincipal();
+        userService.cacheUserDetails(loginUserDetails);
+
         User user = loginUserDetails.getUser();
-
-        // 存入 Redis
-        String redisKey = String.format("user:%s", user.getId());
-        redisCache.set(redisKey, loginUserDetails);
-        redisCache.expire(redisKey, timeout, TimeUnit.HOURS);
-
         String jwt = jwtUtils.createJwt(user);
         LoginResponse loginResponse = new LoginResponse(jwt, null);
         ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse);
