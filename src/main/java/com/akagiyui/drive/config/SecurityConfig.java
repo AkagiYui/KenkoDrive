@@ -79,9 +79,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(a -> a
-                        // 允许所有请求
+                        // 允许指定路径通过
                         .requestMatchers("/server/version").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/user/register/**").permitAll()
+                        .anyRequest().authenticated() // 其他请求需要认证
                 )
                 // 关闭 CSRF
                 .csrf(AbstractHttpConfigurer::disable)
