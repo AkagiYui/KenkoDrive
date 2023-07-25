@@ -107,4 +107,13 @@ public class UserController {
     public boolean confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
         return userService.confirmRegister(registerConfirmRequest);
     }
+
+    /**
+     * 获取当前用户信息
+     * @return 用户信息
+     */
+    @GetMapping("/info")
+    public UserInfoResponse getUserInfo() {
+        return UserInfoResponse.fromUser(userService.getUser());
+    }
 }

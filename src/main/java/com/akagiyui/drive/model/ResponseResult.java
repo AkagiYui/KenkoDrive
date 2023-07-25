@@ -84,7 +84,7 @@ public class ResponseResult<T> {
     }
 
     /**
-     * 写入响应
+     * 把响应内容写入响应体
      *
      * @param res    响应
      * @param code   状态码
@@ -97,6 +97,25 @@ public class ResponseResult<T> {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             res.getWriter().write(objectMapper.writeValueAsString(response(status)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 把响应内容写入响应体
+     *
+     * @param res    响应对象
+     * @param code   状态码
+     * @param object 响应内容
+     */
+    public static void writeResponse(HttpServletResponse res, HttpStatus code, Object object) {
+        res.setStatus(code.value());
+        res.setContentType("application/json;charset=UTF-8");
+        res.setCharacterEncoding("UTF-8");
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            res.getWriter().write(objectMapper.writeValueAsString(response(ResponseEnum.SUCCESS, object)));
         } catch (Exception e) {
             e.printStackTrace();
         }

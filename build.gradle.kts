@@ -37,7 +37,8 @@ dependencies {
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
     implementation("cn.hutool:hutool-core:${hutoolVersion}")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:${hutoolVersion}")  // Hutool 加解密
-    implementation("com.google.guava:guava:31.1-jre")  // Hutool 加解密
+    implementation("cn.hutool:hutool-jwt:${hutoolVersion}")  // Hutool JWT
+    implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
     compileOnly("org.projectlombok:lombok")  // Lombok
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
     annotationProcessor("org.projectlombok:lombok")

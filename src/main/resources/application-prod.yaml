@@ -31,3 +31,6 @@ application:
   email:
     # 邮件发送者名称
     from: MAIL_SENDER_NAME
+  jwt:
+    # JWT 密钥
+    key: YOUR_JWT_KEY

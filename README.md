@@ -8,8 +8,8 @@
 
 ## 功能一览
 
-- [ ] 用户登录
-- [ ] 用户注册
+- [x] 用户注册
+- [x] 用户登录
 - [ ] 用户信息修改
 - [ ] 用户文件上传
 - [ ] 用户文件下载
@@ -29,6 +29,7 @@
 - [ ] 文件类型统计
 - [ ] 流量统计
 - [ ] Minio 对象存储
+- [ ] 违规检查
 
 ## RoadMap
 
@@ -40,6 +41,7 @@
 ## 鸣谢
 
 - [Drone官方文档](https://docs.drone.io/)
+- [柏码知识库](https://itbaima.net/document)
 
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)
@@ -52,3 +54,5 @@
 - [CSDN: SpringBoot 使用 beforeBodyWrite 实现统一的接口返回类型](https://blog.csdn.net/qq_37170583/article/details/107470337)
 - [CSDN: Jpa设置默认值约束](https://blog.csdn.net/github_38336924/article/details/107153217)
 - [CSDN: gradle通过def定义变量指定依赖版本](https://blog.csdn.net/qq_36666651/article/details/80718761)
+- [CSDN: 踩坑：springboot邮箱发送邮件，JavaMailSender自动注入失败的问题](https://blog.csdn.net/A15517340610/article/details/103764245)
+- [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)

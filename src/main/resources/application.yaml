@@ -13,6 +13,13 @@ spring:
     hibernate:
       # 自动修正数据表
       ddl-auto: update
+  mvc:
+    # 抛出 404 异常
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      # 关闭静态资源映射
+      add-mappings: false
   datasource:
     # 数据库驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -51,3 +58,10 @@ application:
       # 邮箱验证码超时（分钟）
       timeout: 10
     from: "Kenko Drive"
+  jwt:
+    # JWT 超时（小时）
+    timeout: 2
+  storage:
+    local:
+      # 本地存储路径
+      root: ./data

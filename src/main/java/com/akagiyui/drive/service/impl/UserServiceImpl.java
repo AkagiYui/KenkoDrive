@@ -16,10 +16,11 @@ import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
     MailService mailService;
 
     @Resource
+    @Lazy
     PasswordEncoder passwordEncoder;
 
     @Override
@@ -89,7 +91,11 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.hasText(user.getNickname())) {
             user.setNickname(user.getUsername());
         }
-        repository.save(user.toUser());
+        User realUser = user.toUser();
+        realUser.setPassword(encryptPassword(user.getUsername(), user.getPassword()));
+        realUser.setDisabled(false);
+
+        repository.save(realUser);
         return true;
     }
 
@@ -103,10 +109,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean isExist(String username) {
+        return repository.existsById(username);
+    }
+
+    @Override
     public User getUser() {
         // 从 SecurityContextHolder 中获取用户信息
-        UsernamePasswordAuthenticationToken authentication =
-                (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
         return userDetails.getUser();
     }
@@ -175,6 +185,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public String encryptPassword(String username, String password) {
         return passwordEncoder.encode(username + password);
+    }
+
+    @Override
+    public String encryptPassword(String username, String password, boolean raw) {
+        if (raw) {
+            return username + password;
+        }
+        return encryptPassword(username, password);
     }
 
     /**

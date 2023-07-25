@@ -55,6 +55,13 @@ public interface UserService extends UserDetailsService {
     boolean delete(String id);
 
     /**
+     * 用户是否存在
+     * @param username 用户名
+     * @return 是否存在
+     */
+    boolean isExist(String id);
+
+    /**
      * 从 Security 获取当前用户
      * @return 用户
      */
@@ -79,4 +86,6 @@ public interface UserService extends UserDetailsService {
      * @return 密码密文
      */
     String encryptPassword(String username, String password);
+
+    String encryptPassword(String username, String password, boolean raw);
 }
