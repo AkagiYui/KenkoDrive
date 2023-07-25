@@ -11,6 +11,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 /**
  * 用户实体
+ *
  * @author AkagiYui
  */
 @Data
@@ -24,20 +25,24 @@ public class User extends BaseEntity {
      */
     @Column(nullable = false)
     private String username;
+
     /**
      * 密码
      */
     @Column(nullable = false)
     private String password;
+
     /**
      * 昵称
      */
     private String nickname;
+
     /**
      * 邮箱
      */
     @Column(nullable = false)
     private String email;
+
     /**
      * 已禁用
      */
