@@ -10,3 +10,5 @@ application:
   storage:
     local:
       root: ./data
+  jwt:
+    key: THIS_IS_A_TEST_KEY
