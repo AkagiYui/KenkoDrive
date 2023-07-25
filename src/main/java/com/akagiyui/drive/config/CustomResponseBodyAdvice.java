@@ -22,6 +22,17 @@ import java.util.List;
 @RestControllerAdvice
 public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, WebMvcConfigurer {
 
+    private static final List<Class<?>> IGNORE_CLASSES;
+
+    static {
+        // 忽略的类
+        IGNORE_CLASSES = List.of(
+                ResponseEntity.class, // 文件
+                byte[].class, // 二进制数据
+                ResponseResult.class // 已经包装过的数据
+        );
+    }
+
     /**
      * 相应数据包装
      * @param body 返回的数据
@@ -44,19 +55,10 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, Web
      * @param converterType 返回的数据类型
      * @return 是否需要执行 beforeBodyWrite 方法
      */
-    @SuppressWarnings("RedundantIfStatement")
     @Override
     public boolean supports(@NonNull MethodParameter returnType, @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         Class<?> parameterType = returnType.getParameterType();
-        // 如果返回文件，就不需要包装
-        if (parameterType == ResponseEntity.class) {
-            return false;
-        }
-        // 如果返回的数据已经是包装过的，就不需要再次包装
-        if (parameterType == ResponseResult.class) {
-            return false;
-        }
-        return true;
+        return !IGNORE_CLASSES.contains(parameterType);
     }
 
     @Override

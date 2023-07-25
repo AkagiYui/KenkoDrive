@@ -12,24 +12,22 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [x] 用户注册
 - [x] 用户登录
-- [ ] 用户信息修改
-- [ ] 用户文件上传
-- [ ] 用户文件下载
-- [ ] 用户文件删除
-- [ ] 文件分享
-- [ ] 分享文件下载
+- [x] 用户信息获取/修改
+- [x] 用户头像获取/修改
+- [ ] 用户文件上传/删除/下载
+- [ ] 文件分享/分享文件下载
 - [ ] 文件夹
 - [ ] 文件夹分享
 - [ ] 游客广场
 - [ ] 管理员用户管理
 - [ ] 管理员文件管理
-- [ ] 相同文件合并
-- [ ] 照片地理位置统计
 - [ ] 文件搜索
+- [ ] 照片地理位置统计
 - [ ] 用户登录地理位置统计
 - [ ] 文件类型统计
 - [ ] 流量统计
 - [ ] 违规检查
+- [ ] 缩略图生成
 
 ## 技术功能一览
 
@@ -42,9 +40,17 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 速度限制
 - [ ] 流量限制
 - [ ] 验证码机制
+- [ ] 断点续传
+- [ ] 分片上传
+- [ ] 分片下载
+- [ ] 文件秒传
+- [ ] 相同文件合并
 
 ## 技术栈
 
+- [x] Spring Boot
+- [x] Gradle
+- [x] Spring Security
 - [x] MySQL 数据库
 - [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
 - [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
