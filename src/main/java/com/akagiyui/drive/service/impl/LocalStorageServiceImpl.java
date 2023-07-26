@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 /**
  * 本地存储服务实现类
@@ -48,12 +50,37 @@ public class LocalStorageServiceImpl implements StorageService {
 
     @Override
     public void saveFile(String key, byte[] content) {
+        // todo key 中可能包含路径，需要处理
         File file = new File(root + File.separator + key);
         if (file.exists()) {
             return;
         }
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public OutputStream saveFile(String key) {
+        return saveFile(key, false);
+    }
+
+    @Override
+    public OutputStream saveFile(String key, boolean overwrite) {
+        File file = new File(root + File.separator + key);
+        createParentDir(file);
+        if (file.exists()) {
+            if (!overwrite) {
+                throw new RuntimeException("文件已存在");
+            }
+            if (!file.delete()) {
+                throw new RuntimeException("删除文件失败");
+            }
+        }
+        try {
+            return Files.newOutputStream(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,6 +100,19 @@ public class LocalStorageServiceImpl implements StorageService {
         }
         if (!file.delete()) {
             throw new RuntimeException("删除文件失败");
+        }
+    }
+
+    /**
+     * 创建父目录
+     * @param file 文件
+     */
+    private void createParentDir(File file) {
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            if (!parent.mkdirs()) {
+                throw new RuntimeException("创建父目录失败");
+            }
         }
     }
 }

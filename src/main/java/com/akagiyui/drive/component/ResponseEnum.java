@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 响应状态枚举
+ *
  * @author AkagiYui
  */
 @Getter
@@ -62,6 +63,14 @@ public enum ResponseEnum {
      * 应用不存在
      */
     CLIENT_NOT_FOUND(10012, "Client not found"),
+    /**
+     * 文件过大
+     */
+    FILE_TOO_LARGE(10013, "File too large"),
+    /**
+     * 文件格式不支持
+     */
+    FILE_FORMAT_NOT_SUPPORT(10014, "File format not support"),
     ;
 
     /**

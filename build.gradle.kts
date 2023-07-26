@@ -39,6 +39,7 @@ dependencies {
     implementation("cn.hutool:hutool-crypto:${hutoolVersion}")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:${hutoolVersion}")  // Hutool JWT
     implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
+    implementation("net.coobird:thumbnailator:0.4.20")  // 图片处理
     compileOnly("org.projectlombok:lombok")  // Lombok
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
     annotationProcessor("org.projectlombok:lombok")
