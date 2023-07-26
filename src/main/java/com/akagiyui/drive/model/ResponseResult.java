@@ -4,6 +4,7 @@ import com.akagiyui.drive.component.ResponseEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
  * @author AkagiYui
  */
 @Data
+@Slf4j
 public class ResponseResult<T> {
     /**
      * 状态码
@@ -98,7 +100,7 @@ public class ResponseResult<T> {
             ObjectMapper objectMapper = new ObjectMapper();
             res.getWriter().write(objectMapper.writeValueAsString(response(status)));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Write response error", e);
         }
     }
 
@@ -117,7 +119,7 @@ public class ResponseResult<T> {
             ObjectMapper objectMapper = new ObjectMapper();
             res.getWriter().write(objectMapper.writeValueAsString(response(ResponseEnum.SUCCESS, object)));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Write response error", e);
         }
     }
 }

@@ -6,6 +6,7 @@ import com.akagiyui.drive.exception.TooManyRequestsException;
 import com.akagiyui.drive.model.ResponseResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -33,6 +34,7 @@ import static com.akagiyui.drive.component.ResponseEnum.*;
  * @author AkagiYui
  */
 @RestControllerAdvice
+@Slf4j
 public class CustomExceptionHandler {
 
     /**
@@ -96,7 +98,7 @@ public class CustomExceptionHandler {
             }
             return ResponseResult.response(BAD_REQUEST);
         }
-        e.printStackTrace();
+        log.error("Unknown exception", e);
         return ResponseResult.response(INTERNAL_ERROR);
     }
 

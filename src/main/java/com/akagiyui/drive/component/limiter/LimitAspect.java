@@ -3,6 +3,7 @@ package com.akagiyui.drive.component.limiter;
 import com.akagiyui.drive.exception.TooManyRequestsException;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.RateLimiter;
+import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -29,7 +30,7 @@ public class LimitAspect {
     private final Map<String, RateLimiter> limitMap = Maps.newConcurrentMap();
 
     @Around("@annotation(com.akagiyui.drive.component.limiter.Limit)")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object around(@NotNull ProceedingJoinPoint joinPoint) throws Throwable {
         // 获取方法签名
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

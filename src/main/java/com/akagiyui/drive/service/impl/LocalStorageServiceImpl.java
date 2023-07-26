@@ -4,6 +4,7 @@ import com.akagiyui.drive.component.ResponseEnum;
 import com.akagiyui.drive.exception.CustomException;
 import com.akagiyui.drive.service.StorageService;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -19,18 +20,19 @@ import java.nio.file.Files;
  * @author AkagiYui
  */
 @Service
+@Slf4j
 public class LocalStorageServiceImpl implements StorageService {
     @Value("${application.storage.local.root:./storage}")
     private String root;
 
     @PostConstruct
     public void init() {
-        System.out.println("root: " + root);
+        log.debug("root: " + root);
         // 检查根目录是否存在，不存在则创建
         File rootDir = new File(root);
         if (!rootDir.exists()) {
             if (!rootDir.mkdirs()) {
-                throw new RuntimeException("创建根目录失败");
+                throw new RuntimeException("创建根目录失败"); // todo 自定义异常
             }
         }
     }

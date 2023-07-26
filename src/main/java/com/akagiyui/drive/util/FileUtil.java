@@ -40,7 +40,7 @@ public class FileUtil {
      * @return 完整路径
      */
     public static String getStaticResourcePath(String path){
-        String resourcePath = Thread.currentThread().getContextClassLoader().getResource("").toString();
+        String resourcePath = Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("")).toString();
         resourcePath = resourcePath.replace("file:/","");
         resourcePath = resourcePath.substring(0,resourcePath.indexOf("/WEB-INF")).concat(path);
         return resourcePath;
