@@ -65,3 +65,5 @@ application:
     local:
       # 本地存储路径
       root: ./data
+  avatar:
+    default: static/default-avatar.jpg

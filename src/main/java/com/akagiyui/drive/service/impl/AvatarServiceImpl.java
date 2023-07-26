@@ -6,15 +6,18 @@ import com.akagiyui.drive.exception.CustomException;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.StorageService;
 import com.akagiyui.drive.service.UserService;
+import com.akagiyui.drive.util.FileUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -40,8 +43,11 @@ public class AvatarServiceImpl implements AvatarService {
     @Resource
     UserService userService;
 
-    /* 初始化允许上传的头像的文件类型 */
+    @Value("${application.avatar.default:static/default-avatar.jpg}")
+    private String defaultAvatarPath;
+
     static {
+        // 初始化允许上传的头像的文件类型
         AVATAR_TYPES.add("image/jpeg");
         AVATAR_TYPES.add("image/jpg");
         AVATAR_TYPES.add("image/png");
@@ -51,15 +57,40 @@ public class AvatarServiceImpl implements AvatarService {
         AVATAR_TYPES.add("image/x-png");
     }
 
+    /**
+     * 默认头像缓存，避免每次都读取文件
+     */
+    private byte[] defaultAvatar = null;
+
+    private byte[] getDefaultAvatar() {
+        if (defaultAvatar == null) {
+            File file = FileUtil.getResourceFile(defaultAvatarPath);
+            try (InputStream inputStream = file.toURI().toURL().openStream()){
+                defaultAvatar = inputStream.readAllBytes();
+            } catch (IOException e) {
+                log.error("Load default avatar failed", e);
+                throw new CustomException(ResponseEnum.INTERNAL_ERROR);
+            }
+        }
+        return defaultAvatar;
+    }
+
     @Override
     public byte[] getAvatar() {
-        InputStreamResource file = storageService.getFile(getAvatarKey());
-        try (InputStream inputStream = file.getInputStream()) {
-            return inputStream.readAllBytes();
-        } catch (IOException e) {
-            log.error("Load avatar failed", e);
-            throw new CustomException(ResponseEnum.INTERNAL_ERROR);
+        String avatarKey = getAvatarKey();
+        byte[] avatar;
+        if (storageService.exists(avatarKey)) {
+            InputStreamResource file = storageService.getFile(avatarKey);
+            try (InputStream inputStream = file.getInputStream()) {
+                avatar = inputStream.readAllBytes();
+            } catch (IOException e) {
+                log.error("Load avatar failed", e);
+                throw new CustomException(ResponseEnum.INTERNAL_ERROR);
+            }
+        } else {
+            avatar = getDefaultAvatar();
         }
+        return avatar;
     }
 
     @Override
