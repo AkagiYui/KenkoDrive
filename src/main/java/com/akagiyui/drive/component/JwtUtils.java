@@ -66,7 +66,7 @@ public class JwtUtils {
      * @return 是否有效
      */
     public boolean verifyJwt(String token) {
-        return JWT.of(token).setKey(key).verify();
+        return JWT.of(token).setKey(key).validate(1);
     }
 
     /**
