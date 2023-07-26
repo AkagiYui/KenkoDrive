@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @Configuration
 // 启用自动填充
 @EnableJpaAuditing
-public class JpaConfiguration {
+public class JpaConfig {
 }
