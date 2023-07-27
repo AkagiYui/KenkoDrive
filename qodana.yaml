@@ -1,5 +1,6 @@
 version: "1.0"
-
+projectJDK: 17
+linter: jetbrains/qodana-jvm:latest
 profile:
   name: qodana.recommended
 
@@ -7,7 +8,3 @@ include:
   - name: CheckDependencyLicenses
   - name: VulnerableLibrariesGlobal
   - name: JvmCoverageInspection
-
-
-projectJDK: 17
-linter: jetbrains/qodana-jvm:latest

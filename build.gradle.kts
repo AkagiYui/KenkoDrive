@@ -10,8 +10,6 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
-val hutoolVersion = "5.8.20"
-
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
@@ -19,13 +17,14 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url = uri("https://maven.aliyun.com/repository/public/")
     }
-    mavenLocal()
     mavenCentral()
 }
 
+val hutoolVersion = "5.8.20"
 dependencies {
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
@@ -49,6 +48,12 @@ dependencies {
 }
 
 tasks.withType<Test> {
+    val osName: String = System.getProperty("os.name")
+    if (osName.startsWith("Windows")) {
+        systemProperty("spring.profiles.active", "dev")
+    } else {
+        systemProperty("spring.profiles.active", "test")
+    }
     useJUnitPlatform()
 }
 
