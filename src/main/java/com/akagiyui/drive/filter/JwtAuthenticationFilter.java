@@ -9,7 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -21,6 +21,7 @@ import java.io.IOException;
 
 /**
  * JWT 认证过滤器
+ *
  * @author AkagiYui
  */
 @Component
@@ -46,8 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     LoginUserDetails userDetails = userService.getUserDetails(userId);
                     if (userDetails != null) {
                         // 放入 Spring Security 上下文
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // todo 解释
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
