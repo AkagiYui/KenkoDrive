@@ -1,15 +1,16 @@
-name: Qodana
+name: Qodana PR
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
+  pull_request:
 
 jobs:
   qodana:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}  # 获取 PR 的代码，而不是 master 分支的代码
+          fetch-depth: 0  # 完整的 git history
 
       # 在 GitHub Actions 时使用官方源
       - name: Replace Gradle Wrapper Distribution Url
