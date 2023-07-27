@@ -18,6 +18,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}  # 获取 PR 的代码，而不是 master 分支的代码
           fetch-depth: 0  # 完整的 git history
+
+      # 在 GitHub Actions 时使用官方源
+      - name: Replace Gradle Wrapper Distribution Url
+        run: |
+          sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
+
       - name: 'Qodana Scan'
         uses: JetBrains/qodana-action@v2023.2
         env:
