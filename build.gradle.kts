@@ -10,7 +10,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
-val hutoolVersion = "5.8.16"
+val hutoolVersion = "5.8.20"
 
 configurations {
     compileOnly {
@@ -27,6 +27,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
     implementation("org.springframework.boot:spring-boot-starter-data-redis")  // Redis 操作
     implementation("org.springframework.boot:spring-boot-starter-mail")  // 邮件发送
