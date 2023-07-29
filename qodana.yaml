@@ -6,3 +6,16 @@ profile:
 
 include:
   - name: VulnerableLibrariesGlobal
+
+bootstrap: |
+  mkdir .idea
+  cat > .idea/misc.xml << \EOF
+  <?xml version="1.0" encoding="UTF-8"?>
+  <project version="4">
+    <component name="ExternalStorageConfigurationManager" enabled="true" />
+    <component name="NullableNotNullManager">
+      <option name="myDefaultNullable" value="org.jetbrains.annotation.Nullable" /> 
+      <option name="myDefaultNotNull" value="org.jetbrains.annotation.NotNull" />
+    </component>
+  </project>
+  EOF
