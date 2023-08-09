@@ -1,6 +1,6 @@
 # KenkoDrive 我的云盘
 
-计划作为毕业设计，立项于 2023年5月31日。
+计划作为毕业设计，立项于 2023年5月31日。项目整体结构清晰，职责明确，注释全面，开箱即用。
 
 在线演示地址：[drive.akagiyui.com](https://drive.akagiyui.com)
 
@@ -12,6 +12,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [x] 用户注册
 - [x] 用户登录
+- [ ] 重置密码
 - [x] 用户信息获取/修改
 - [x] 用户头像获取/修改
 - [ ] 用户文件上传/删除/下载
@@ -28,18 +29,22 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 流量统计
 - [ ] 违规检查
 - [ ] 缩略图生成
+- [ ] 系统告警通知
 
 ## 技术功能一览
 
 - [x] 请求频率限制
+- [x] 异步任务
 - [x] 邮件发送
 - [x] 参数校验
+- [x] 统一 JSON 格式返回
 - [ ] 短信发送
 - [ ] 日志记录
 - [ ] Minio 对象存储
-- [ ] 速度限制
+- [ ] 速度限制（Redis进行IP地址限流）
 - [ ] 流量限制
-- [ ] 验证码机制
+- [x] 邮箱验证码（Redis）
+- [ ] 图片验证码
 - [ ] 断点续传
 - [ ] 分片上传
 - [ ] 分片下载
@@ -50,14 +55,16 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [x] Spring Boot
 - [x] Gradle
-- [x] Spring Security
+- [x] Spring Security（跨域与认证授权）
 - [x] MySQL 数据库
+- [ ] Caffeine 缓存
 - [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
 - [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](src/main/java/com/akagiyui/drive/repository)
 - [x] [AOP 切面编程](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
+- [x] ApiFox 在线 API 文档
 
 ## RoadMap
 

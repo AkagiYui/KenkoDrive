@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.1.2" // Spring Boot
     id("io.spring.dependency-management") version "1.1.2" // 依赖管理
+    kotlin("jvm") version "1.9.0" // Kotlin 支持
 }
 
 group = "com.akagiyui"
@@ -40,12 +41,14 @@ dependencies {
     implementation("cn.hutool:hutool-crypto:${hutoolVersion}")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:${hutoolVersion}")  // Hutool JWT
     implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
-    implementation("net.coobird:thumbnailator:0.4.20")  // 图片处理
+    implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
     compileOnly("org.projectlombok:lombok")  // Lombok
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
 }
 
 tasks.withType<Test> {
@@ -69,4 +72,9 @@ tasks.processResources {
 extensions.findByName("buildScan")?.withGroovyBuilder {
     setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
     setProperty("termsOfServiceAgree", "yes")
+}
+
+// Kotlin 代码生成版本
+kotlin {
+    jvmToolchain(17)
 }
