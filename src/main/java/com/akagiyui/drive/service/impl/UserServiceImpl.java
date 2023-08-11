@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.drive.component.RedisCache;
 import com.akagiyui.drive.component.ResponseEnum;
 import com.akagiyui.drive.entity.User;
@@ -17,6 +18,8 @@ import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,14 +58,12 @@ public class UserServiceImpl implements UserService {
     @Resource
     MailService mailService;
 
-    @Value("${application.jwt.timeout}")
-    private long timeout;
-
     @Resource
     @Lazy
     PasswordEncoder passwordEncoder;
 
     @Override
+    @Cacheable(value = CacheConstants.USER_BY_ID, key = "#id")
     public User findUserById(String id) {
         return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
@@ -73,12 +74,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConstants.USER_PAGE, key = "{#index, #size, #userFilter}")
     public Page<User> find(int index, int size, UserFilter userFilter) {
         Pageable pageable = PageRequest.of(index, size);
         return repository.findAll(pageable);
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConstants.USER_LIST)
     public List<User> find() {
         return repository.findAll();
     }
@@ -104,6 +107,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {
+            CacheConstants.USER_BY_ID,
+            CacheConstants.USER_DETAILS,
+            CacheConstants.USER_LOGIN_DETAILS,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+            CacheConstants.USER_EXIST,
+    }, allEntries = true)
     public boolean delete(String id) {
         if (!repository.existsById(id)) {
             throw new CustomException(ResponseEnum.NOT_FOUND);
@@ -113,6 +124,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConstants.USER_EXIST, key = "#username")
     public boolean isExist(String username) {
         return repository.existsById(username);
     }
@@ -126,22 +138,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(cacheNames = CacheConstants.USER_LOGIN_DETAILS, key = "#userId")
     public LoginUserDetails getUserDetails(String userId) {
-        String redisKey = String.format("user:%s", userId);
-        LoginUserDetails userDetails = redisCache.get(redisKey);
-        if (userDetails == null) {
-            User user = findUserById(userId);
-            userDetails = new LoginUserDetails(user, List.of("ROLE_USER"));
-            cacheUserDetails(userDetails);
-        }
-        return userDetails;
-    }
-
-    @Override
-    public boolean cacheUserDetails(LoginUserDetails userDetails) {
-        String redisKey = String.format("user:%s", userDetails.getUser().getId());
-        redisCache.set(redisKey, userDetails);
-        return redisCache.expire(redisKey, timeout, TimeUnit.HOURS);
+        User user = findUserById(userId);
+        return new LoginUserDetails(user, List.of("ROLE_USER"));
     }
 
     @Override
@@ -219,6 +219,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {
+            CacheConstants.USER_BY_ID,
+            CacheConstants.USER_DETAILS,
+            CacheConstants.USER_LOGIN_DETAILS,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+            CacheConstants.USER_EXIST,
+    }, allEntries = true)
     public boolean updateInfo(UpdateUserInfoRequest userInfo) {
         User user = getUser();
         if (StringUtils.hasText(userInfo.getNickname())) {
@@ -228,8 +236,6 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userInfo.getEmail());
         }
         repository.save(user);
-
-        cacheUserDetails(new LoginUserDetails(user, List.of("ROLE_USER"))); // 缓存用户信息
         return true;
     }
 
@@ -238,6 +244,7 @@ public class UserServiceImpl implements UserService {
      * @param username 用户名
      */
     @Override
+    @Cacheable(cacheNames = CacheConstants.USER_DETAILS, key = "#username")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repository.getFirstByUsername(username);
         if (user == null) {

@@ -2,6 +2,7 @@ package com.akagiyui.drive.service.impl;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
+import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.drive.component.ResponseEnum;
 import com.akagiyui.drive.entity.FileInfo;
 import com.akagiyui.drive.exception.CustomException;
@@ -10,6 +11,8 @@ import com.akagiyui.drive.service.FileInfoService;
 import com.akagiyui.drive.service.StorageService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +35,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     private StorageService storageService;
 
     @Override
+    @Cacheable(value = CacheConstants.FILE_INFO, key = "#id")
     public FileInfo getFileInfo(String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
@@ -78,12 +82,14 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
+    @CacheEvict(value = CacheConstants.FILE_INFO, key = "#fileInfo.id")
     public void recordDownload(FileInfo fileInfo) {
         fileInfo.setDownloadCount(fileInfo.getDownloadCount() + 1);
         fileInfoRepository.save(fileInfo);
     }
 
     @Override
+    @CacheEvict(value = CacheConstants.FILE_INFO, key = "#id")
     public void deleteFile(String id) {
         FileInfo fileInfo = getFileInfo(id);
         storageService.deleteFile(fileInfo.getStorageKey());

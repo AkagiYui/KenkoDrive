@@ -9,7 +9,6 @@ import com.akagiyui.drive.filter.JwtAuthenticationFilter;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.ResponseResult;
 import com.akagiyui.drive.model.response.LoginResponse;
-import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,9 +57,6 @@ public class SecurityConfig {
 
     @Resource
     JwtUtils jwtUtils;
-
-    @Resource
-    UserService userService;
 
     public final static String LOGIN_URL = "/user/token";
 
@@ -147,7 +143,6 @@ public class SecurityConfig {
             Authentication authentication
     ) {
         LoginUserDetails loginUserDetails = (LoginUserDetails) authentication.getPrincipal();
-        userService.cacheUserDetails(loginUserDetails);
 
         User user = loginUserDetails.getUser();
         String jwt = jwtUtils.createJwt(user);

@@ -31,6 +31,7 @@ dependencies {
     implementation("org.jetbrains:annotations:24.0.1") // JetBrain 的注解，如 @NonNull
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
     implementation("org.springframework.boot:spring-boot-starter-data-redis")  // Redis 操作
+    implementation("org.springframework.boot:spring-boot-starter-cache")  // 缓存
     implementation("org.springframework.boot:spring-boot-starter-mail")  // 邮件发送
     implementation("org.springframework.boot:spring-boot-starter-security")  // 认证 & 授权
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")  // 模板引擎
@@ -42,6 +43,7 @@ dependencies {
     implementation("cn.hutool:hutool-jwt:${hutoolVersion}")  // Hutool JWT
     implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存
     compileOnly("org.projectlombok:lombok")  // Lombok
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
     annotationProcessor("org.projectlombok:lombok")

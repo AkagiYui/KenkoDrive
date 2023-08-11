@@ -77,13 +77,6 @@ public interface UserService extends UserDetailsService {
     LoginUserDetails getUserDetails(String userId);
 
     /**
-     * 将用户信息存入 redis
-     * @param userDetails 用户信息
-     * @return 是否成功
-     */
-    boolean cacheUserDetails(LoginUserDetails userDetails);
-
-    /**
      * 发送邮箱验证码
      */
     boolean sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest);
