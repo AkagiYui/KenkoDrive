@@ -1,9 +1,9 @@
 package com.akagiyui.drive.config;
 
-import com.akagiyui.drive.component.ResponseEnum;
-import com.akagiyui.drive.exception.CustomException;
-import com.akagiyui.drive.exception.TooManyRequestsException;
-import com.akagiyui.drive.model.ResponseResult;
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
+import com.akagiyui.common.exception.TooManyRequestsException;
+import com.akagiyui.common.ResponseResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import static com.akagiyui.drive.component.ResponseEnum.*;
+import static com.akagiyui.common.ResponseEnum.*;
 
 
 /**

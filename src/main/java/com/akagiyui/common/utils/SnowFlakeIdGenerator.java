@@ -1,4 +1,4 @@
-package com.akagiyui.drive.util;
+package com.akagiyui.common.utils;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;

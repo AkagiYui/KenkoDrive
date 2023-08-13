@@ -1,7 +1,7 @@
 package com.akagiyui.drive.service.impl;
 
-import com.akagiyui.drive.component.ResponseEnum;
-import com.akagiyui.drive.exception.CustomException;
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.service.StorageService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

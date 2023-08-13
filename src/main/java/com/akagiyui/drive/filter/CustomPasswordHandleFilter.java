@@ -2,7 +2,7 @@ package com.akagiyui.drive.filter;
 
 import com.akagiyui.drive.config.SecurityConfig;
 import com.akagiyui.drive.service.UserService;
-import com.akagiyui.drive.util.CustomRequestWrapper;
+import com.akagiyui.common.utils.CustomRequestWrapper;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

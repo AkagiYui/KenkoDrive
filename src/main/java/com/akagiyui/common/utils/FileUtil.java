@@ -1,4 +1,4 @@
-package com.akagiyui.drive.util;
+package com.akagiyui.common.utils;
 
 import java.io.BufferedReader;
 import java.io.File;

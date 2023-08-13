@@ -1,4 +1,4 @@
-package com.akagiyui.drive.util;
+package com.akagiyui.common.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;

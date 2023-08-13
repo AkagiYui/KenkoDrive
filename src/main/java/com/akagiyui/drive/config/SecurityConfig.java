@@ -2,12 +2,12 @@ package com.akagiyui.drive.config;
 
 
 import com.akagiyui.drive.component.JwtUtils;
-import com.akagiyui.drive.component.ResponseEnum;
+import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter;
 import com.akagiyui.drive.filter.JwtAuthenticationFilter;
 import com.akagiyui.drive.model.LoginUserDetails;
-import com.akagiyui.drive.model.ResponseResult;
+import com.akagiyui.common.ResponseResult;
 import com.akagiyui.drive.model.response.LoginResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;

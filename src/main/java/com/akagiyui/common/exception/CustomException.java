@@ -1,6 +1,6 @@
-package com.akagiyui.drive.exception;
+package com.akagiyui.common.exception;
 
-import com.akagiyui.drive.component.ResponseEnum;
+import com.akagiyui.common.ResponseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

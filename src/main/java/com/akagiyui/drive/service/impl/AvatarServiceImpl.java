@@ -1,12 +1,12 @@
 package com.akagiyui.drive.service.impl;
 
-import com.akagiyui.drive.component.ResponseEnum;
+import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.drive.entity.User;
-import com.akagiyui.drive.exception.CustomException;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.StorageService;
 import com.akagiyui.drive.service.UserService;
-import com.akagiyui.drive.util.FileUtil;
+import com.akagiyui.common.utils.FileUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;

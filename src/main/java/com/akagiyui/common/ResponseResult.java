@@ -1,6 +1,5 @@
-package com.akagiyui.drive.model;
+package com.akagiyui.common;
 
-import com.akagiyui.drive.component.ResponseEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;

@@ -1,6 +1,6 @@
-package com.akagiyui.drive.entity;
+package com.akagiyui.common.entity;
 
-import com.akagiyui.drive.util.SnowFlakeIdGenerator;
+import com.akagiyui.common.utils.SnowFlakeIdGenerator;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;

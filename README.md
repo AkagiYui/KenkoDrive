@@ -11,7 +11,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 ## 用户功能一览
 
 - [x] 用户注册
-- [x] 用户登录
+- [x] 用户名登录/邮箱登录
 - [ ] 重置密码
 - [x] 用户信息获取/修改
 - [x] 用户头像获取/修改
@@ -33,17 +33,17 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## 技术功能一览
 
-- [x] 请求频率限制
-- [x] 异步任务
-- [x] 邮件发送
-- [x] 参数校验
-- [x] 统一 JSON 格式返回
+- [x] [请求频率限制（注解 + 令牌桶）](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
+- [ ] 请求频率限制（Redis + IP地址限流）
+- [x] [异步任务](src/main/java/com/akagiyui/drive/service/MailService.java)
+- [x] [邮件发送](src/main/java/com/akagiyui/drive/service/MailService.java)
+- [x] [参数校验](src/main/java/com/akagiyui/drive/model/request/AddUserRequest.java)
+- [x] [统一 JSON 格式返回](src/main/java/com/akagiyui/drive/model/ResponseResult.java)
 - [ ] 短信发送
 - [ ] 日志记录
-- [ ] Minio 对象存储
-- [ ] 速度限制（Redis进行IP地址限流）
+- [ ] 速度限制
 - [ ] 流量限制
-- [x] 邮箱验证码（Redis）
+- [x] [邮箱验证码（Redis）](src/main/java/com/akagiyui/drive/service/impl/MailServiceImpl.java)
 - [ ] 图片验证码
 - [ ] 断点续传
 - [ ] 分片上传
@@ -53,18 +53,21 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## 技术栈
 
-- [x] Spring Boot
-- [x] Gradle
-- [x] Spring Security（跨域与认证授权）
+- [x] [Gradle 包管理](build.gradle.kts)
+- [x] [Spring Boot](src/main/java/com/akagiyui/drive/KenkoDriveApplication.java)
+- [x] [Spring Security（跨域与认证授权）](src/main/java/com/akagiyui/drive/config/SecurityConfig.java)
 - [x] MySQL 数据库
-- [ ] Caffeine 缓存
+- [x] [Spring Cache 缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
+- [x] [Caffeine 本地缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
 - [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
 - [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](src/main/java/com/akagiyui/drive/repository)
 - [x] [AOP 切面编程](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
-- [x] ApiFox 在线 API 文档
+- [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
+- [ ] Minio 对象存储
+- [ ] 事务管理
 
 ## RoadMap
 

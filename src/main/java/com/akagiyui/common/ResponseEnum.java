@@ -1,4 +1,4 @@
-package com.akagiyui.drive.component;
+package com.akagiyui.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

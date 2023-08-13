@@ -1,4 +1,4 @@
-package com.akagiyui.drive.exception;
+package com.akagiyui.common.exception;
 
 /**
  * 请求过快异常

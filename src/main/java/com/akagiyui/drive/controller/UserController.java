@@ -1,6 +1,6 @@
 package com.akagiyui.drive.controller;
 
-import com.akagiyui.drive.component.limiter.Limit;
+import com.akagiyui.common.limiter.Limit;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
