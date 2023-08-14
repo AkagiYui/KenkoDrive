@@ -33,12 +33,13 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## 技术功能一览
 
-- [x] [请求频率限制（注解 + 令牌桶）](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
+- [x] [请求频率限制（注解 + 令牌桶）](src/main/java/com/akagiyui/common/limiter/LimitAspect.java)
 - [ ] 请求频率限制（Redis + IP地址限流）
 - [x] [异步任务](src/main/java/com/akagiyui/drive/service/MailService.java)
 - [x] [邮件发送](src/main/java/com/akagiyui/drive/service/MailService.java)
 - [x] [参数校验](src/main/java/com/akagiyui/drive/model/request/AddUserRequest.java)
-- [x] [统一 JSON 格式返回](src/main/java/com/akagiyui/drive/model/ResponseResult.java)
+- [x] [权限校验](src/main/java/com/akagiyui/drive/model/Permission.java)
+- [x] [统一 JSON 格式返回](src/main/java/com/akagiyui/common/ResponseResult.java)
 - [ ] 短信发送
 - [ ] 日志记录
 - [ ] 速度限制
@@ -50,6 +51,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 分片下载
 - [ ] 文件秒传
 - [ ] 相同文件合并
+- [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
 
 ## 技术栈
 
@@ -64,7 +66,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](src/main/java/com/akagiyui/drive/repository)
-- [x] [AOP 切面编程](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
+- [x] AOP 切面编程：[频率控制](src/main/java/com/akagiyui/common/limiter/LimitAspect.java)、[权限校验](src/main/java/com/akagiyui/drive/component/permission/PermissionAspect.java)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
 - [ ] 事务管理
@@ -85,6 +87,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)
 - [Stack Overflow: How to intercept a RequestRejectedException in Spring?](https://stackoverflow.com/a/75338927/19990931)
+- [Stack Overflow: Map enum in JPA with fixed values?](https://stackoverflow.com/questions/2751733/map-enum-in-jpa-with-fixed-values)
+- [Stack Overflow: Are many-to-many relationships possible with enums in JPA or Hibernate?](https://stackoverflow.com/questions/39870914/are-many-to-many-relationships-possible-with-enums-in-jpa-or-hibernate)
 - [腾讯云开发者社区: 将构建配置从 Groovy 迁移到 KTS](https://cloud.tencent.com/developer/article/1839887?from=15425)
 - [博客园: docker-compose重新启动单个容器](https://www.cnblogs.com/yakniu/p/16982310.html)
 - [博客园: SpringBoot应用程序使用Gradle配置脚本中的版本号](https://www.cnblogs.com/xupeixuan/p/15695652.html)
@@ -94,4 +98,5 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: Jpa设置默认值约束](https://blog.csdn.net/github_38336924/article/details/107153217)
 - [CSDN: gradle通过def定义变量指定依赖版本](https://blog.csdn.net/qq_36666651/article/details/80718761)
 - [CSDN: 踩坑：springboot邮箱发送邮件，JavaMailSender自动注入失败的问题](https://blog.csdn.net/A15517340610/article/details/103764245)
+- [CSDN: 解决JPA的枚举局限性](https://blog.csdn.net/listeningsea/article/details/122149580)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)

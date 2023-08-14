@@ -1,13 +1,13 @@
 package com.akagiyui.drive.entity;
 
 import com.akagiyui.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+
+import java.util.Set;
 
 
 /**
@@ -50,4 +50,15 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     @ColumnDefault("false")
     private Boolean disabled;
+
+    /**
+     * 角色
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
 }

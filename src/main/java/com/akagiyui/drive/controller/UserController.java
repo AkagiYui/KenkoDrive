@@ -1,7 +1,9 @@
 package com.akagiyui.drive.controller;
 
 import com.akagiyui.common.limiter.Limit;
+import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +50,7 @@ public class UserController {
      * @return 用户
      */
     @GetMapping("/{id}")
+    @RequirePermission(Permission.USER_VIEW)
     User findById(@PathVariable("id") String id) {
         return userService.findUserById(id);
     }
@@ -58,6 +62,7 @@ public class UserController {
      * @return 是否成功
      */
     @PostMapping
+    @RequirePermission(Permission.USER_ADD)
     boolean add(@Validated @RequestBody AddUserRequest user) {
         return userService.addUser(user);
     }
@@ -70,6 +75,7 @@ public class UserController {
      * @return 用户分页响应
      */
     @GetMapping({"", "/"})
+    @RequirePermission(Permission.USER_VIEW)
     public PageResponse<UserInfoResponse> getPage(
             @RequestParam(defaultValue = "0") Integer index,
             @RequestParam(defaultValue = "10") Integer size,
@@ -95,6 +101,7 @@ public class UserController {
      * @param id 用户 ID
      */
     @DeleteMapping("/{id}")
+    @RequirePermission(Permission.USER_DELETE)
     public Boolean delete(@PathVariable String id) {
         return userService.delete(id);
     }
@@ -106,6 +113,7 @@ public class UserController {
      * @return 是否成功
      */
     @PostMapping("/register/email")
+    @PreAuthorize("isAnonymous()")
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1)
     public boolean getEmailVerifyCode(@RequestBody @Valid EmailVerifyCodeRequest verifyRequest) {
         return userService.sendEmailVerifyCode(verifyRequest);
@@ -118,6 +126,7 @@ public class UserController {
      * @return 是否成功
      */
     @PostMapping("/register")
+    @PreAuthorize("isAnonymous()")
     public boolean confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
         return userService.confirmRegister(registerConfirmRequest);
     }
@@ -128,6 +137,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/info")
+    @PreAuthorize("isAuthenticated()")
     public UserInfoResponse getUserInfo() {
         return UserInfoResponse.fromUser(userService.getUser());
     }
@@ -136,6 +146,7 @@ public class UserController {
      * 更新当前用户信息
      */
     @PutMapping("/info")
+    @PreAuthorize("isAuthenticated()")
     public boolean updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
         return userService.updateInfo(userInfo);
     }
@@ -147,6 +158,7 @@ public class UserController {
      * @return 是否成功
      */
     @PostMapping("/avatar")
+    @PreAuthorize("isAuthenticated()")
     public boolean updateAvatar(@RequestParam("avatar") MultipartFile avatar) {
         return avatarService.saveAvatar(avatar);
     }
@@ -157,6 +169,7 @@ public class UserController {
      * @return 头像
      */
     @GetMapping("/avatar")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<byte[]> getAvatar() {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.valueOf("image/" + AvatarService.IMAGE_FORMAT));

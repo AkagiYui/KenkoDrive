@@ -1,0 +1,49 @@
+package com.akagiyui.drive.entity;
+
+import com.akagiyui.common.entity.BaseEntity;
+import com.akagiyui.drive.model.Permission;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
+import java.util.Set;
+
+/**
+ * 角色实体类
+ *
+ * @author AkagiYui
+ */
+@Data
+@Accessors(chain = true)
+@Entity
+@Table
+@DynamicInsert
+public class Role extends BaseEntity {
+    /**
+     * 角色名
+     */
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    /**
+     * 角色描述
+     */
+    private String description;
+
+    /**
+     * 角色是否被禁用
+     */
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean disabled;
+
+    /**
+     * 角色权限
+     */
+    @Convert(converter = Permission.PermissionConverter.class)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "role_permission")
+    private Set<Permission> permissions;
+}

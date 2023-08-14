@@ -1,0 +1,86 @@
+package com.akagiyui.drive.model;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.Objects;
+
+/**
+ * 权限枚举
+ *
+ * @author AkagiYui
+ */
+@Getter
+@AllArgsConstructor
+public enum Permission {
+    /**
+     * 个人文件上传
+     */
+    PERSONAL_UPLOAD("personal:upload", "个人文件上传"),
+    /**
+     * 个人文件下载
+     */
+    PERSONAL_DOWNLOAD("personal:download", "个人文件下载"),
+    /**
+     * 用户查看
+     */
+    USER_VIEW("user:view", "用户查看"),
+    /**
+     * 用户添加
+     */
+    USER_ADD("user:add", "用户添加"),
+    /**
+     * 用户修改
+     */
+    USER_UPDATE("user:update", "用户修改"),
+    /**
+     * 用户删除
+     */
+    USER_DELETE("user:delete", "用户删除"),
+    ;
+
+    /**
+     * 权限名
+     */
+    private final String name;
+    /**
+     * 权限描述
+     */
+    private final String description;
+
+    /**
+     * 从数据库值映射到枚举常量
+     */
+    @Converter
+    public static class PermissionConverter implements AttributeConverter<Permission, String> {
+        /**
+         * 将枚举常量转换为数据库列值
+         *
+         * @param permission 枚举常量
+         * @return 数据库列值
+         */
+        @Override
+        public String convertToDatabaseColumn(Permission permission) {
+            System.out.println(permission.getName());
+            return permission.getName();
+        }
+
+        /**
+         * 将数据库列值转换为枚举常量
+         *
+         * @param value 数据库列值
+         * @return 枚举常量
+         */
+        @Override
+        public Permission convertToEntityAttribute(String value) {
+            for (Permission permission : Permission.values()) {
+                if (Objects.equals(permission.getName(), value)) {
+                    return permission;
+                }
+            }
+            throw new IllegalArgumentException("Invalid Permission value: " + value);
+        }
+    }
+}

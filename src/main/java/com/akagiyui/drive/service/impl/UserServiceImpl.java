@@ -1,11 +1,11 @@
 package com.akagiyui.drive.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.drive.component.RedisCache;
-import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.drive.entity.User;
-import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
@@ -30,6 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -139,9 +140,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_LOGIN_DETAILS, key = "#userId")
+    @Transactional
     public LoginUserDetails getUserDetails(String userId) {
         User user = findUserById(userId);
-        return new LoginUserDetails(user, List.of("ROLE_USER"));
+        return new LoginUserDetails(user);
     }
 
     @Override
@@ -245,11 +247,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_DETAILS, key = "#loginUsernameParam")
+    @Transactional
     public UserDetails loadUserByUsername(String loginUsernameParam) throws UsernameNotFoundException {
         User user = repository.getFirstByUsernameOrEmail(loginUsernameParam);
         if (user == null) {
             throw new UsernameNotFoundException("Username or password error");
         }
-        return new LoginUserDetails(user, List.of("ROLE_USER"));
+        return new LoginUserDetails(user);
     }
 }

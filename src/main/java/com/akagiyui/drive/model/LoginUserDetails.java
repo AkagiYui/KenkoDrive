@@ -1,5 +1,6 @@
 package com.akagiyui.drive.model;
 
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -11,8 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,19 +24,37 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginUserDetails implements UserDetails, Serializable {
+
+    /**
+     * 用户
+     */
     User user;
-    List<String> permissions;
+
+    /**
+     * 权限字符串
+     */
+    Set<String> permissions;
+
+    /**
+     * 权限列表
+     */
     @JsonIgnore
-    List<GrantedAuthority> authorities;
+    Set<GrantedAuthority> authorities;
 
     /**
      * 登录用户详情
      * @param user 用户
-     * @param permissions 用户权限
      */
-    public LoginUserDetails(User user, List<String> permissions) {
+    public LoginUserDetails(User user) {
         this.user = user;
-        this.permissions = permissions;
+
+        // 获取权限，注意如果使用懒加载，需要在事务内获取
+        Set<Role> roles = user.getRoles();
+        this.permissions = roles.stream()
+                .map(Role::getPermissions)
+                .flatMap(Collection::stream)
+                .map(Permission::getName)
+                .collect(Collectors.toSet());
     }
 
     /**
@@ -44,11 +63,12 @@ public class LoginUserDetails implements UserDetails, Serializable {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 转换为 GrantedAuthority 集合
+        // 如果 authorities 为空，则初始化，缓存加速
         return Objects.requireNonNullElseGet(authorities, () -> {
+            // 转换为 GrantedAuthority 集合
             authorities = permissions.stream()
                     .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             return authorities;
         });
     }
