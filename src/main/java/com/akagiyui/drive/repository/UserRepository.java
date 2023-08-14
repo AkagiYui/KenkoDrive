@@ -2,6 +2,7 @@ package com.akagiyui.drive.repository;
 
 import com.akagiyui.drive.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -16,6 +17,14 @@ public interface UserRepository extends JpaRepository<User, String> {
      * @return 用户
      */
     User getFirstByUsername(String username);
+
+    /**
+     * 根据用户名或邮箱查找用户
+     * @param text 用户名或邮箱
+     * @return 用户
+     */
+    @Query("select u from User u where u.username = ?1 or u.email = ?1")
+    User getFirstByUsernameOrEmail(String text);
 
     /**
      * 邮箱是否存在

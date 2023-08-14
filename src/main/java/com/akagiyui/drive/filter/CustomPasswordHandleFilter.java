@@ -31,7 +31,7 @@ public class CustomPasswordHandleFilter extends OncePerRequestFilter {
         String url = request.getRequestURI();
         String method = request.getMethod();
 
-        if (Objects.equals(SecurityConfig.LOGIN_URL, url) && "POST".equals(method)) {
+        if (Objects.equals(SecurityConfig.LOGIN_URL, url) && "POST".equals(method) && false) {
             String rawUsername = request.getParameter("username");
             String rawPassword = request.getParameter("password");
 

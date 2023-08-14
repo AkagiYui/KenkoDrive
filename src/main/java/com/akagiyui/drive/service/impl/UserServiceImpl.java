@@ -3,9 +3,9 @@ package com.akagiyui.drive.service.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.drive.component.RedisCache;
-import com.akagiyui.drive.component.ResponseEnum;
+import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.drive.entity.User;
-import com.akagiyui.drive.exception.CustomException;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.AddUserRequest;
@@ -241,12 +241,12 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据用户名获取用户信息
-     * @param username 用户名
+     * @param loginUsernameParam 登录username参数
      */
     @Override
-    @Cacheable(cacheNames = CacheConstants.USER_DETAILS, key = "#username")
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = repository.getFirstByUsername(username);
+    @Cacheable(cacheNames = CacheConstants.USER_DETAILS, key = "#loginUsernameParam")
+    public UserDetails loadUserByUsername(String loginUsernameParam) throws UsernameNotFoundException {
+        User user = repository.getFirstByUsernameOrEmail(loginUsernameParam);
         if (user == null) {
             throw new UsernameNotFoundException("Username or password error");
         }
