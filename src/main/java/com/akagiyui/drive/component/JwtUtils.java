@@ -3,16 +3,20 @@ package com.akagiyui.drive.component;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTException;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.LoginUserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
  * JWT工具类
+ *
  * @author AkagiYui
  */
 @Component
+@Slf4j
 public class JwtUtils {
     /**
      * 密钥
@@ -27,6 +31,7 @@ public class JwtUtils {
 
     /**
      * 生成密钥
+     *
      * @param user 用户
      * @return 密钥
      */
@@ -36,6 +41,7 @@ public class JwtUtils {
 
     /**
      * 生成密钥
+     *
      * @param user 用户
      * @return 密钥
      */
@@ -45,6 +51,7 @@ public class JwtUtils {
 
     /**
      * 生成密钥
+     *
      * @param userId 用户id
      * @return 密钥
      */
@@ -66,7 +73,17 @@ public class JwtUtils {
      * @return 是否有效
      */
     public boolean verifyJwt(String token) {
-        return JWT.of(token).setKey(key).validate(1);
+        if (token.length() <= 20) {
+            return false;
+        }
+        try {
+            return JWT.of(token).setKey(key).validate(1);
+        } catch (JWTException e) {
+            return false;
+        } catch (Exception e) {
+            log.error("JWT验证错误", e);
+            return false;
+        }
     }
 
     /**
@@ -76,6 +93,6 @@ public class JwtUtils {
      * @return 用户id
      */
     public String getUserId(String token) {
-        return  JWT.of(token).setKey(key).getPayloads().getStr("id");
+        return JWT.of(token).setKey(key).getPayloads().getStr("id");
     }
 }
