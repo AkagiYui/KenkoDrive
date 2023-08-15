@@ -50,6 +50,8 @@ spring:
         smtp:
           ssl:
             enable: true
+  messages:
+    basename: i18n/messages
 application:
   # 应用版本号，自动从 build.gradle 中获取
   version: ${version?:unknown}

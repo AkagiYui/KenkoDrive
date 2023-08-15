@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 
 /**
  * 响应包装体
@@ -50,7 +51,7 @@ public class ResponseResult<T> {
      * @param status 状态枚举
      * @return 响应体
      */
-    public static ResponseResult<?> response(ResponseEnum status) {
+    public static <T> ResponseResult<T> response(ResponseEnum status) {
         return response(status.getCode(), status.getMsg(), null);
     }
 
@@ -61,6 +62,9 @@ public class ResponseResult<T> {
      * @return 响应体
      */
     public static <T> ResponseResult<T> response(ResponseEnum status, T data) {
+        if (status == ResponseEnum.BAD_REQUEST && data instanceof String && StringUtils.hasText((String) data)) {
+            return response(status.getCode(), (String) data, null);
+        }
         return response(status.getCode(), status.getMsg(), data);
     }
 

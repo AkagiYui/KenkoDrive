@@ -17,29 +17,30 @@ public class AddUserRequest {
     /**
      * 用户名
      */
-    @NotBlank(message = "Username cannot be empty")
-    @NotNull(message = "Username cannot be empty")
-    @Size(min = 3, max = 20, message = "Username length must be between 3 and 20")
+    @NotBlank(message = "{username cannot be empty}")
+    @NotNull(message = "{username is missing}")
+    @Size(min = 3, max = 20, message = "{username length must be between 3 and 20}")
     private String username;
 
     /**
      * 密码
      */
-    @NotBlank(message = "Password cannot be empty")
-    @NotNull(message = "Password cannot be empty")
+    @NotBlank(message = "{password cannot be empty}")
+    @NotNull(message = "{password is missing}")
+    @Size(min = 8, max = 64, message = "{password length must be more than 8}")
     private String password;
 
     /**
      * 昵称
      */
-    @Size(max = 20, message = "Nickname length must be less than 20")
+    @Size(max = 20, message = "{nickname length must be less than 20}")
     private String nickname;
 
     /**
      * 邮箱
      */
-    @Email(message = "Email format is incorrect")
-    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "{email format is incorrect}")
+    @NotBlank(message = "{email cannot be empty}")
     private String email;
 
     /**

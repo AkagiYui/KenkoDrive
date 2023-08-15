@@ -1,9 +1,9 @@
 package com.akagiyui.drive.config;
 
 import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.ResponseResult;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.common.exception.TooManyRequestsException;
-import com.akagiyui.common.ResponseResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -58,16 +58,30 @@ public class CustomExceptionHandler {
             HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class,
             MaxUploadSizeExceededException.class,
+            MethodArgumentNotValidException.class,
     })
-    public ResponseResult<?> jsonParseException(Exception e) {
+    public ResponseResult<?> badRequestException(Exception e) {
         // 目前可预见的是 JSON 解析错误
         Throwable cause = e.getCause();
         if (cause != null) {
             return ResponseResult.response(BAD_REQUEST, cause.getMessage());
         }
-        // i无请求体错误
+        // 无请求体错误
         if (e.getMessage() != null && e.getMessage().startsWith("Required request body is missing")) {
             return ResponseResult.response(BAD_REQUEST, "Request body is missing");
+        }
+        // 参数校验异常处理
+        if (e instanceof MethodArgumentNotValidException ae) {
+            FieldError fieldError = ae.getBindingResult().getFieldError();
+            if (fieldError != null) {
+                String message = fieldError.getDefaultMessage();
+                // 国际化时匹配到未适配的字段，去除前后的大括号
+                if (message != null && message.startsWith("{") && message.endsWith("}")) {
+                    message = message.substring(1, message.length() - 1);
+                }
+                return ResponseResult.response(BAD_REQUEST, message);
+            }
+            return ResponseResult.response(BAD_REQUEST);
         }
         return ResponseResult.response(BAD_REQUEST, e.getMessage());
     }
@@ -85,19 +99,13 @@ public class CustomExceptionHandler {
      * 其他异常
      */
     @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseResult<?> unknownException(Exception e) {
         // 自定义异常处理
         if (e instanceof CustomException ce) {
             return ResponseResult.response(ce.getStatus());
         }
-        // 参数校验异常处理
-        if (e instanceof MethodArgumentNotValidException ae) {
-            FieldError fieldError = ae.getBindingResult().getFieldError();
-            if (fieldError != null) {
-                return ResponseResult.response(BAD_REQUEST, fieldError.getDefaultMessage());
-            }
-            return ResponseResult.response(BAD_REQUEST);
-        }
+
         log.error("Unknown exception", e);
         return ResponseResult.response(INTERNAL_ERROR);
     }

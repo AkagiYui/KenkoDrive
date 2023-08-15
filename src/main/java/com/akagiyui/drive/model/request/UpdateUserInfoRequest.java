@@ -14,12 +14,12 @@ public class UpdateUserInfoRequest {
     /**
      * 昵称
      */
-    @Size(max = 20, message = "Nickname length must be less than 20")
+    @Size(max = 20, message = "{nickname length must be less than 20}")
     private String nickname;
 
     /**
      * 邮箱
      */
-    @Email(message = "Email format is incorrect")
+    @Email(message = "{email format is incorrect}")
     private String email;
 }
