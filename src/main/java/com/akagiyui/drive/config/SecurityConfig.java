@@ -1,13 +1,14 @@
 package com.akagiyui.drive.config;
 
 
-import com.akagiyui.drive.component.JwtUtils;
 import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.ResponseResult;
+import com.akagiyui.drive.component.JwtUtils;
+import com.akagiyui.drive.component.RequestMatcherBuilder;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter;
 import com.akagiyui.drive.filter.JwtAuthenticationFilter;
 import com.akagiyui.drive.model.LoginUserDetails;
-import com.akagiyui.common.ResponseResult;
 import com.akagiyui.drive.model.response.LoginResponse;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,13 +74,13 @@ public class SecurityConfig {
      * @throws Exception 异常
      */
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, RequestMatcherBuilder mvc) throws Exception {
         return http
                 .authorizeHttpRequests(a -> a
                         // 允许指定路径通过
-                        .requestMatchers("/server/version").permitAll()
-                        .requestMatchers("/info/**").permitAll()
-                        .requestMatchers("/user/register/**").permitAll()
+                        .requestMatchers(mvc.matchers("/server/version")).permitAll()
+                        .requestMatchers(mvc.matchers("/info/**")).permitAll()
+                        .requestMatchers(mvc.matchers("/user/register/**")).permitAll()
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 // 关闭 CSRF
@@ -143,7 +144,7 @@ public class SecurityConfig {
             HttpServletResponse response,
             Authentication authentication
     ) {
-        LoginUserDetails loginUserDetails = (LoginUserDetails) authentication.getPrincipal();
+        LoginUserDetails loginUserDetails = (LoginUserDetails)authentication.getPrincipal();
 
         User user = loginUserDetails.getUser();
         String jwt = jwtUtils.createJwt(user);

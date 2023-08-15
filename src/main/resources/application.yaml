@@ -2,6 +2,9 @@
 server:
   # 端口号
   port: 6677
+  http2:
+    # 启用 HTTP2
+    enabled: true
 spring:
   application:
     # 服务名称

@@ -36,7 +36,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")  // 认证 & 授权
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")  // 模板引擎
     implementation("org.springframework.boot:spring-boot-starter-validation")  // 参数校验
-    implementation("org.springframework.boot:spring-boot-starter-web")  // Web 开发
+    implementation("org.springframework.boot:spring-boot-starter-web") {  // Web 开发
+        exclude("org.springframework.boot", "spring-boot-starter-tomcat")  // 排除内置 Tomcat
+    }
+    implementation("org.springframework.boot:spring-boot-starter-undertow")  // Undertow
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
     implementation("cn.hutool:hutool-core:${hutoolVersion}")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:${hutoolVersion}")  // Hutool 加解密
