@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 用户服务接口
@@ -111,4 +112,16 @@ public interface UserService extends UserDetailsService {
      * @return 是否成功
      */
     boolean updateInfo(UpdateUserInfoRequest userInfo);
+
+    /**
+     * 获取用户权限
+     * @return 权限列表
+     */
+    Set<String> getPermission();
+
+    /**
+     * 获取用户角色
+     * @return 角色列表
+     */
+    Set<String> getRole();
 }

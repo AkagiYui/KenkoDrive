@@ -4,6 +4,7 @@ import com.akagiyui.common.entity.BaseEntity;
 import com.akagiyui.drive.model.Permission;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
@@ -16,6 +17,7 @@ import java.util.Set;
  * @author AkagiYui
  */
 @Data
+@ToString(exclude = "users")
 @Accessors(chain = true)
 @Entity
 @Table
@@ -46,4 +48,10 @@ public class Role extends BaseEntity {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "role_permission")
     private Set<Permission> permissions;
+
+    /**
+     * 该角色下的用户
+     */
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 }

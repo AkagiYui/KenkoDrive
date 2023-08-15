@@ -3,11 +3,12 @@ package com.akagiyui.drive.entity;
 import com.akagiyui.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.util.Set;
+import java.util.List;
 
 
 /**
@@ -16,6 +17,7 @@ import java.util.Set;
  * @author AkagiYui
  */
 @Data
+@ToString(exclude = "roles")
 @Accessors(chain = true)
 @Entity
 @Table
@@ -54,11 +56,11 @@ public class User extends BaseEntity {
     /**
      * 角色
      */
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 }

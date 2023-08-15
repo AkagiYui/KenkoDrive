@@ -5,6 +5,7 @@ import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.drive.component.RedisCache;
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.filter.UserFilter;
@@ -35,7 +36,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 /**
@@ -134,7 +137,7 @@ public class UserServiceImpl implements UserService {
     public User getUser() {
         // 从 SecurityContextHolder 中获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
+        LoginUserDetails userDetails = (LoginUserDetails)authentication.getPrincipal();
         return userDetails.getUser();
     }
 
@@ -209,15 +212,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String encryptPassword(String username, String password) {
-        return passwordEncoder.encode(username + password);
+        return encryptPassword(username, password, false);
     }
 
     @Override
     public String encryptPassword(String username, String password, boolean raw) {
+        // 密码加密核心
+        String encode = password;
         if (raw) {
-            return username + password;
+            return encode;
         }
-        return encryptPassword(username, password);
+        return passwordEncoder.encode(encode);
     }
 
     @Override
@@ -241,8 +246,23 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    @Transactional
+    public Set<String> getPermission() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUserDetails userDetails = (LoginUserDetails)authentication.getPrincipal();
+        return userDetails.getPermissions();
+    }
+
+    @Override
+    public Set<String> getRole() {
+        User user = getUser();
+        return user.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
+    }
+
     /**
      * 根据用户名获取用户信息
+     *
      * @param loginUsernameParam 登录username参数
      */
     @Override

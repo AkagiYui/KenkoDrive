@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -178,5 +179,23 @@ public class UserController {
                 .ok()
                 .headers(header)
                 .body(avatarService.getAvatar());
+    }
+
+    /**
+     * 获取当前用户权限列表
+     */
+    @GetMapping("/permission")
+    @PreAuthorize("isAuthenticated()")
+    public Set<String> getPermission() {
+        return userService.getPermission();
+    }
+
+    /**
+     * 获取当前用户角色列表
+     */
+    @GetMapping("/role")
+    @PreAuthorize("isAuthenticated()")
+    public Set<String> getRole() {
+        return userService.getRole();
     }
 }

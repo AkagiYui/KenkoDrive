@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class LoginUserDetails implements UserDetails, Serializable {
         this.user = user;
 
         // 获取权限，注意如果使用懒加载，需要在事务内获取
-        Set<Role> roles = user.getRoles();
+        List<Role> roles = user.getRoles();
         this.permissions = roles.stream()
                 .map(Role::getPermissions)
                 .flatMap(Collection::stream)
