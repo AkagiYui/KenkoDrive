@@ -78,6 +78,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         // 允许指定路径通过
                         .requestMatchers("/server/version").permitAll()
+                        .requestMatchers("/info/**").permitAll()
                         .requestMatchers("/user/register/**").permitAll()
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
