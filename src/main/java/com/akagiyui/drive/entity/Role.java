@@ -45,7 +45,7 @@ public class Role extends BaseEntity {
      * 角色权限
      */
     @Convert(converter = Permission.PermissionConverter.class)
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "role_permission")
     private Set<Permission> permissions;
 

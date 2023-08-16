@@ -16,11 +16,9 @@ import java.util.Date;
  * @author AkagiYui
  */
 @Data
-// 继承策略
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 // 启用自动填充
 @EntityListeners(AuditingEntityListener.class)
-// 实体继承映射
+// 实体继承映射，标记该类为父类，为子类提供映射规则
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
     /**
