@@ -27,7 +27,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 用户登录地理位置统计
 - [ ] 文件类型统计
 - [ ] 流量统计
-- [ ] 违规检查
+- [ ] 敏感内容审查
 - [ ] 缩略图生成
 - [ ] 系统告警通知
 
@@ -56,7 +56,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 ## 技术栈
 
 - [x] [Gradle 包管理](build.gradle.kts)
-- [x] [Spring Boot](src/main/java/com/akagiyui/drive/KenkoDriveApplication.java)
+- [x] [Spring Boot 3.1](src/main/java/com/akagiyui/drive/KenkoDriveApplication.java)
 - [x] [Spring Security（跨域与认证授权）](src/main/java/com/akagiyui/drive/config/SecurityConfig.java)
 - [x] MySQL 数据库
 - [x] [Spring Cache 缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
@@ -69,7 +69,9 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] AOP 切面编程：[频率控制](src/main/java/com/akagiyui/common/limiter/LimitAspect.java)、[权限校验](src/main/java/com/akagiyui/drive/component/permission/PermissionAspect.java)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
-- [ ] 事务管理
+- [ ] 阿里云 OSS 对象存储
+- [ ] ElasticSearch 搜索引擎
+- [x] 事务管理
 
 ## RoadMap
 

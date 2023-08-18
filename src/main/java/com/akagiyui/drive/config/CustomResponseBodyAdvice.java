@@ -2,6 +2,7 @@ package com.akagiyui.drive.config;
 
 import com.akagiyui.common.ResponseResult;
 import lombok.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class CustomResponseBodyAdvice implements ResponseBodyAdvice<Object>, Web
     }
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    public void configureMessageConverters(@NotNull List<HttpMessageConverter<?>> converters) {
         // 把String类型的转换器去掉，不使用String类型的转换器，防止过早转换发生异常
         converters.removeIf(converter -> converter.getClass() == StringHttpMessageConverter.class);
     }

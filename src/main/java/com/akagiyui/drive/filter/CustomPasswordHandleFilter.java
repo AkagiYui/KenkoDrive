@@ -27,7 +27,7 @@ public class CustomPasswordHandleFilter extends OncePerRequestFilter {
     UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         String url = request.getRequestURI();
         String method = request.getMethod();
 
