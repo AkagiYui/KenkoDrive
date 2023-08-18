@@ -1,10 +1,17 @@
 package com.akagiyui.drive.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.AsyncConfigurer;
+import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * 线程池配置类
@@ -12,8 +19,12 @@ import java.util.concurrent.Executor;
  * @author kenko
  */
 @Configuration
-public class AsyncConfig {
+@Slf4j
+public class AsyncConfig implements AsyncConfigurer, WebMvcConfigurer {
 
+/**
+     * 配置 Spring 异步任务执行器
+     */
     @Bean(name = "taskExecutor")
     public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
@@ -26,4 +37,19 @@ public class AsyncConfig {
         return executor;
     }
 
+    /**
+     * 配置 Web 异步任务执行器，主要用于文件下载
+     */
+    @Override
+    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+        configurer.setTaskExecutor(new ConcurrentTaskExecutor(Executors.newCachedThreadPool()));
+    }
+
+    /**
+     * Web 异步任务中发生异常
+     */
+    @Override
+    public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
+        return (throwable, method, objects) -> log.error("Exception caught in async method", throwable);
+    }
 }

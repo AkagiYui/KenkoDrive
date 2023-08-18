@@ -9,6 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -18,12 +20,15 @@ import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.io.IOException;
 
 import static com.akagiyui.common.ResponseEnum.*;
 
@@ -42,23 +47,34 @@ public class CustomExceptionHandler {
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-            NoHandlerFoundException.class,
-            HttpRequestMethodNotSupportedException.class,
+            NoHandlerFoundException.class, // 无路由
+            HttpRequestMethodNotSupportedException.class, // 请求方法不支持
     })
     public ResponseResult<?> noRouteException(Exception ignored) {
         return ResponseResult.response(NOT_FOUND);
     }
 
+    /**
+     * 客户端中断连接，常见于文件下载
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(IOException.class) // IO 异常
+    public ResponseEntity<Void> requestRejectedException(IOException ignored) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.TEXT_PLAIN)
+                .build();
+    }
 
     /**
      * 400 请求体错误
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
-            HttpMessageNotReadableException.class,
-            MissingServletRequestParameterException.class,
-            MaxUploadSizeExceededException.class,
-            MethodArgumentNotValidException.class,
+            HttpMessageNotReadableException.class, // 请求体为空
+            MissingServletRequestParameterException.class, // 缺少请求参数
+            MissingRequestHeaderException.class, // 缺少请求头
+            MaxUploadSizeExceededException.class, // 文件过大
+            MethodArgumentNotValidException.class, // 参数校验异常
     })
     public ResponseResult<?> badRequestException(Exception e) {
         // 目前可预见的是 JSON 解析错误
@@ -90,16 +106,16 @@ public class CustomExceptionHandler {
      * 429 请求过快
      */
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    @ExceptionHandler(TooManyRequestsException.class)
+    @ExceptionHandler(TooManyRequestsException.class) // 请求过快
     public ResponseResult<?> tooManyRequestsException(TooManyRequestsException ignored) {
         return ResponseResult.response(TOO_MANY_REQUESTS);
     }
 
     /**
-     * 其他异常
+     * 500 其他异常
      */
-    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
     public ResponseResult<?> unknownException(Exception e) {
         // 自定义异常处理
         if (e instanceof CustomException ce) {

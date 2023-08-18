@@ -46,9 +46,9 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 流量限制
 - [x] [邮箱验证码（Redis）](src/main/java/com/akagiyui/drive/service/impl/MailServiceImpl.java)
 - [ ] 图片验证码
-- [ ] 断点续传
+- [x] [断点续传](src/main/java/com/akagiyui/drive/controller/FileController.java)
 - [ ] 分片上传
-- [ ] 分片下载
+- [x] [分片下载](src/main/java/com/akagiyui/drive/controller/FileController.java)
 - [ ] 文件秒传
 - [ ] 相同文件合并
 - [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
@@ -79,13 +79,13 @@ API 文档：https://apifox.com/apidoc/project-2811497
 | 后端自动部署  | 已完成 | 2023年6月26日 |
 | 用户注册/登录 | 已完成 | 2023年7月25日 |
 | 用户权限校验  | 已完成 | 2023年8月15日 |
+| 下载断点续传  | 已完成 | 2023年8月19日 |
 
 ## 鸣谢
 
 - [Drone官方文档](https://docs.drone.io/)
 
 - [柏码知识库](https://itbaima.net/document)
-
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)
 
@@ -93,9 +93,12 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [Stack Overflow: How to intercept a RequestRejectedException in Spring?](https://stackoverflow.com/a/75338927/19990931)
 - [Stack Overflow: Map enum in JPA with fixed values?](https://stackoverflow.com/questions/2751733/map-enum-in-jpa-with-fixed-values)
 - [Stack Overflow: Are many-to-many relationships possible with enums in JPA or Hibernate?](https://stackoverflow.com/questions/39870914/are-many-to-many-relationships-possible-with-enums-in-jpa-or-hibernate)
+- [Stack Overflow: Proper way of streaming using ResponseEntity and making sure the InputStream gets closed](https://stackoverflow.com/questions/51845228/proper-way-of-streaming-using-responseentity-and-making-sure-the-inputstream-get)
+- [Medium: Partial Data Retrieval in Spring Boot REST API](https://medium.com/@bubu.tripathy/partial-data-retrieval-in-spring-boot-rest-api-b62b7a0cae34)
 - [腾讯云开发者社区: 将构建配置从 Groovy 迁移到 KTS](https://cloud.tencent.com/developer/article/1839887?from=15425)
 - [博客园: docker-compose重新启动单个容器](https://www.cnblogs.com/yakniu/p/16982310.html)
 - [博客园: SpringBoot应用程序使用Gradle配置脚本中的版本号](https://www.cnblogs.com/xupeixuan/p/15695652.html)
+- [博客园: Java下载文件，中文名乱码（attachment;filename=中文文件名）](https://www.cnblogs.com/tomcatandjerry/p/11541871.html)
 - [脚本之家: springboot切换使用undertow容器的方式](https://www.jb51.net/article/254623.htm)
 - [CSDN: 有关HikariPool-1 – Failed to validate connection com.mysql.cj.jdbc.ConnectionImp 错误的产生原因与解决方法](https://blog.csdn.net/qq_45886144/article/details/128984915)
 - [CSDN: 数据库连接池选型 Druid vs HikariCP性能对比](https://blog.csdn.net/weixin_39098944/article/details/109228618)
@@ -107,4 +110,5 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: springboot 配置 Validator 校验框架国际化 支持快速返回](https://blog.csdn.net/weixin_40461281/article/details/121597834)
 - [CSDN: spring常见错误【数据库】idleTimeout is close to or more than maxLifetime, disabling it.](https://blog.csdn.net/qq_26462567/article/details/123982879)
 - [CSDN: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during v](https://blog.csdn.net/jj89929665/article/details/111387865)
+- [CSDN: 大文件上传下载实现思路，分片、断点续传代码实现，以及webUpload组件](https://blog.csdn.net/weixin_52210557/article/details/124097574)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
