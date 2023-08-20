@@ -38,6 +38,7 @@ class GotifyPusher(
         }
 
         headers = HttpHeaders()
+        @Suppress("UastIncorrectHttpHeaderInspection")
         headers.add("X-Gotify-Key", apiKey)
         headers.contentType = MediaType.APPLICATION_JSON
 

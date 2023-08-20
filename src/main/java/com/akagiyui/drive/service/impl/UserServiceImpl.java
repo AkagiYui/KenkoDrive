@@ -217,6 +217,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String encryptPassword(String username, String password, boolean raw) {
+        @SuppressWarnings("UnnecessaryLocalVariable")
         // 密码加密核心
         String encode = password;
         if (raw) {

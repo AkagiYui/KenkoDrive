@@ -81,11 +81,12 @@ API 文档：https://apifox.com/apidoc/project-2811497
 | 后端自动部署  | 已完成 | 2023年6月26日 |
 | 用户注册/登录 | 已完成 | 2023年7月25日 |
 | 用户权限校验  | 已完成 | 2023年8月15日 |
-| 下载断点续传  | 已完成 | 2023年8月19日 |
+| 断点续传下载  | 已完成 | 2023年8月19日 |
 
 ## 鸣谢
 
 - [Drone官方文档](https://docs.drone.io/)
+- [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
 
 - [柏码知识库](https://itbaima.net/document)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)

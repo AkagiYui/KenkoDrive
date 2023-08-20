@@ -1,6 +1,7 @@
 package com.akagiyui.drive.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +42,7 @@ public class AsyncConfig implements AsyncConfigurer, WebMvcConfigurer {
      * 配置 Web 异步任务执行器，主要用于文件下载
      */
     @Override
-    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+    public void configureAsyncSupport(@NotNull AsyncSupportConfigurer configurer) {
         configurer.setTaskExecutor(new ConcurrentTaskExecutor(Executors.newCachedThreadPool()));
     }
 
