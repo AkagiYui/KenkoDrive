@@ -62,6 +62,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] [Spring Cache 缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
 - [x] [Caffeine 本地缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
 - [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
+- [ ] [多级缓存](https://github.com/pig-mesh/multilevel-cache-spring-boot-starter)
 - [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
@@ -115,4 +116,5 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: spring常见错误【数据库】idleTimeout is close to or more than maxLifetime, disabling it.](https://blog.csdn.net/qq_26462567/article/details/123982879)
 - [CSDN: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during v](https://blog.csdn.net/jj89929665/article/details/111387865)
 - [CSDN: 大文件上传下载实现思路，分片、断点续传代码实现，以及webUpload组件](https://blog.csdn.net/weixin_52210557/article/details/124097574)
+- [简书: Spring Boot - 数据校验](https://www.jianshu.com/p/e69a1f187482)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
