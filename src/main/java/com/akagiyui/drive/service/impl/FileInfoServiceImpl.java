@@ -39,6 +39,10 @@ public class FileInfoServiceImpl implements FileInfoService {
     public FileInfo getFileInfo(String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
+    
+    private FileInfo getFileInfoWithoutCache(String id) {
+        return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
+    }
 
     @Override
     public List<FileInfo> saveFile(List<MultipartFile> files) {
@@ -91,7 +95,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     @CacheEvict(value = CacheConstants.FILE_INFO, key = "#id")
     public void deleteFile(String id) {
-        FileInfo fileInfo = getFileInfo(id);
+        FileInfo fileInfo = getFileInfoWithoutCache(id);
         storageService.deleteFile(fileInfo.getStorageKey());
         fileInfoRepository.delete(fileInfo);
     }
