@@ -91,6 +91,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {
+            CacheConstants.USER_BY_ID,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+            CacheConstants.USER_EXIST,
+    }, allEntries = true)
     public boolean addUser(AddUserRequest user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new CustomException(ResponseEnum.USER_EXIST);
