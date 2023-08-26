@@ -124,4 +124,11 @@ public interface UserService extends UserDetailsService {
      * @return 角色列表
      */
     Set<String> getRole();
+
+    /**
+     * 启用/禁用用户
+     * @param id 用户 ID
+     * @param disabled 是否禁用
+     */
+    Boolean disable(String id, boolean disabled);
 }

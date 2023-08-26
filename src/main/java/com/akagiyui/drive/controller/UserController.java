@@ -108,6 +108,18 @@ public class UserController {
     }
 
     /**
+     * 启用/禁用用户
+     *
+     * @param id       用户 ID
+     * @param disabled 是否禁用
+     */
+    @PutMapping("/{id}/disable")
+    @RequirePermission(Permission.USER_UPDATE)
+    public Boolean disable(@PathVariable String id, @RequestParam Boolean disabled) {
+        return userService.disable(id, disabled);
+    }
+
+    /**
      * 获取邮件验证码
      *
      * @param verifyRequest 预注册请求体

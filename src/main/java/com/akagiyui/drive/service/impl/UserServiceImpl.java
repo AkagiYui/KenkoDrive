@@ -72,6 +72,10 @@ public class UserServiceImpl implements UserService {
         return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
 
+    private User findUserByIdWithCache(String id) {
+        return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
+    }
+
     @Override
     public User register(User user) {
         return null;
@@ -265,6 +269,22 @@ public class UserServiceImpl implements UserService {
     public Set<String> getRole() {
         User user = getUser();
         return user.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
+    }
+
+    @Override
+    @CacheEvict(cacheNames = {
+            CacheConstants.USER_BY_ID,
+            CacheConstants.USER_DETAILS,
+            CacheConstants.USER_LOGIN_DETAILS,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+            CacheConstants.USER_EXIST,
+    }, allEntries = true)
+    public Boolean disable(String id, boolean disabled) {
+        User user = findUserByIdWithCache(id);
+        user.setDisabled(disabled);
+        repository.save(user);
+        return true;
     }
 
     /**
