@@ -4,6 +4,8 @@ import com.akagiyui.drive.entity.User;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 /**
  * 用户信息响应
  *
@@ -32,6 +34,10 @@ public class UserInfoResponse {
      * 已禁用
      */
     private Boolean disabled;
+    /**
+     * 注册时间
+     */
+    private Date registerTime;
 
     /**
      * 从用户实体转换
@@ -42,6 +48,7 @@ public class UserInfoResponse {
                 .setUsername(user.getUsername())
                 .setNickname(user.getNickname())
                 .setEmail(user.getEmail())
-                .setDisabled(user.getDisabled());
+                .setDisabled(user.getDisabled())
+                .setRegisterTime(user.getCreateTime());
     }
 }
