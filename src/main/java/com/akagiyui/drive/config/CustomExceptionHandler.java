@@ -112,16 +112,20 @@ public class CustomExceptionHandler {
     }
 
     /**
+     * 200 自定义异常
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler(CustomException.class)
+    public ResponseResult<?> customException(CustomException e) {
+        return ResponseResult.response(e.getStatus());
+    }
+
+    /**
      * 500 其他异常
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseResult<?> unknownException(Exception e) {
-        // 自定义异常处理
-        if (e instanceof CustomException ce) {
-            return ResponseResult.response(ce.getStatus());
-        }
-
         log.error("Unknown exception", e);
         return ResponseResult.response(INTERNAL_ERROR);
     }
