@@ -23,6 +23,7 @@ public enum Permission {
      * 个人文件下载
      */
     PERSONAL_DOWNLOAD("personal:download", "个人文件下载"),
+
     /**
      * 用户查看
      */
@@ -39,6 +40,23 @@ public enum Permission {
      * 用户删除
      */
     USER_DELETE("user:delete", "用户删除"),
+
+    /**
+     * 公告添加
+     */
+    ANNOUNCEMENT_ADD("announcement:add", "公告添加"),
+    /**
+     * 公告修改
+     */
+    ANNOUNCEMENT_UPDATE("announcement:update", "公告修改"),
+    /**
+     * 公告删除
+     */
+    ANNOUNCEMENT_DELETE("announcement:delete", "公告删除"),
+    /**
+     * 获取所有公告
+     */
+    ANNOUNCEMENT_GET_ALL("announcement:getAll", "获取所有公告"),
     ;
 
     /**

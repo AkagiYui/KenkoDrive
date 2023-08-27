@@ -3,6 +3,7 @@ package com.akagiyui.drive.controller;
 import com.akagiyui.drive.model.response.RoleInfoResponse;
 import com.akagiyui.drive.service.RoleService;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,7 @@ public class RoleController {
      * 获取角色信息
      */
     @RequestMapping({"/", ""})
+    @PreAuthorize("permitAll()")
     public List<RoleInfoResponse> getRoles() {
         return roleService.getAllRoles();
     }
