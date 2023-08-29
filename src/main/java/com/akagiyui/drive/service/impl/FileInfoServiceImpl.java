@@ -88,8 +88,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Override
     @CacheEvict(value = CacheConstants.FILE_INFO, key = "#fileInfo.id")
     public void recordDownload(FileInfo fileInfo) {
-        fileInfo.setDownloadCount(fileInfo.getDownloadCount() + 1);
-        fileInfoRepository.save(fileInfo);
+        fileInfoRepository.recordDownload(fileInfo.getId());
     }
 
     @Override
