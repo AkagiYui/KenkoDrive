@@ -1,9 +1,10 @@
 package com.akagiyui.drive.component.permission;
 
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.model.Permission;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +37,7 @@ public class PermissionAspect {
 
         // 校验权限
         if (!authorities.containsAll(permissionList)) {
-            throw new AccessDeniedException("No permission");
+            throw new CustomException(ResponseEnum.UNAUTHORIZED);
         }
     }
 }
