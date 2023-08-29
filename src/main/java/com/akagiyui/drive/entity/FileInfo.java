@@ -51,13 +51,6 @@ public class FileInfo extends BaseEntity {
     private String storageKey;
 
     /**
-     * 引用次数（防止重复上传）
-     */
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Long refCount;
-
-    /**
      * 下载次数
      */
     @Column(nullable = false)
