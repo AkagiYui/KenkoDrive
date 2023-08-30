@@ -44,14 +44,15 @@ public class AnnouncementDisplayResponse {
 
     /**
      * 从公告实体转换
+     *
+     * @param announcement 公告 实体
      */
-    public static AnnouncementDisplayResponse fromAnnouncement(Announcement announcement) {
-        return new AnnouncementDisplayResponse()
-                .setTitle(announcement.getTitle())
-                .setContent(announcement.getContent())
-                .setUserNickname(announcement.getAuthor().getNickname())
-                .setCreateTime(announcement.getCreateTime())
-                .setUpdateTime(announcement.getUpdateTime());
+    public AnnouncementDisplayResponse(Announcement announcement) {
+        this.title = announcement.getTitle();
+        this.content = announcement.getContent();
+        this.userNickname = announcement.getAuthor().getNickname();
+        this.createTime = announcement.getCreateTime();
+        this.updateTime = announcement.getUpdateTime();
     }
 
     /**
@@ -59,7 +60,7 @@ public class AnnouncementDisplayResponse {
      */
     public static List<AnnouncementDisplayResponse> fromAnnouncementList(List<Announcement> announcementList) {
         return announcementList.stream()
-                .map(AnnouncementDisplayResponse::fromAnnouncement)
+                .map(AnnouncementDisplayResponse::new)
                 .collect(Collectors.toList());
     }
 }

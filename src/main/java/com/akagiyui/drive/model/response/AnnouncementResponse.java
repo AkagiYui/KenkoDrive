@@ -52,18 +52,14 @@ public class AnnouncementResponse {
      */
     private Date updateTime;
 
-    /**
-     * 从公告实体转换
-     */
-    public static AnnouncementResponse fromAnnouncement(Announcement announcement) {
-        return new AnnouncementResponse()
-                .setId(announcement.getId())
-                .setTitle(announcement.getTitle())
-                .setContent(announcement.getContent())
-                .setUserId(announcement.getAuthor().getId())
-                .setEnabled(announcement.getEnabled())
-                .setCreateTime(announcement.getCreateTime())
-                .setUpdateTime(announcement.getUpdateTime());
+    public AnnouncementResponse(Announcement announcement) {
+        this.id = announcement.getId();
+        this.title = announcement.getTitle();
+        this.content = announcement.getContent();
+        this.userId = announcement.getAuthor().getId();
+        this.enabled = announcement.getEnabled();
+        this.createTime = announcement.getCreateTime();
+        this.updateTime = announcement.getUpdateTime();
     }
 
     /**
@@ -71,7 +67,7 @@ public class AnnouncementResponse {
      */
     public static List<AnnouncementResponse> fromAnnouncementList(List<Announcement> announcementList) {
         return announcementList.stream()
-                .map(AnnouncementResponse::fromAnnouncement)
+                .map(AnnouncementResponse::new)
                 .collect(Collectors.toList());
     }
 }

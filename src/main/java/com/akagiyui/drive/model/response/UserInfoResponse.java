@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户信息响应
@@ -39,16 +40,16 @@ public class UserInfoResponse {
      */
     private Date registerTime;
 
-    /**
-     * 从用户实体转换
-     */
-    public static UserInfoResponse fromUser(User user) {
-        return new UserInfoResponse()
-                .setId(user.getId())
-                .setUsername(user.getUsername())
-                .setNickname(user.getNickname())
-                .setEmail(user.getEmail())
-                .setDisabled(user.getDisabled())
-                .setRegisterTime(user.getCreateTime());
+    public UserInfoResponse(User user) {
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.nickname = user.getNickname();
+        this.email = user.getEmail();
+        this.disabled = user.getDisabled();
+        this.registerTime = user.getCreateTime();
+    }
+
+    public static List<UserInfoResponse> fromUserList(List<User> users) {
+        return users.stream().map(UserInfoResponse::new).toList();
     }
 }

@@ -4,6 +4,8 @@ import com.akagiyui.drive.entity.Role;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 /**
  * 角色信息响应
  *
@@ -28,14 +30,14 @@ public class RoleInfoResponse {
      */
     private String description;
 
-    /**
-     * 从角色实体转换
-     */
-    public static RoleInfoResponse fromRole(Role role) {
-        return new RoleInfoResponse()
-                .setId(role.getId())
-                .setName(role.getName())
-                .setDescription(role.getDescription());
+    public RoleInfoResponse(Role role) {
+        this.id = role.getId();
+        this.name = role.getName();
+        this.description = role.getDescription();
+    }
+
+    public static List<RoleInfoResponse> fromRoleList(List<Role> roles) {
+        return roles.stream().map(RoleInfoResponse::new).toList();
     }
 
 }

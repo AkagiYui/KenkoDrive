@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 /**
@@ -84,9 +83,7 @@ public class UserController {
     ) {
         Page<User> userPage = userService.find(index, size, filter);
         List<User> userList = userPage.getContent();
-        List<UserInfoResponse> studentResponseList = userList.stream()
-                .map(UserInfoResponse::fromUser)
-                .collect(Collectors.toList());
+        List<UserInfoResponse> studentResponseList = UserInfoResponse.fromUserList(userList);
 
         return new PageResponse<UserInfoResponse>()
                 .setPage(index)
@@ -152,7 +149,7 @@ public class UserController {
     @GetMapping("/info")
     @PreAuthorize("isAuthenticated()")
     public UserInfoResponse getUserInfo() {
-        return UserInfoResponse.fromUser(userService.getUser());
+        return new UserInfoResponse(userService.getUser());
     }
 
     /**
