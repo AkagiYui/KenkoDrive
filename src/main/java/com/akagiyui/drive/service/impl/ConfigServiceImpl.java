@@ -44,12 +44,34 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
+     * 通过配置项键查找配置项值，并转换为整数
+     *
+     * @param key                  配置项键
+     * @param defaultValueSupplier 默认值生产者
+     * @return 配置项值
+     */
+    private int findInteger(String key, Supplier<Integer> defaultValueSupplier) {
+        return findByKey(key).map(Integer::parseInt).orElseGet(defaultValueSupplier);
+    }
+
+    /**
      * 保存配置项
      *
      * @param key   配置项键
      * @param value 配置项值
      */
     private void save(String key, boolean value) {
+        KeyValueConfig keyValueConfig = new KeyValueConfig().setConfigKey(key).setConfigValue("" + value);
+        configRepository.save(keyValueConfig);
+    }
+
+    /**
+     * 保存配置项
+     *
+     * @param key   配置项键
+     * @param value 配置项值
+     */
+    private void save(String key, int value) {
         KeyValueConfig keyValueConfig = new KeyValueConfig().setConfigKey(key).setConfigValue("" + value);
         configRepository.save(keyValueConfig);
     }
@@ -78,5 +100,18 @@ public class ConfigServiceImpl implements ConfigService {
     public boolean setInitialized(boolean initialized) {
         save(IS_INITIALIZED, initialized);
         return initialized;
+    }
+
+    @Override
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_CHUNK_SIZE")
+    public int getFileUploadChunkSize() {
+        return findInteger(FILE_UPLOAD_CHUNK_SIZE, () -> setFileUploadChunkSize(5 * 1024 * 1024));
+    }
+
+    @Override
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_CHUNK_SIZE")
+    public int setFileUploadChunkSize(int chunkSize) {
+        save(FILE_UPLOAD_CHUNK_SIZE, chunkSize);
+        return chunkSize;
     }
 }

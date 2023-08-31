@@ -37,4 +37,18 @@ public interface ConfigService {
      */
     boolean setInitialized(boolean initialized);
 
+    /**
+     * 文件分片大小 键名
+     */
+    String FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize";
+
+    /**
+     * 文件分片大小，单位：字节，默认：5MB
+     */
+    int getFileUploadChunkSize();
+
+    /**
+     * 设置 文件分片大小
+     */
+    int setFileUploadChunkSize(int chunkSize);
 }
