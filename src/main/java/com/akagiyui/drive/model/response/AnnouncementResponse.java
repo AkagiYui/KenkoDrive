@@ -40,7 +40,7 @@ public class AnnouncementResponse {
     /**
      * 已启用
      */
-    private Boolean enabled;
+    private boolean enabled;
 
     /**
      * 发布时间
