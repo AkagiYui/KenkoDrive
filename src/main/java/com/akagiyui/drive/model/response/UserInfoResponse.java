@@ -34,7 +34,7 @@ public class UserInfoResponse {
     /**
      * 已禁用
      */
-    private Boolean disabled;
+    private boolean disabled;
     /**
      * 注册时间
      */

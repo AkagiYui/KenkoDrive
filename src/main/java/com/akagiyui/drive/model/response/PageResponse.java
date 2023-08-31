@@ -15,22 +15,22 @@ public class PageResponse<T> {
     /**
      * 当前页
      */
-    Integer page;
+    int page;
 
     /**
      * 每页大小
      */
-    Integer size;
+    int size;
 
     /**
      * 页数
      */
-    Integer pageCount;
+    int pageCount;
 
     /**
      * 总数
      */
-    Long total;
+    long total;
 
     /**
      * 内容
