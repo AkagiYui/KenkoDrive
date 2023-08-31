@@ -37,6 +37,12 @@ public class FileController {
     @Resource
     private FileInfoService fileInfoService;
 
+    @Resource
+    private FolderService folderService;
+
+    @Resource
+    private UserFileService userFileService;
+
     /**
      * 上传文件
      *
@@ -46,6 +52,21 @@ public class FileController {
     @PostMapping({"", "/"})
     public List<FileInfo> upload(@RequestParam("file") List<MultipartFile> files) {
         return fileInfoService.saveFile(files);
+    }
+
+    /**
+     * 获取文件列表
+     *
+     * @param folderId 文件夹id
+     * @return 文件列表
+     */
+    @GetMapping({"", "/"})
+    @PreAuthorize("isAuthenticated()")
+    public FolderContentResponse getFileList(@RequestParam(name = "folder", required = false) String folderId) {
+        List<UserFileResponse> files = UserFileResponse.fromUserFileList(userFileService.getFiles(folderId));
+        List<FolderResponse> folders = FolderResponse.fromFolderList(folderService.getSubFolders(folderId));
+
+        return new FolderContentResponse(files, folders);
     }
 
     /**
@@ -60,7 +81,7 @@ public class FileController {
     }
 
     /**
-     * 下载文件
+     * 下载文件，单线程
      *
      * @param id 文件id
      * @return 文件流
