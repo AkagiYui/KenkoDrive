@@ -54,7 +54,7 @@ public class AnnouncementController {
      * 获取用于首页展示的公告列表
      */
     @GetMapping("/index")
-    @PreAuthorize("hasPermission()")
+    @PreAuthorize("isAuthenticated()")
     public List<AnnouncementDisplayResponse> getIndexAnnouncementList() {
         return AnnouncementDisplayResponse.fromAnnouncementList(announcementService.getAnnouncementDisplayList());
     }
