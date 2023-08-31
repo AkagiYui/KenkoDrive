@@ -34,11 +34,25 @@ class RoleRepositoryTest {
     }
 
     @Test
-    void addAdminRole() {
+    void addUserAdminRole() {
         Role role = new Role();
-        role.setName("管理员");
+        role.setName("用户管理员");
         role.setDescription("允许用户查询、用户增删、用户修改。");
         role.setPermissions(Set.of(Permission.USER_VIEW, Permission.USER_ADD, Permission.USER_UPDATE, Permission.USER_DELETE));
+        roleRepository.save(role);
+    }
+
+    @Test
+    void addAnnouncementAdminRole() {
+        Role role = new Role();
+        role.setName("公告管理员");
+        role.setDescription("允许获取所有公告、公告增删、公告修改。");
+        role.setPermissions(Set.of(
+                Permission.ANNOUNCEMENT_GET_ALL,
+                Permission.ANNOUNCEMENT_ADD,
+                Permission.ANNOUNCEMENT_UPDATE,
+                Permission.ANNOUNCEMENT_DELETE
+        ));
         roleRepository.save(role);
     }
 }
