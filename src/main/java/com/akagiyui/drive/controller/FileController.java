@@ -86,7 +86,7 @@ public class FileController {
      * @param id 文件id
      * @return 文件流
      */
-    @GetMapping("/{id}/download")
+    @GetMapping("/{id}/download/single")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String id) {
         // todo 权限校验
 
@@ -111,7 +111,7 @@ public class FileController {
      *
      * @param id 文件id
      */
-    @GetMapping("/{id}/download/multipart")
+    @GetMapping("/{id}/download")
     public ResponseEntity<StreamingResponseBody> test(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         // 读取文件
         FileInfo fileInfo = fileInfoService.getFileInfo(id);
