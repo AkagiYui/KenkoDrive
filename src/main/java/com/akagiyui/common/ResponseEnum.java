@@ -71,6 +71,10 @@ public enum ResponseEnum {
      * 文件格式不支持
      */
     FILE_FORMAT_NOT_SUPPORT(10014, "File format not support"),
+    /**
+     * 文件夹已存在
+     */
+    FOLDER_EXIST(10015, "Folder exist"),
     ;
 
     /**

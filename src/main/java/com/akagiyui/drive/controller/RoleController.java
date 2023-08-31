@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 角色 控制器
+ *
  * @author AkagiYui
  */
 @RestController
@@ -21,6 +23,8 @@ public class RoleController {
 
     /**
      * 获取角色信息
+     *
+     * @return 角色信息 列表
      */
     @RequestMapping({"/", ""})
     @PreAuthorize("permitAll()")
