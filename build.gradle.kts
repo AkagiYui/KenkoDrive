@@ -41,9 +41,9 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")  // Undertow
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
-    implementation("cn.hutool:hutool-core:${hutoolVersion}")  // Hutool 核心工具包
-    implementation("cn.hutool:hutool-crypto:${hutoolVersion}")  // Hutool 加解密
-    implementation("cn.hutool:hutool-jwt:${hutoolVersion}")  // Hutool JWT
+    implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
+    implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加解密
+    implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
     implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存

@@ -39,7 +39,7 @@ public class ConfigServiceImpl implements ConfigService {
      * @param defaultValueSupplier 默认值生产者
      * @return 配置项值
      */
-    private Boolean findBoolean(String key, Supplier<Boolean> defaultValueSupplier) {
+    private boolean findBoolean(String key, Supplier<Boolean> defaultValueSupplier) {
         return findByKey(key).map(Boolean::parseBoolean).orElseGet(defaultValueSupplier);
     }
 

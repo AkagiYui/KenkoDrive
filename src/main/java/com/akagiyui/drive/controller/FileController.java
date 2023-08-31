@@ -87,6 +87,7 @@ public class FileController {
 
     /**
      * 断点续传文件下载
+     *
      * @param id 文件id
      */
     @GetMapping("/{id}/download/multipart")
@@ -144,6 +145,7 @@ public class FileController {
 
     /**
      * 删除文件
+     *
      * @param id 文件id
      * @return 是否成功
      */
