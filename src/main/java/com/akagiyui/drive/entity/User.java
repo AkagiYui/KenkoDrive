@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     /**
      * 用户名
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     /**
@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     /**
      * 邮箱
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     /**
@@ -63,4 +63,5 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private List<Role> roles;
+
 }
