@@ -39,7 +39,12 @@ public class FileInfoServiceImpl implements FileInfoService {
     public FileInfo getFileInfo(String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
-    
+
+    @Override
+    public FileInfo getFileInfoListByHash(String hash) {
+        return fileInfoRepository.getFirstByHash(hash);
+    }
+
     private FileInfo getFileInfoWithoutCache(String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }

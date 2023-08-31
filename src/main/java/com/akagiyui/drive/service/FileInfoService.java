@@ -16,6 +16,14 @@ public interface FileInfoService {
      */
      FileInfo getFileInfo(String id);
 
+    /**
+     * 根据hash获取文件信息
+     *
+     * @param hash 文件hash
+     * @return 文件信息
+     */
+     FileInfo getFileInfoListByHash(String hash);
+
      /**
       * 保存文件
       */
