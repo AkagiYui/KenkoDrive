@@ -28,6 +28,11 @@ public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
      */
     boolean existsByHash(String hash);
 
+    /**
+     * 记录一次下载
+     *
+     * @param id 文件ID
+     */
     @Query("update FileInfo f set f.downloadCount = f.downloadCount + 1 where f.id = ?1")
     void recordDownload(String id);
 }

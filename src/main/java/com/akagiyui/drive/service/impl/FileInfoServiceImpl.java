@@ -9,6 +9,8 @@ import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.repository.FileInfoRepository;
 import com.akagiyui.drive.service.FileInfoService;
 import com.akagiyui.drive.service.StorageService;
+import com.akagiyui.drive.service.UserFileService;
+import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -34,6 +36,12 @@ public class FileInfoServiceImpl implements FileInfoService {
     @Resource
     private StorageService storageService;
 
+    @Resource
+    private UserFileService userFileService;
+
+    @Resource
+    private UserService userService;
+
     @Override
     @Cacheable(value = CacheConstants.FILE_INFO, key = "#id")
     public FileInfo getFileInfo(String id) {
@@ -53,6 +61,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     public List<FileInfo> saveFile(List<MultipartFile> files) {
         List<FileInfo> fileInfos = new ArrayList<>();
         for (MultipartFile file : files) {
+            // 读取文件信息
             String filename = file.getOriginalFilename();
             long fileSize = file.getSize();
             String contentType = file.getContentType();
@@ -67,25 +76,31 @@ public class FileInfoServiceImpl implements FileInfoService {
             Digester digester = new Digester(DigestAlgorithm.MD5);
             String hash = digester.digestHex(fileBytes);
 
-            if (fileInfoRepository.existsByHash(hash)) {
-                log.info("文件已存在，hash: {}", hash);
-                fileInfos.add(fileInfoRepository.getFirstByHash(hash));
-                continue;
+            // 文件未存在
+            if (!fileInfoRepository.existsByHash(hash)) {
+                // 新增文件记录
+                FileInfo fileInfo = new FileInfo();
+                fileInfo.setName(filename);
+                fileInfo.setSize(fileSize);
+                fileInfo.setType(contentType);
+                fileInfo.setHash(hash);
+                fileInfo.setStorageKey(hash); // todo 直接使用hash作为key可能不太好？
+                fileInfo.setDownloadCount(0L);
+                fileInfoRepository.save(fileInfo);
+
+                // 保存二进制内容
+                storageService.saveFile(fileInfo.getStorageKey(), fileBytes);
+            } else {
+                // 文件已存在
+                log.debug("文件已存在，hash: {}", hash);
             }
 
-            FileInfo fileInfo = new FileInfo();
-            fileInfo.setName(filename);
-            fileInfo.setSize(fileSize);
-            fileInfo.setType(contentType);
-            fileInfo.setHash(hash);
-            fileInfo.setStorageKey(hash); // todo 直接使用hash作为key可能不太好？
-            fileInfo.setDownloadCount(0L);
-            fileInfo.setRefCount(0L);
-            fileInfoRepository.save(fileInfo);
-            fileInfos.add(fileInfoRepository.getFirstByHash(hash));
+            // 添加用户与文件的关联记录
+            FileInfo fileInfo = fileInfoRepository.getFirstByHash(hash);
+            userFileService.addAssociation(userService.getUser(), fileInfo, null);
 
-            // 保存文件
-            storageService.saveFile(fileInfo.getStorageKey(), fileBytes);
+            // 记录返回结果
+            fileInfos.add(fileInfo);
         }
         return fileInfos;
     }
