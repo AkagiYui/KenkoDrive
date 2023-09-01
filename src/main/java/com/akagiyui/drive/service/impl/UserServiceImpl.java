@@ -14,6 +14,7 @@ import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
 import com.akagiyui.drive.model.request.RegisterConfirmRequest;
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
 import com.akagiyui.drive.repository.UserRepository;
+import com.akagiyui.drive.service.ConfigService;
 import com.akagiyui.drive.service.MailService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
@@ -65,6 +66,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     @Lazy
     PasswordEncoder passwordEncoder;
+
+    @Resource
+    private ConfigService configService;
 
     @Override
     @Cacheable(value = CacheConstants.USER_BY_ID, key = "#id")
@@ -161,6 +165,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest) {
+        if (!configService.isRegisterEnabled()) {
+            throw new CustomException(ResponseEnum.REGISTER_DISABLED);
+        }
+
         // 检查该邮箱是否在 redis 中等待验证
         String redisKey = "emailVerifyCode:" + verifyRequest.getEmail();
         if (redisCache.hasKey(redisKey)) {

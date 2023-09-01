@@ -75,6 +75,10 @@ public enum ResponseEnum {
      * 文件夹已存在
      */
     FOLDER_EXIST(10015, "Folder exist"),
+    /**
+     * 注册已关闭
+     */
+    REGISTER_DISABLED(10016, "Register disabled"),
     ;
 
     /**
