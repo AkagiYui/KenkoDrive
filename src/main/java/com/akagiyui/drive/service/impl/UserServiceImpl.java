@@ -16,6 +16,7 @@ import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
 import com.akagiyui.drive.repository.UserRepository;
 import com.akagiyui.drive.service.ConfigService;
 import com.akagiyui.drive.service.MailService;
+import com.akagiyui.drive.service.RoleService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private ConfigService configService;
 
+    @Resource
+    private RoleService roleService;
+
     @Override
     @Cacheable(value = CacheConstants.USER_BY_ID, key = "#id")
     public User findUserById(String id) {
@@ -119,6 +123,7 @@ public class UserServiceImpl implements UserService {
         User realUser = user.toUser();
         realUser.setPassword(encryptPassword(user.getUsername(), user.getPassword()));
         realUser.setDisabled(false);
+        realUser.setRoles(roleService.getAllDefaultRoles());
 
         repository.save(realUser);
         return true;

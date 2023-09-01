@@ -42,6 +42,13 @@ public class Role extends BaseEntity {
     private Boolean disabled;
 
     /**
+     * 是否自动为新用户添加该角色
+     */
+    @Column(nullable = false)
+    @ColumnDefault("false")
+    private Boolean isDefault;
+
+    /**
      * 角色权限
      */
     @Convert(converter = Permission.PermissionConverter.class)

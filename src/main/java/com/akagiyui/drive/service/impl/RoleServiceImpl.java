@@ -1,5 +1,6 @@
 package com.akagiyui.drive.service.impl;
 
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.model.response.RoleInfoResponse;
 import com.akagiyui.drive.repository.RoleRepository;
 import com.akagiyui.drive.service.RoleService;
@@ -25,4 +26,10 @@ public class RoleServiceImpl implements RoleService {
     public List<RoleInfoResponse> getAllRoles() {
         return RoleInfoResponse.fromRoleList(roleRepository.findAll());
     }
+
+    @Override
+    public List<Role> getAllDefaultRoles() {
+        return roleRepository.findAllByIsDefaultIsTrue();
+    }
+
 }
