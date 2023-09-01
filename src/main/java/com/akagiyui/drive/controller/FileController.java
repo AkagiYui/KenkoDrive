@@ -1,8 +1,15 @@
 package com.akagiyui.drive.controller;
 
+import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.FileInfo;
+import com.akagiyui.drive.model.Permission;
+import com.akagiyui.drive.model.response.FolderContentResponse;
+import com.akagiyui.drive.model.response.FolderResponse;
+import com.akagiyui.drive.model.response.UserFileResponse;
 import com.akagiyui.drive.service.FileInfoService;
+import com.akagiyui.drive.service.FolderService;
 import com.akagiyui.drive.service.StorageService;
+import com.akagiyui.drive.service.UserFileService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +18,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -50,8 +58,21 @@ public class FileController {
      * @return 文件信息
      */
     @PostMapping({"", "/"})
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
     public List<FileInfo> upload(@RequestParam("file") List<MultipartFile> files) {
         return fileInfoService.saveFile(files);
+    }
+
+    /**
+     * 是否已存在文件
+     *
+     * @param hash 文件hash
+     * @return 是否已存在
+     */
+    @GetMapping("/exist/{hash}")
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
+    public boolean uploadStatus(@PathVariable String hash) {
+        return fileInfoService.existByHash(hash);
     }
 
     /**

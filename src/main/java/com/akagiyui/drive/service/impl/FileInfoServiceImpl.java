@@ -53,6 +53,11 @@ public class FileInfoServiceImpl implements FileInfoService {
         return fileInfoRepository.getFirstByHash(hash);
     }
 
+    @Override
+    public boolean existByHash(String hash) {
+        return fileInfoRepository.existsByHash(hash);
+    }
+
     private FileInfo getFileInfoWithoutCache(String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }

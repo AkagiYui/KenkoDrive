@@ -7,6 +7,8 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.List;
+
 /**
  * 文件夹 实体
  *
@@ -56,6 +58,19 @@ public class Folder extends BaseEntity {
             return "/" + name;
         } else {
             return parent.getPath() + "/" + name;
+        }
+    }
+
+    /**
+     * 获取层级路径列表
+     */
+    public List<String> getPathList() {
+        if (inRoot()) {
+            return List.of(name);
+        } else {
+            List<String> pathList = parent.getPathList();
+            pathList.add(name);
+            return pathList;
         }
     }
 }

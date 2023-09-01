@@ -25,6 +25,14 @@ public interface FileInfoService {
      FileInfo getFileInfoListByHash(String hash);
 
      /**
+      * 根据hash判断文件是否存在
+      *
+      * @param hash 文件hash
+      * @return 文件是否存在
+      */
+     boolean existByHash(String hash);
+
+     /**
       * 保存文件
       */
      List<FileInfo> saveFile(List<MultipartFile> files);
