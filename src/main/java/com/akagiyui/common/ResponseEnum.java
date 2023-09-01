@@ -79,6 +79,10 @@ public enum ResponseEnum {
      * 注册已关闭
      */
     REGISTER_DISABLED(10016, "Register disabled"),
+    /**
+     * 任务已存在
+     */
+    TASK_EXIST(10017, "Task exist"),
     ;
 
     /**

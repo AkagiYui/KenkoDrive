@@ -51,4 +51,19 @@ public interface ConfigService {
      * 设置 文件分片大小
      */
     int setFileUploadChunkSize(int chunkSize);
+
+    /**
+     * 全局文件上传大小限制 键名
+     */
+    String FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize";
+
+    /**
+     * 全局文件上传大小限制，单位：字节，默认：100MB
+     */
+    long getFileUploadMaxSize();
+
+    /**
+     * 设置 全局文件上传大小限制
+     */
+    long setFileUploadMaxSize(long maxSize);
 }

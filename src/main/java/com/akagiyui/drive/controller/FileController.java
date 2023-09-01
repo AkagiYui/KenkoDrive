@@ -3,13 +3,11 @@ package com.akagiyui.drive.controller;
 import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.FileInfo;
 import com.akagiyui.drive.model.Permission;
+import com.akagiyui.drive.model.request.PreUploadRequest;
 import com.akagiyui.drive.model.response.FolderContentResponse;
 import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.model.response.UserFileResponse;
-import com.akagiyui.drive.service.FileInfoService;
-import com.akagiyui.drive.service.FolderService;
-import com.akagiyui.drive.service.StorageService;
-import com.akagiyui.drive.service.UserFileService;
+import com.akagiyui.drive.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +17,7 @@ import org.springframework.http.HttpRange;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
@@ -51,6 +50,9 @@ public class FileController {
     @Resource
     private UserFileService userFileService;
 
+    @Resource
+    private UploadService uploadService;
+
     /**
      * 上传文件
      *
@@ -73,6 +75,18 @@ public class FileController {
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     public boolean uploadStatus(@PathVariable String hash) {
         return fileInfoService.existByHash(hash);
+    }
+
+    /**
+     * 请求上传文件
+     *
+     * @param request 请求内容
+     * @return 是否成功
+     */
+    @PostMapping("/upload/request")
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
+    public Boolean uploadRequest(@RequestBody @Validated PreUploadRequest request) {
+        return uploadService.requestUpload(request);
     }
 
     /**

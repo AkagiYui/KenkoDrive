@@ -55,6 +55,17 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     /**
+     * 通过配置项键查找配置项值，并转换为长整数
+     *
+     * @param key                  配置项键
+     * @param defaultValueSupplier 默认值生产者
+     * @return 配置项值
+     */
+    private long findLong(String key, Supplier<Long> defaultValueSupplier) {
+        return findByKey(key).map(Long::parseLong).orElseGet(defaultValueSupplier);
+    }
+
+    /**
      * 保存配置项
      *
      * @param key   配置项键
@@ -72,6 +83,17 @@ public class ConfigServiceImpl implements ConfigService {
      * @param value 配置项值
      */
     private void save(String key, int value) {
+        KeyValueConfig keyValueConfig = new KeyValueConfig().setConfigKey(key).setConfigValue("" + value);
+        configRepository.save(keyValueConfig);
+    }
+
+    /**
+     * 保存配置项
+     *
+     * @param key   配置项键
+     * @param value 配置项值
+     */
+    private void save(String key, long value) {
         KeyValueConfig keyValueConfig = new KeyValueConfig().setConfigKey(key).setConfigValue("" + value);
         configRepository.save(keyValueConfig);
     }
@@ -113,5 +135,18 @@ public class ConfigServiceImpl implements ConfigService {
     public int setFileUploadChunkSize(int chunkSize) {
         save(FILE_UPLOAD_CHUNK_SIZE, chunkSize);
         return chunkSize;
+    }
+
+    @Override
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_MAX_SIZE")
+    public long getFileUploadMaxSize() {
+        return findLong(FILE_UPLOAD_MAX_SIZE, () -> setFileUploadMaxSize(100 * 1024 * 1024));
+    }
+
+    @Override
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_MAX_SIZE")
+    public long setFileUploadMaxSize(long maxSize) {
+        save(FILE_UPLOAD_MAX_SIZE, maxSize);
+        return maxSize;
     }
 }
