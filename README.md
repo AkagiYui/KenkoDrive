@@ -68,7 +68,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](src/main/java/com/akagiyui/drive/repository)
-- [x] AOP 切面编程：[频率控制](src/main/java/com/akagiyui/common/limiter/LimitAspect.java)、[权限校验](src/main/java/com/akagiyui/drive/component/permission/PermissionAspect.java)
+- [x] AOP 切面编程：[频率控制](src/main/java/com/akagiyui/common/limiter/LimitAspect.java)、[权限校验](src/main/java/com/akagiyui/drive/component/permission/PermissionAspect.java)、[请求日志](src/main/java/com/akagiyui/drive/component/RequestLogAspect.java)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
 - [ ] 阿里云 OSS 对象存储
@@ -138,7 +138,10 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [博客园: docker-compose重新启动单个容器](https://www.cnblogs.com/yakniu/p/16982310.html)
 - [博客园: SpringBoot应用程序使用Gradle配置脚本中的版本号](https://www.cnblogs.com/xupeixuan/p/15695652.html)
 - [博客园: Java下载文件，中文名乱码（attachment;filename=中文文件名）](https://www.cnblogs.com/tomcatandjerry/p/11541871.html)
+- [掘金: SpringBoot实现固定、动态定时任务 | 三种实现方式](https://juejin.cn/post/7013234573823705102)
 - [脚本之家: springboot切换使用undertow容器的方式](https://www.jb51.net/article/254623.htm)
+- [知乎: SpringBoot开始定时任务的三种方式](https://zhuanlan.zhihu.com/p/622930121)
+- [知乎: ObjectMapper，别再像个二货一样一直new了！](https://zhuanlan.zhihu.com/p/498705670)
 - [CSDN: 有关HikariPool-1 – Failed to validate connection com.mysql.cj.jdbc.ConnectionImp 错误的产生原因与解决方法](https://blog.csdn.net/qq_45886144/article/details/128984915)
 - [CSDN: 数据库连接池选型 Druid vs HikariCP性能对比](https://blog.csdn.net/weixin_39098944/article/details/109228618)
 - [CSDN: SpringBoot 使用 beforeBodyWrite 实现统一的接口返回类型](https://blog.csdn.net/qq_37170583/article/details/107470337)
@@ -150,5 +153,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: spring常见错误【数据库】idleTimeout is close to or more than maxLifetime, disabling it.](https://blog.csdn.net/qq_26462567/article/details/123982879)
 - [CSDN: spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during v](https://blog.csdn.net/jj89929665/article/details/111387865)
 - [CSDN: 大文件上传下载实现思路，分片、断点续传代码实现，以及webUpload组件](https://blog.csdn.net/weixin_52210557/article/details/124097574)
+- [CSDN: kotlin 中的open关键字](https://blog.csdn.net/weixin_42600398/article/details/114486754)
+- [CSDN: 在SpringBoot中使用AOP获取HttpServletRequest、HttpSession 内容](https://blog.csdn.net/fishinhouse/article/details/79896971)
 - [简书: Spring Boot - 数据校验](https://www.jianshu.com/p/e69a1f187482)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
