@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 文件信息接口实现类
@@ -122,5 +123,10 @@ public class FileInfoServiceImpl implements FileInfoService {
         FileInfo fileInfo = getFileInfoWithoutCache(id);
         storageService.deleteFile(fileInfo.getStorageKey());
         fileInfoRepository.delete(fileInfo);
+    }
+
+    @Override
+    public Stream<FileInfo> getAllFileInfo() {
+        return fileInfoRepository.findAllByOrderByUpdateTimeAsc();
     }
 }

@@ -50,9 +50,9 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 分片上传
 - [x] [分片下载](src/main/java/com/akagiyui/drive/controller/FileController.java)
 - [ ] 文件秒传
-- [ ] 相同文件合并
+- [x] 相同文件合并（在上传时会检测）
 - [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
-- [ ] 定时任务
+- [x] [定时任务](src/main/java/com/akagiyui/drive/task/RemoveUnusedFileTask.java)
 
 ## 技术栈
 

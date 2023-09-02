@@ -44,4 +44,9 @@ public class UserFileServiceImpl implements UserFileService {
         User user = userService.getUser();
         return userFileRepository.findByUserIdAndFolderId(user.getId(), folderId);
     }
+
+    @Override
+    public boolean existByFileId(String fileId) {
+        return userFileRepository.existsByFileInfoId(fileId);
+    }
 }

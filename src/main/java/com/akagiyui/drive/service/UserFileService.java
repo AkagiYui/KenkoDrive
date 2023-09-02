@@ -23,4 +23,9 @@ public interface UserFileService {
      * @param folderId 文件夹ID
      */
     List<UserFile> getFiles(String folderId);
+
+    /**
+     * 判断文件是否有用户关联
+     */
+    boolean existByFileId(String fileId);
 }

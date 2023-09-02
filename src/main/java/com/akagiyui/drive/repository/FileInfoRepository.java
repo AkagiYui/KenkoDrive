@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.stream.Stream;
+
 /**
  * 文件信息操作接口
  *
@@ -35,4 +37,11 @@ public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
      */
     @Query("update FileInfo f set f.downloadCount = f.downloadCount + 1 where f.id = ?1")
     void recordDownload(String id);
+
+    /**
+     * 获取所有文件信息，按更新时间升序，优先遍历长时间未更新的文件
+     *
+     * @return 文件信息流
+     */
+    Stream<FileInfo> findAllByOrderByUpdateTimeAsc();
 }

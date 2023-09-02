@@ -4,6 +4,7 @@ import com.akagiyui.drive.entity.FileInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * 文件信息接口
@@ -46,4 +47,9 @@ public interface FileInfoService {
      * 删除文件
      */
     void deleteFile(String id);
+
+    /**
+     * 获取所有文件信息
+     */
+    Stream<FileInfo> getAllFileInfo();
 }
