@@ -52,4 +52,9 @@ public interface FileInfoService {
      * 获取所有文件信息
      */
     Stream<FileInfo> getAllFileInfo();
+
+    /**
+     * 添加文件信息
+     */
+    void addFileInfo(FileInfo fileInfo);
 }

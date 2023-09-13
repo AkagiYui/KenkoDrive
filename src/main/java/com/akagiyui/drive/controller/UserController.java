@@ -1,6 +1,6 @@
 package com.akagiyui.drive.controller;
 
-import com.akagiyui.common.limiter.Limit;
+import com.akagiyui.drive.component.limiter.Limit;
 import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.Permission;

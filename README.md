@@ -47,7 +47,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] [邮箱验证码（Redis）](src/main/java/com/akagiyui/drive/service/impl/MailServiceImpl.java)
 - [ ] 图片验证码
 - [x] [断点续传](src/main/java/com/akagiyui/drive/controller/FileController.java)
-- [ ] 分片上传
+- [x] [分片上传](src/main/java/com/akagiyui/drive/service/UploadService.java)
 - [x] [分片下载](src/main/java/com/akagiyui/drive/controller/FileController.java)
 - [ ] 文件秒传
 - [x] 相同文件合并（在上传时会检测）
@@ -142,6 +142,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [脚本之家: springboot切换使用undertow容器的方式](https://www.jb51.net/article/254623.htm)
 - [知乎: SpringBoot开始定时任务的三种方式](https://zhuanlan.zhihu.com/p/622930121)
 - [知乎: ObjectMapper，别再像个二货一样一直new了！](https://zhuanlan.zhihu.com/p/498705670)
+- [哔哩哔哩: 【java工程师必知】SpringBoot Validation入参校验国际化](https://www.bilibili.com/video/av742302746/)
 - [CSDN: 有关HikariPool-1 – Failed to validate connection com.mysql.cj.jdbc.ConnectionImp 错误的产生原因与解决方法](https://blog.csdn.net/qq_45886144/article/details/128984915)
 - [CSDN: 数据库连接池选型 Druid vs HikariCP性能对比](https://blog.csdn.net/weixin_39098944/article/details/109228618)
 - [CSDN: SpringBoot 使用 beforeBodyWrite 实现统一的接口返回类型](https://blog.csdn.net/qq_37170583/article/details/107470337)

@@ -1,4 +1,4 @@
-package com.akagiyui.common.limiter;
+package com.akagiyui.drive.component.limiter;
 
 import com.akagiyui.common.exception.TooManyRequestsException;
 import com.google.common.collect.Maps;
@@ -29,7 +29,7 @@ public class LimitAspect {
      */
     private final Map<String, RateLimiter> limitMap = Maps.newConcurrentMap();
 
-    @Around("@annotation(com.akagiyui.common.limiter.Limit)")
+    @Around("@annotation(com.akagiyui.drive.component.limiter.Limit)")
     public Object around(@NotNull ProceedingJoinPoint joinPoint) throws Throwable {
         // 获取方法签名
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

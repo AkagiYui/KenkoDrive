@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
@@ -75,6 +76,7 @@ public class CustomExceptionHandler {
             MissingRequestHeaderException.class, // 缺少请求头
             MaxUploadSizeExceededException.class, // 文件过大
             MethodArgumentNotValidException.class, // 参数校验异常
+            MultipartException.class, // 文件上传异常
     })
     public ResponseResult<?> badRequestException(Exception e) {
         // 目前可预见的是 JSON 解析错误

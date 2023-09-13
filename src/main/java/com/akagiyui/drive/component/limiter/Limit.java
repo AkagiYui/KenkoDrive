@@ -1,4 +1,4 @@
-package com.akagiyui.common.limiter;
+package com.akagiyui.drive.component.limiter;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;

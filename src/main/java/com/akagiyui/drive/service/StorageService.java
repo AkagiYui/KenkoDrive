@@ -1,12 +1,17 @@
 package com.akagiyui.drive.service;
 
+import com.akagiyui.drive.model.StorageFile;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.scheduling.annotation.Async;
 
 import java.io.OutputStream;
 
 /**
- * 存储服务接口
+ * 存储 服务接口
+ * <p>
+ *     存储服务是一个 Key-Value 存储服务，Key 为文件名，Value 为文件内容
+ *     {key: String, value: byte[]/Stream}
+ * </p>
  *
  * @author AkagiYui
  */
@@ -49,4 +54,16 @@ public interface StorageService {
      */
     @Async
     void deleteFile(String key);
+
+    /**
+     * 存储分片
+     */
+    void saveChunk(String userId, String fileHash, int chunkIndex, byte[] content);
+
+    /**
+     * 合并分片
+     *
+     * @return
+     */
+    StorageFile mergeChunk(String userId, String fileHash, int chunkCount);
 }

@@ -129,4 +129,9 @@ public class FileInfoServiceImpl implements FileInfoService {
     public Stream<FileInfo> getAllFileInfo() {
         return fileInfoRepository.findAllByOrderByUpdateTimeAsc();
     }
+
+    @Override
+    public void addFileInfo(FileInfo fileInfo) {
+        fileInfoRepository.save(fileInfo);
+    }
 }

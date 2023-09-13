@@ -10,6 +10,7 @@ import com.akagiyui.drive.model.response.UserFileResponse;
 import com.akagiyui.drive.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -87,6 +88,21 @@ public class FileController {
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     public Boolean uploadRequest(@RequestBody @Validated PreUploadRequest request) {
         return uploadService.requestUpload(request);
+    }
+
+    /**
+     * 上传文件分片
+     */
+    @PostMapping("/upload/{hash}/chunk")
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
+    public Boolean uploadChunk(
+            @PathVariable("hash") String fileHash,
+            @RequestParam("file") MultipartFile chunk,
+            @RequestParam("hash") String chunkHash,
+            @RequestParam("index") @Min(1) int chunkIndex
+    ) {
+        uploadService.uploadChunk(fileHash, chunk, chunkHash, chunkIndex);
+        return true;
     }
 
     /**

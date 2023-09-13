@@ -83,6 +83,14 @@ public enum ResponseEnum {
      * 任务已存在
      */
     TASK_EXIST(10017, "Task exist"),
+    /**
+     * 校验失败
+     */
+    VERIFY_FAILED(10018, "Verify failed"),
+    /**
+     * 任务不存在
+     */
+    TASK_NOT_FOUND(10019, "Task not found"),
     ;
 
     /**

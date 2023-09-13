@@ -1,8 +1,10 @@
 package com.akagiyui.drive.model;
 
 import com.akagiyui.drive.model.request.PreUploadRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
@@ -16,6 +18,7 @@ import java.util.List;
  */
 @Data
 @Accessors(chain = true)
+@NoArgsConstructor
 public class ChunkedUploadInfo implements Serializable {
     /**
      * 整个文件hash
@@ -57,16 +60,17 @@ public class ChunkedUploadInfo implements Serializable {
      */
     @Data
     @AllArgsConstructor
-    static class Chunk implements Serializable {
+    @NoArgsConstructor
+    public static class Chunk implements Serializable {
         /**
          * 分片序号
          */
-        private final int index;
+        private int index;
 
         /**
          * 分片大小
          */
-        private final int size;
+        private int size;
 
         /**
          * 分片hash
@@ -96,6 +100,7 @@ public class ChunkedUploadInfo implements Serializable {
     /**
      * 是否上传完成
      */
+    @JsonIgnore
     public boolean isUploadFinish() {
         for (Chunk chunk : chunks) {
             if (!chunk.isCheckSuccess()) {
