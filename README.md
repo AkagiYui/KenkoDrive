@@ -2,11 +2,15 @@
 
 计划作为毕业设计，立项于 2023年5月31日。项目整体结构清晰，职责明确，注释全面，开箱即用。
 
+GitHub仓库：[github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)
+
+GitLink中国大陆仓库：[gitlink.org.cn/AkagiYui/KenkoDrive](https://gitlink.org.cn/AkagiYui/KenkoDrive)
+
 在线演示地址：[drive.akagiyui.com](https://drive.akagiyui.com)
 
 API 文档：https://apifox.com/apidoc/project-2811497
 
-前端仓库：[KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue)
+前端仓库：[KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue)
 
 ## 用户功能一览
 
@@ -27,6 +31,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 用户登录地理位置统计
 - [ ] 文件类型统计
 - [ ] 流量统计
+- [ ] 在线解压
+- [ ] 批量打包下载
 - [ ] 敏感内容审查
 - [ ] 缩略图生成
 - [ ] 系统告警通知
@@ -122,12 +128,10 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [Drone官方文档](https://docs.drone.io/)
 - [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
-
 - [柏码知识库](https://itbaima.net/document)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Spring 框架缓存故障自动切换](https://kyon.life/post/dynamic-switch-cache-in-spring/)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)
-
 - [GitHub: Improve CVE-2023-34035 detection](https://github.com/spring-projects/spring-security/issues/13568)
 - [Stack Overflow: How to intercept a RequestRejectedException in Spring?](https://stackoverflow.com/a/75338927/19990931)
 - [Stack Overflow: Map enum in JPA with fixed values?](https://stackoverflow.com/questions/2751733/map-enum-in-jpa-with-fixed-values)
@@ -158,3 +162,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: 在SpringBoot中使用AOP获取HttpServletRequest、HttpSession 内容](https://blog.csdn.net/fishinhouse/article/details/79896971)
 - [简书: Spring Boot - 数据校验](https://www.jianshu.com/p/e69a1f187482)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
+
+## 活跃数据
+
+![Alt](https://repobeats.axiom.co/api/embed/0ed4941f9e91671fd7d675d4ee71c21c1c497a85.svg "Repobeats analytics image")
