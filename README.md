@@ -36,6 +36,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 敏感内容审查
 - [ ] 缩略图生成
 - [ ] 系统告警通知
+- [ ] 第三方登录
+- [ ] 增值服务
 
 ## 技术功能一览
 
@@ -59,6 +61,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] 相同文件合并（在上传时会检测）
 - [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
 - [x] [定时任务](src/main/java/com/akagiyui/drive/task/RemoveUnusedFileTask.java)
+- [ ] OAuth2.0
+- [ ] 对接支付宝
 
 ## 技术栈
 

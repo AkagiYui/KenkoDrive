@@ -29,7 +29,7 @@ public class LocalStorageServiceImpl implements StorageService {
     @PostConstruct
     public void init() {
         // 检查根目录是否存在，不存在则创建
-        log.debug("root dir: " + root);
+        log.debug("Local storage root dir: " + root);
         File rootDir = new File(root);
         if (!rootDir.exists()) {
             if (!rootDir.mkdirs()) {
