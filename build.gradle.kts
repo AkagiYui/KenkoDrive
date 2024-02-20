@@ -1,8 +1,8 @@
 plugins {
     java
-    id("org.springframework.boot") version "3.1.2" // Spring Boot
-    id("io.spring.dependency-management") version "1.1.2" // 依赖管理
-    kotlin("jvm") version "1.9.0" // Kotlin 支持
+    id("org.springframework.boot") version "3.1.8" // Spring Boot
+    id("io.spring.dependency-management") version "1.1.4" // 依赖管理
+    kotlin("jvm") version "1.9.20" // Kotlin 支持
 }
 
 group = "com.akagiyui"
@@ -25,7 +25,7 @@ repositories {
     mavenCentral()
 }
 
-val hutoolVersion = "5.8.20"
+val hutoolVersion = "5.8.25"
 dependencies {
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
     implementation("org.jetbrains:annotations:24.0.1") // JetBrain 的注解，如 @NonNull
@@ -44,7 +44,7 @@ dependencies {
     implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
-    implementation("com.google.guava:guava:31.1-jre")  // Guava 工具包
+    implementation("com.google.guava:guava:33.0.0-jre")  // Guava 工具包
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存
     compileOnly("org.projectlombok:lombok")  // Lombok

@@ -39,6 +39,13 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 第三方登录
 - [ ] 增值服务
 
+### 文件快递柜
+
+- [ ] 匿名分享：无需注册，直接分享
+- [ ] 支持多种类型：文本，图片，文件
+- [ ] 随机取件码生成
+- [ ] 自定义次数、有效期
+
 ## 技术功能一览
 
 - [x] [请求频率限制（注解 + 令牌桶）](src/main/java/com/akagiyui/drive/component/limiter/LimitAspect.java)
