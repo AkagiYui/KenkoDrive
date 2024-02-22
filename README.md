@@ -89,6 +89,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
 - [ ] 阿里云 OSS 对象存储
+- [ ] WebDAV
 - [ ] 搜索引擎
 - [x] 事务管理
 
