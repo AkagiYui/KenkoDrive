@@ -1,6 +1,9 @@
 package com.akagiyui.drive.component;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class RequestLogAspect {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public RequestLogAspect() {
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY); // 可以序列化私有字段
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false); // 序列化空对象时不抛异常
+    }
 
     @Around("execution(* com.akagiyui.drive.controller.*.*(..))")
     public Object process(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -55,10 +63,18 @@ public class RequestLogAspect {
                     if (param instanceof MultipartFile) {
                         continue; // 忽略文件参数
                     }
-                    paramsBuffer.append(objectMapper.writeValueAsString(param)).append(", ");
+                    String paramStr = objectMapper.writeValueAsString(param);
+                    if (paramStr.length() > 1000) {
+                        paramStr = paramStr.substring(0, 1000) + "...";
+                    }
+                    paramsBuffer.append(paramStr).append(", ");
                 }
                 if (!paramsBuffer.isEmpty()) {
-                    requestLog.append(String.format("\n params -> %s", paramsBuffer.substring(0, paramsBuffer.length() - 2)));
+                    String paramStr =paramsBuffer.substring(0, paramsBuffer.length() - 2);
+                    if (paramStr.length() > 1000) {
+                        paramStr = paramStr.substring(0, 1000) + "...";
+                    }
+                    requestLog.append(String.format("\n params -> %s", paramStr));
                 }
             }
 
@@ -67,7 +83,11 @@ public class RequestLogAspect {
             try {
                 Object returnObj = joinPoint.proceed();
                 if (returnObj != null) {
-                    requestLog.append(String.format("\n result -> %s", objectMapper.writeValueAsString(returnObj)));
+                    String returnStr = objectMapper.writeValueAsString(returnObj);
+                    if (returnStr.length() > 1000) {
+                        returnStr = returnStr.substring(0, 1000) + "...";
+                    }
+                    requestLog.append(String.format("\n result -> %s", returnStr));
                 }
                 return returnObj;
             } catch (Throwable throwable) {
