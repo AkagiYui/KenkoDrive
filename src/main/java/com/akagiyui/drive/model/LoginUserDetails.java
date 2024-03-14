@@ -34,13 +34,13 @@ public class LoginUserDetails implements UserDetails, Serializable {
     /**
      * 权限字符串
      */
-    Set<String> permissions;
+    private Set<String> permissions;
 
     /**
      * 权限列表
      */
     @JsonIgnore
-    Set<GrantedAuthority> authorities;
+    private Set<GrantedAuthority> authorities;
 
     /**
      * 登录用户详情

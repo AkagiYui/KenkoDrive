@@ -59,9 +59,6 @@ dependencies {
     implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
-    implementation("com.google.guava:guava:33.0.0-jre")  // Guava 工具包
-    implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
-    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存
     implementation("com.google.guava:guava:$guavaVersion")  // Guava 工具包
     implementation("net.coobird:thumbnailator:$thumbnailatorVersion")  // 缩略图生成
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")  // Caffeine 内存缓存

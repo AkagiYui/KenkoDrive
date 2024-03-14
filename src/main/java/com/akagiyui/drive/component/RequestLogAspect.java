@@ -52,7 +52,7 @@ public class RequestLogAspect {
                 clientIp = request.getRemoteAddr();
             }
             if (request != null) {
-                requestLog.append(String.format("\n %s request -> %s", clientIp, methodName));
+                requestLog.append(String.format("%n %s request -> %s", clientIp, methodName));
             }
 
             // 获取请求参数
@@ -74,7 +74,7 @@ public class RequestLogAspect {
                     if (paramStr.length() > 1000) {
                         paramStr = paramStr.substring(0, 1000) + "...";
                     }
-                    requestLog.append(String.format("\n params -> %s", paramStr));
+                    requestLog.append(String.format("%n params -> %s", paramStr));
                 }
             }
 
@@ -87,15 +87,15 @@ public class RequestLogAspect {
                     if (returnStr.length() > 1000) {
                         returnStr = returnStr.substring(0, 1000) + "...";
                     }
-                    requestLog.append(String.format("\n result -> %s", returnStr));
+                    requestLog.append(String.format("%n result -> %s", returnStr));
                 }
                 return returnObj;
             } catch (Throwable throwable) {
-                requestLog.append(String.format("\n error -> %s", throwable.getMessage()));
+                requestLog.append(String.format("%n error -> %s", throwable.getMessage()));
                 throw new ServiceThrowable(throwable.getMessage(), throwable);
             } finally {
                 long endTime = System.currentTimeMillis();
-                requestLog.append(String.format("\n time -> %dms", endTime - startTime));
+                requestLog.append(String.format("%n time -> %dms", endTime - startTime));
                 log.debug(requestLog.toString());
             }
 

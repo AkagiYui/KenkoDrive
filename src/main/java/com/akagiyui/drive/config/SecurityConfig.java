@@ -59,7 +59,7 @@ public class SecurityConfig {
     @Resource
     JwtUtils jwtUtils;
 
-    public final static String LOGIN_URL = "/user/token";
+    public static final String LOGIN_URL = "/user/token";
 
     @Bean
     PasswordEncoder passwordEncoder() {

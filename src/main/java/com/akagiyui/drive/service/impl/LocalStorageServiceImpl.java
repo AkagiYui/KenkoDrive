@@ -16,6 +16,7 @@ import java.nio.file.Files;
 
 /**
  * 本地存储服务实现类
+ *
  * @author AkagiYui
  */
 @Service
@@ -31,19 +32,16 @@ public class LocalStorageServiceImpl implements StorageService {
         // 检查根目录是否存在，不存在则创建
         log.debug("Local storage root dir: " + root);
         File rootDir = new File(root);
-        if (!rootDir.exists()) {
-            if (!rootDir.mkdirs()) {
-                throw new RuntimeException("创建根目录失败"); // todo 自定义异常
-            }
+        if (!rootDir.exists() && (!rootDir.mkdirs())) {
+            throw new RuntimeException("创建根目录失败"); // todo 自定义异常
         }
 
         // 检查临时分片目录是否存在，不存在则创建
         tempChunkDir = root + File.separator + "temp";
         File tempChunkDirFile = new File(tempChunkDir);
-        if (!tempChunkDirFile.exists()) {
-            if (!tempChunkDirFile.mkdirs()) {
-                throw new RuntimeException("创建临时分片目录失败"); // todo 自定义异常
-            }
+        if (!tempChunkDirFile.exists() && (!tempChunkDirFile.mkdirs())) {
+            throw new RuntimeException("创建临时分片目录失败"); // todo 自定义异常
+
         }
     }
 
@@ -87,7 +85,9 @@ public class LocalStorageServiceImpl implements StorageService {
             if (!overwrite) {
                 throw new RuntimeException("文件已存在");
             }
-            if (!file.delete()) {
+            try {
+                Files.delete(file.toPath());
+            } catch (IOException e) {
                 throw new RuntimeException("删除文件失败");
             }
         }
@@ -110,7 +110,9 @@ public class LocalStorageServiceImpl implements StorageService {
         if (!file.exists()) {
             throw new CustomException(ResponseEnum.NOT_FOUND);
         }
-        if (!file.delete()) {
+        try {
+            Files.delete(file.toPath());
+        } catch (IOException e) {
             throw new RuntimeException("删除文件失败");
         }
     }
@@ -121,7 +123,9 @@ public class LocalStorageServiceImpl implements StorageService {
         File chunkFile = getChunkFile(userId, fileHash, chunkIndex);
         // 如果分片已存在，则覆盖
         if (chunkFile.exists()) {
-            if (!chunkFile.delete()) {
+            try {
+                Files.delete(chunkFile.toPath());
+            } catch (IOException e) {
                 throw new RuntimeException("删除分片失败");
             }
         }
@@ -139,18 +143,14 @@ public class LocalStorageServiceImpl implements StorageService {
     @NotNull
     private File getChunkFile(String userId, String fileHash, int chunkIndex) {
         File userDir = new File(tempChunkDir + File.separator + userId);
-        if (!userDir.exists()) {
-            if (!userDir.mkdirs()) {
-                throw new RuntimeException("创建用户目录失败");
-            }
+        if (!userDir.exists() && (!userDir.mkdirs())) {
+            throw new RuntimeException("创建用户目录失败");
         }
 
         // 如果 fileHash 目录不存在，则创建
         File fileDir = new File(userDir + File.separator + fileHash);
-        if (!fileDir.exists()) {
-            if (!fileDir.mkdirs()) {
-                throw new RuntimeException("创建文件目录失败");
-            }
+        if (!fileDir.exists() && (!fileDir.mkdirs())) {
+            throw new RuntimeException("创建文件目录失败");
         }
 
         // 分片文件名为分片序号
@@ -176,7 +176,9 @@ public class LocalStorageServiceImpl implements StorageService {
         File targetFile = new File(root + File.separator + fileHash);
         createParentDir(targetFile);
         if (targetFile.exists()) {
-            if (!targetFile.delete()) {
+            try {
+                Files.delete(targetFile.toPath());
+            } catch (IOException e) {
                 throw new RuntimeException("删除文件失败");
             }
         }
@@ -185,9 +187,9 @@ public class LocalStorageServiceImpl implements StorageService {
         }
 
         return new StorageFile()
-                .setHash(fileHash)
-                .setKey(fileHash)
-                .setSize(file.length());
+            .setHash(fileHash)
+            .setKey(fileHash)
+            .setSize(file.length());
     }
 
     @NotNull
@@ -217,14 +219,13 @@ public class LocalStorageServiceImpl implements StorageService {
 
     /**
      * 创建父目录
+     *
      * @param file 文件
      */
     private void createParentDir(File file) {
         File parent = file.getParentFile();
-        if (!parent.exists()) {
-            if (!parent.mkdirs()) {
-                throw new RuntimeException("创建父目录失败");
-            }
+        if (!parent.exists() && (!parent.mkdirs())) {
+            throw new RuntimeException("创建父目录失败");
         }
     }
 }

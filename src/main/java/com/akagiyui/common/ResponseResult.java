@@ -84,7 +84,7 @@ public class ResponseResult<T> {
      *
      * @return 响应体
      */
-    public static ResponseResult<?> success() {
+    public static ResponseResult<Object> success() {
         return success(null);
     }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ import java.util.Objects;
  */
 @Getter
 @AllArgsConstructor
+@Slf4j
 public enum Permission {
     /**
      * 个人文件上传
@@ -81,7 +83,7 @@ public enum Permission {
          */
         @Override
         public String convertToDatabaseColumn(Permission permission) {
-            System.out.println(permission.getName());
+            log.debug(permission.getName());
             return permission.getName();
         }
 

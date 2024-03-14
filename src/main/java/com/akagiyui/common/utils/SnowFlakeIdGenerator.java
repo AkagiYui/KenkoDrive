@@ -16,7 +16,7 @@ public class SnowFlakeIdGenerator implements IdentifierGenerator {
     /**
      * 雪花算法生成器
      */
-    private final static Snowflake SNOWFLAKE = IdUtil.getSnowflake();
+    private static final Snowflake SNOWFLAKE = IdUtil.getSnowflake();
 
     /**
      * 生成ID

@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/server")
-open class ServerController {
+open class ServerController(
     @Value("\${application.version:unknown}")
-    private val version: String? = null
-
-    @Resource
-    private val configService: ConfigService? = null
-
+    private val version: String,
+    private val configService: ConfigService,
+) {
     /**
      * 获取服务器版本
      * @return 服务器版本
@@ -32,7 +30,7 @@ open class ServerController {
      */
     @GetMapping("/config/is-register-enabled")
     open fun getConfig(): Boolean {
-        return configService?.isRegisterEnabled() == true
+        return configService.isRegisterEnabled()
     }
 
     /**
@@ -40,6 +38,6 @@ open class ServerController {
      */
     @PutMapping("/config/is-register-enabled")
     open fun setConfig(@RequestParam enabled: Boolean) {
-        configService?.setRegisterEnabled(enabled)
+        configService.setRegisterEnabled(enabled)
     }
 }
