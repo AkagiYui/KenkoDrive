@@ -21,7 +21,7 @@ public interface AnnouncementService {
      *
      * @param all 是否获取所有公告
      */
-    List<Announcement> getAnnouncementList(Boolean all);
+    List<Announcement> getAnnouncementList(boolean all);
 
     /**
      * 获取用于首页展示的公告列表

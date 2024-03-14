@@ -35,7 +35,7 @@ public class AvatarServiceImpl implements AvatarService {
     /**
      * 允许上传的头像的文件类型
      */
-    public static final List<String> AVATAR_TYPES = new ArrayList<>();
+    private static final List<String> AVATAR_TYPES = new ArrayList<>();
 
     @Resource
     StorageService storageService;

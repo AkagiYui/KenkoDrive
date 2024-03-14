@@ -191,8 +191,10 @@ public class FileController {
         StreamingResponseBody streamBody;
         try {
             InputStream inputStream = fileStream.getInputStream();
-            //noinspection ResultOfMethodCallIgnored
-            inputStream.skip(start);
+            long bytesActuallySkipped = inputStream.skip(start);
+            if (bytesActuallySkipped != start) {
+                throw new IOException("Skipped " + bytesActuallySkipped + " bytes, expected " + start + " bytes");
+            }
             streamBody = outputStream -> {
                 // 异步写入
                 int numberOfBytesToWrite;

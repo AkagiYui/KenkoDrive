@@ -26,7 +26,8 @@ public class EmailVerifyCodeRequest {
     @NotBlank(message = "{username cannot be empty}")
     @NotNull(message = "{username is missing}")
     @Size(min = 3, max = 20, message = "{username length must be between 3 and 20}")
-    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "{username can only contain letters, numbers and underscores}")
+    // ^[a-zA-Z0-9_]+$
+    @Pattern(regexp = "^\\w+$", message = "{username can only contain letters, numbers and underscores}")
     private String username;
 
     /**

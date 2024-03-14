@@ -51,7 +51,7 @@ public class CustomExceptionHandler {
             NoHandlerFoundException.class, // 无路由
             HttpRequestMethodNotSupportedException.class, // 请求方法不支持
     })
-    public ResponseResult<?> noRouteException(Exception ignored) {
+    public ResponseResult<Object> noRouteException(Exception ignored) {
         return ResponseResult.response(NOT_FOUND);
     }
 
@@ -78,7 +78,7 @@ public class CustomExceptionHandler {
             MethodArgumentNotValidException.class, // 参数校验异常
             MultipartException.class, // 文件上传异常
     })
-    public ResponseResult<?> badRequestException(Exception e) {
+    public ResponseResult<Object> badRequestException(Exception e) {
         // 目前可预见的是 JSON 解析错误
         Throwable cause = e.getCause();
         if (cause != null) {
@@ -109,7 +109,7 @@ public class CustomExceptionHandler {
      */
     @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
     @ExceptionHandler(TooManyRequestsException.class) // 请求过快
-    public ResponseResult<?> tooManyRequestsException(TooManyRequestsException ignored) {
+    public ResponseResult<Object> tooManyRequestsException(TooManyRequestsException ignored) {
         return ResponseResult.response(TOO_MANY_REQUESTS);
     }
 
@@ -118,7 +118,7 @@ public class CustomExceptionHandler {
      */
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(CustomException.class)
-    public ResponseResult<?> customException(CustomException e) {
+    public ResponseResult<Object> customException(CustomException e) {
         return ResponseResult.response(e.getStatus());
     }
 
@@ -127,7 +127,7 @@ public class CustomExceptionHandler {
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
-    public ResponseResult<?> unknownException(Exception e) {
+    public ResponseResult<Object> unknownException(Exception e) {
         log.error("Unknown exception", e);
         return ResponseResult.response(INTERNAL_ERROR);
     }

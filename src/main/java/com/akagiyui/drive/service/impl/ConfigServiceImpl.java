@@ -140,7 +140,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_MAX_SIZE")
     public long getFileUploadMaxSize() {
-        return findLong(FILE_UPLOAD_MAX_SIZE, () -> setFileUploadMaxSize(100 * 1024 * 1024));
+        return findLong(FILE_UPLOAD_MAX_SIZE, () -> setFileUploadMaxSize(100L * 1024 * 1024));
     }
 
     @Override

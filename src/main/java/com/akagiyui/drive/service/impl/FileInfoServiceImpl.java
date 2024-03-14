@@ -75,7 +75,7 @@ public class FileInfoServiceImpl implements FileInfoService {
             try {
                 fileBytes = file.getInputStream().readAllBytes();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new CustomException(ResponseEnum.INTERNAL_ERROR);
             }
 
             // 计算文件md5

@@ -3,7 +3,6 @@ package com.akagiyui.common.exception;
 import com.akagiyui.common.ResponseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -12,11 +11,10 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class CustomException extends RuntimeException {
     /**
      * 响应状态枚举
      */
-    private ResponseEnum status;
+    private final ResponseEnum status;
 }

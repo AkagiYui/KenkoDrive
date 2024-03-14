@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 公告信息 响应
@@ -61,6 +60,6 @@ public class AnnouncementDisplayResponse {
     public static List<AnnouncementDisplayResponse> fromAnnouncementList(List<Announcement> announcementList) {
         return announcementList.stream()
                 .map(AnnouncementDisplayResponse::new)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

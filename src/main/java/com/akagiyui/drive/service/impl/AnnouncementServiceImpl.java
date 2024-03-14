@@ -25,7 +25,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> getAnnouncementList(Boolean all) {
+    public List<Announcement> getAnnouncementList(boolean all) {
         if (all) {
             return announcementRepository.findAll();
         } else {

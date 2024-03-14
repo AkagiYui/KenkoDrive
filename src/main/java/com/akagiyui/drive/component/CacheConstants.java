@@ -2,6 +2,7 @@ package com.akagiyui.drive.component;
 
 /**
  * 缓存键名前缀
+ *
  * @author kenko
  */
 public class CacheConstants {
@@ -12,4 +13,7 @@ public class CacheConstants {
     public static final String USER_DETAILS = "user_details";
     public static final String USER_LOGIN_DETAILS = "user_login_details";
     public static final String USER_EXIST = "user-exist";
+
+    private CacheConstants() {
+    }
 }

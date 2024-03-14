@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
 
         // 检查该邮箱是否在 redis 中等待验证
         String redisKey = "emailVerifyCode:" + verifyRequest.getEmail();
-        if (redisCache.hasKey(redisKey)) {
+        if (Objects.equals(Boolean.TRUE, redisCache.hasKey(redisKey))) {
             throw new CustomException(ResponseEnum.EMAIL_EXIST);
         }
         // 检查该邮箱是否已经注册

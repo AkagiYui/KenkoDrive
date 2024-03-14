@@ -75,4 +75,7 @@ public class FileUtil {
     public static String readFileToString(File file) throws IOException {
         return readFileToString(file, "utf-8");
     }
+
+    private FileUtil() {
+    }
 }

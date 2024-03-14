@@ -3,6 +3,7 @@ package com.akagiyui.common.notifier
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.*
 import org.springframework.web.client.RestTemplate
+import java.net.URI
 
 /**
  * Gotify 推送器
@@ -13,7 +14,7 @@ class GotifyPusher(
      * Gotify 服务器地址
      * 例如：http://localhost:8080
      */
-    private val host: String,
+    private var host: String,
     /**
      * Gotify Application API Key
      */
@@ -29,19 +30,24 @@ class GotifyPusher(
      */
     private val restTemplate: RestTemplate
 
+    /**
+     * JSON 对象映射器
+     */
+    private val objectMapper: ObjectMapper
+
     init {
-        if (!host.startsWith("http")) {
-            throw IllegalArgumentException("host must start with http or https")
+        require(host.startsWith("http")) {
+            "host must start with http or https"
         }
-        while (host.endsWith("/")) {
-            host + host.substring(0, host.length - 1)
-        }
+        // 去除末尾的斜杠
+        host = URI.create(host).normalize().toString()
 
         headers = HttpHeaders()
         headers.add("X-Gotify-Key", apiKey)
         headers.contentType = MediaType.APPLICATION_JSON
 
         restTemplate = RestTemplate()
+        objectMapper = ObjectMapper()
     }
 
     /**
@@ -55,8 +61,7 @@ class GotifyPusher(
         title: String,
         message: String,
         priority: Int = 5,
-    ): ResponseEntity<Void> {
-
+    ): ResponseEntity<String> {
         val messageMap = mapOf(
             "message" to message,
             "title" to title,
@@ -64,7 +69,7 @@ class GotifyPusher(
         )
 
         val entity = HttpEntity(
-            ObjectMapper().writeValueAsString(messageMap),
+            objectMapper.writeValueAsString(messageMap),
             headers,
         )
 
@@ -72,7 +77,7 @@ class GotifyPusher(
             "$host/message",
             HttpMethod.POST,
             entity,
-            Void::class.java,
+            String::class.java,
         )
     }
 

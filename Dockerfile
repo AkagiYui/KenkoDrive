@@ -1,5 +1,5 @@
 FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
-MAINTAINER AkagiYui
+LABEL maintainer="AkagiYui"
 
 COPY build/libs/*.jar /app/app.jar
 COPY ./config/.env-prod.yaml /app/.env-prod.yaml
