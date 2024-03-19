@@ -54,7 +54,7 @@ public class LoginUserDetails implements UserDetails, Serializable {
         this.permissions = roles.stream()
                 .map(Role::getPermissions)
                 .flatMap(Collection::stream)
-                .map(Permission::getName)
+                .map(Permission::name)
                 .collect(Collectors.toSet());
     }
 

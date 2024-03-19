@@ -33,7 +33,7 @@ public class PermissionAspect {
 
         // 获取注解中的权限
         Permission[] permissions = requiredPermission.value();
-        Set<String> permissionList = Arrays.stream(permissions).map(Permission::getName).collect(Collectors.toSet());
+        Set<String> permissionList = Arrays.stream(permissions).map(Permission::name).collect(Collectors.toSet());
 
         // 校验权限
         if (!authorities.containsAll(permissionList)) {
