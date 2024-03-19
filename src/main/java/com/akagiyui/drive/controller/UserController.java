@@ -5,10 +5,7 @@ import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.UserFilter;
-import com.akagiyui.drive.model.request.AddUserRequest;
-import com.akagiyui.drive.model.request.EmailVerifyCodeRequest;
-import com.akagiyui.drive.model.request.RegisterConfirmRequest;
-import com.akagiyui.drive.model.request.UpdateUserInfoRequest;
+import com.akagiyui.drive.model.request.*;
 import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.AvatarService;
@@ -206,5 +203,14 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     public Set<String> getRole() {
         return userService.getRole();
+    }
+
+    /**
+     * (管理员)重置密码
+     */
+    @PutMapping("/{id}/password")
+    @RequirePermission(Permission.USER_UPDATE)
+    public boolean resetPassword(@PathVariable String id,@RequestBody @Valid ResetPasswordRequest request) {
+        return userService.resetPassword(id, request.getNewPassword());
     }
 }

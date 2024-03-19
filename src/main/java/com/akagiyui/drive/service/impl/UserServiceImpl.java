@@ -295,7 +295,16 @@ public class UserServiceImpl implements UserService {
     }, allEntries = true)
     public Boolean disable(String id, boolean disabled) {
         User user = findUserByIdWithCache(id);
+        // todo 检查是否为超级管理员
         user.setDisabled(disabled);
+        repository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean resetPassword(String id, String newPassword) {
+        User user = findUserByIdWithCache(id);
+        user.setPassword(encryptPassword(user.getUsername(), newPassword));
         repository.save(user);
         return true;
     }

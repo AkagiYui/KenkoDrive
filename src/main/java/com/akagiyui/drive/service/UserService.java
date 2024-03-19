@@ -131,4 +131,13 @@ public interface UserService extends UserDetailsService {
      * @param disabled 是否禁用
      */
     Boolean disable(String id, boolean disabled);
+
+    /**
+     * 重置密码
+     *
+     * @param id          用户 ID
+     * @param newPassword 新密码
+     * @return 是否成功
+     */
+    boolean resetPassword(String id, String newPassword);
 }

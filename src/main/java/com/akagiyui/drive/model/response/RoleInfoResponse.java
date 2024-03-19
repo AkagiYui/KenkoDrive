@@ -30,12 +30,24 @@ public class RoleInfoResponse {
      */
     private String description;
 
+    /**
+     * 角色是否被禁用
+     */
+    private boolean disabled;
+
     public RoleInfoResponse(Role role) {
         this.id = role.getId();
         this.name = role.getName();
         this.description = role.getDescription();
+        this.disabled = role.getDisabled();
     }
 
+    /**
+     * 从角色列表转换
+     *
+     * @param roles 角色列表
+     * @return 角色信息响应列表
+     */
     public static List<RoleInfoResponse> fromRoleList(List<Role> roles) {
         return roles.stream().map(RoleInfoResponse::new).toList();
     }

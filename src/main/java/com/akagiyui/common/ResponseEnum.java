@@ -91,7 +91,14 @@ public enum ResponseEnum {
      * 任务不存在
      */
     TASK_NOT_FOUND(10019, "Task not found"),
-    ;
+    /**
+     * 角色已存在
+     */
+    ROLE_EXIST(10020, "Role exist"),
+    /**
+     * 权限不存在
+     */
+    PERMISSION_NOT_EXIST(10021, "Permission not exist");
 
     /**
      * 状态码

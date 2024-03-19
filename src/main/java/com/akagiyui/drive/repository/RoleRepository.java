@@ -19,4 +19,12 @@ public interface RoleRepository extends JpaRepository<Role, String> {
      * @return 默认角色列表
      */
     List<Role> findAllByIsDefaultIsTrue();
+
+    /**
+     * 角色名是否存在
+     *
+     * @param name 角色名
+     * @return 是否存在
+     */
+    boolean existsByName(String name);
 }
