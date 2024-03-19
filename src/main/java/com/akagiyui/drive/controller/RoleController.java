@@ -63,6 +63,17 @@ public class RoleController {
     }
 
     /**
+     * 删除角色
+     *
+     * @param id 角色id
+     * @return 是否成功
+     */
+    @DeleteMapping("/{id}")
+    public void deleteRole(@PathVariable("id") String id) {
+        roleService.deleteRole(id);
+    }
+
+    /**
      * 获取所有权限
      *
      * @return 权限列表

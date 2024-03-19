@@ -98,7 +98,12 @@ public enum ResponseEnum {
     /**
      * 权限不存在
      */
-    PERMISSION_NOT_EXIST(10021, "Permission not exist");
+    PERMISSION_NOT_EXIST(10021, "Permission not exist"),
+    /**
+     * 角色不存在
+     */
+    ROLE_NOT_EXIST(10022, "Role not exist")
+    ;
 
     /**
      * 状态码

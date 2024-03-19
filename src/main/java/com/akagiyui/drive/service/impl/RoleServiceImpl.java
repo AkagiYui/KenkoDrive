@@ -78,4 +78,14 @@ public class RoleServiceImpl implements RoleService {
         return true;
     }
 
+    @Override
+    public void deleteRole(String id) {
+        // 检查角色是否存在
+        if (!roleRepository.existsById(id)) {
+            log.warn("角色不存在: {}", id);
+            throw new CustomException(ResponseEnum.ROLE_NOT_EXIST);
+        }
+        roleRepository.deleteById(id);
+    }
+
 }

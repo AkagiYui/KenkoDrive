@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 角色 Service 接口
+ *
  * @author AkagiYui
  */
 public interface RoleService {
@@ -26,8 +27,9 @@ public interface RoleService {
 
     /**
      * 分页查询角色
-     * @param index 页码
-     * @param size 页大小
+     *
+     * @param index  页码
+     * @param size   页大小
      * @param filter 查询条件
      * @return 角色分页
      */
@@ -35,14 +37,23 @@ public interface RoleService {
 
     /**
      * 获取所有权限
+     *
      * @return 权限列表
      */
     List<Permission> getAllPermissions();
 
     /**
      * 添加角色
+     *
      * @param role 角色
      * @return 是否成功
      */
     boolean addRole(AddRoleRequest role);
+
+    /**
+     * 删除角色
+     *
+     * @param id 角色id
+     */
+    void deleteRole(String id);
 }
