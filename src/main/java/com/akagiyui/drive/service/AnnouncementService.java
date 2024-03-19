@@ -14,7 +14,7 @@ public interface AnnouncementService {
     /**
      * 新增公告
      */
-    boolean addAnnouncement(Announcement announcement);
+    void addAnnouncement(Announcement announcement);
 
     /**
      * 获取公告列表

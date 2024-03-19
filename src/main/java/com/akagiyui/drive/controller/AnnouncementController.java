@@ -35,10 +35,10 @@ public class AnnouncementController {
      */
     @PostMapping({"", "/"})
     @RequirePermission(Permission.ANNOUNCEMENT_ADD)
-    public Boolean addAnnouncement(@RequestBody @Validated AddAnnouncementRequest request) {
+    public void addAnnouncement(@RequestBody @Validated AddAnnouncementRequest request) {
         Announcement announcement = request.toAnnouncement();
         announcement.setAuthor(userService.getUser());
-        return announcementService.addAnnouncement(announcement);
+        announcementService.addAnnouncement(announcement);
     }
 
     /**

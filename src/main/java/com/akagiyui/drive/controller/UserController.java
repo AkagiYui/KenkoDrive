@@ -60,8 +60,8 @@ public class UserController {
      */
     @PostMapping
     @RequirePermission(Permission.USER_ADD)
-    boolean add(@Validated @RequestBody AddUserRequest user) {
-        return userService.addUser(user);
+    void add(@Validated @RequestBody AddUserRequest user) {
+        userService.addUser(user);
     }
 
     /**
@@ -97,8 +97,8 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @RequirePermission(Permission.USER_DELETE)
-    public Boolean delete(@PathVariable String id) {
-        return userService.delete(id);
+    public void delete(@PathVariable String id) {
+        userService.delete(id);
     }
 
     /**
@@ -109,8 +109,8 @@ public class UserController {
      */
     @PutMapping("/{id}/disable")
     @RequirePermission(Permission.USER_UPDATE)
-    public Boolean disable(@PathVariable String id, @RequestParam Boolean disabled) {
-        return userService.disable(id, disabled);
+    public void disable(@PathVariable String id, @RequestParam Boolean disabled) {
+        userService.disable(id, disabled);
     }
 
     /**
@@ -122,8 +122,8 @@ public class UserController {
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1)
-    public boolean getEmailVerifyCode(@RequestBody @Valid EmailVerifyCodeRequest verifyRequest) {
-        return userService.sendEmailVerifyCode(verifyRequest);
+    public void getEmailVerifyCode(@RequestBody @Valid EmailVerifyCodeRequest verifyRequest) {
+        userService.sendEmailVerifyCode(verifyRequest);
     }
 
     /**
@@ -134,8 +134,8 @@ public class UserController {
      */
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public boolean confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
-        return userService.confirmRegister(registerConfirmRequest);
+    public void confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
+        userService.confirmRegister(registerConfirmRequest);
     }
 
     /**
@@ -154,8 +154,8 @@ public class UserController {
      */
     @PutMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public boolean updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
-        return userService.updateInfo(userInfo);
+    public void updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
+        userService.updateInfo(userInfo);
     }
 
     /**
@@ -166,8 +166,8 @@ public class UserController {
      */
     @PostMapping("/avatar")
     @PreAuthorize("isAuthenticated()")
-    public boolean updateAvatar(@RequestParam("avatar") MultipartFile avatar) {
-        return avatarService.saveAvatar(avatar);
+    public void updateAvatar(@RequestParam("avatar") MultipartFile avatar) {
+        avatarService.saveAvatar(avatar);
     }
 
     /**
@@ -210,7 +210,7 @@ public class UserController {
      */
     @PutMapping("/{id}/password")
     @RequirePermission(Permission.USER_UPDATE)
-    public boolean resetPassword(@PathVariable String id,@RequestBody @Valid ResetPasswordRequest request) {
-        return userService.resetPassword(id, request.getNewPassword());
+    public void resetPassword(@PathVariable String id,@RequestBody @Valid ResetPasswordRequest request) {
+        userService.resetPassword(id, request.getNewPassword());
     }
 }

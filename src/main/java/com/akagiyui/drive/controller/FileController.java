@@ -86,8 +86,8 @@ public class FileController {
      */
     @PostMapping("/upload/request")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    public Boolean uploadRequest(@RequestBody @Validated PreUploadRequest request) {
-        return uploadService.requestUpload(request);
+    public void uploadRequest(@RequestBody @Validated PreUploadRequest request) {
+        uploadService.requestUpload(request);
     }
 
     /**
@@ -95,14 +95,13 @@ public class FileController {
      */
     @PostMapping("/upload/{hash}/chunk")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    public Boolean uploadChunk(
+    public void uploadChunk(
             @PathVariable("hash") String fileHash,
             @RequestParam("file") MultipartFile chunk,
             @RequestParam("hash") String chunkHash,
             @RequestParam("index") @Min(1) int chunkIndex
     ) {
         uploadService.uploadChunk(fileHash, chunk, chunkHash, chunkIndex);
-        return true;
     }
 
     /**
@@ -224,9 +223,8 @@ public class FileController {
      * @return 是否成功
      */
     @DeleteMapping("/{id}")
-    public boolean deleteFile(@PathVariable String id) {
+    public void deleteFile(@PathVariable String id) {
         // todo 权限校验
         fileInfoService.deleteFile(id);
-        return true;
     }
 }

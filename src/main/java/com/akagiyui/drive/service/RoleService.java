@@ -46,9 +46,8 @@ public interface RoleService {
      * 添加角色
      *
      * @param role 角色
-     * @return 是否成功
      */
-    boolean addRole(AddRoleRequest role);
+    void addRole(AddRoleRequest role);
 
     /**
      * 删除角色

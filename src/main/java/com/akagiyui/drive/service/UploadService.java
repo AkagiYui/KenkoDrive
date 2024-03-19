@@ -12,7 +12,7 @@ public interface UploadService {
     /**
      * 请求文件上传
      */
-    boolean requestUpload(PreUploadRequest preUploadRequest);
+    void requestUpload(PreUploadRequest preUploadRequest);
 
     /**
      * 上传分片

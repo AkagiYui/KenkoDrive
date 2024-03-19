@@ -53,7 +53,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public boolean addRole(AddRoleRequest role) {
+    public void addRole(AddRoleRequest role) {
         // 检查角色名是否重复
         if (roleRepository.existsByName(role.getName())) {
             log.warn("角色名重复: {}", role.getName());
@@ -75,7 +75,6 @@ public class RoleServiceImpl implements RoleService {
             .setDescription(role.getDescription())
             .setPermissions(permissions);
         roleRepository.save(newRole);
-        return true;
     }
 
     @Override

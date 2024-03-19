@@ -19,9 +19,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private AnnouncementRepository announcementRepository;
 
     @Override
-    public boolean addAnnouncement(Announcement announcement) {
+    public void addAnnouncement(Announcement announcement) {
         announcementRepository.save(announcement);
-        return true;
     }
 
     @Override

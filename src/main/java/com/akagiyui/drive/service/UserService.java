@@ -46,16 +46,17 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 新增用户
+     *
      * @param user 用户
      */
-    boolean addUser(AddUserRequest user);
+    void addUser(AddUserRequest user);
 
     /**
      * 删除用户
+     *
      * @param id 用户ID
-     * @return 删除结果
      */
-    boolean delete(String id);
+    void delete(String id);
 
     /**
      * 用户是否存在
@@ -80,14 +81,14 @@ public interface UserService extends UserDetailsService {
     /**
      * 发送邮箱验证码
      */
-    boolean sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest);
+    void sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest);
 
     /**
      * 确认注册
+     *
      * @param registerConfirmRequest 注册确认请求
-     * @return 是否成功
      */
-    boolean confirmRegister(RegisterConfirmRequest registerConfirmRequest);
+    void confirmRegister(RegisterConfirmRequest registerConfirmRequest);
 
     /**
      * 加密密码
@@ -108,10 +109,10 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 更新用户信息
+     *
      * @param userInfo 用户信息
-     * @return 是否成功
      */
-    boolean updateInfo(UpdateUserInfoRequest userInfo);
+    void updateInfo(UpdateUserInfoRequest userInfo);
 
     /**
      * 获取用户权限
@@ -127,17 +128,17 @@ public interface UserService extends UserDetailsService {
 
     /**
      * 启用/禁用用户
-     * @param id 用户 ID
+     *
+     * @param id       用户 ID
      * @param disabled 是否禁用
      */
-    Boolean disable(String id, boolean disabled);
+    void disable(String id, boolean disabled);
 
     /**
      * 重置密码
      *
      * @param id          用户 ID
      * @param newPassword 新密码
-     * @return 是否成功
      */
-    boolean resetPassword(String id, String newPassword);
+    void resetPassword(String id, String newPassword);
 }

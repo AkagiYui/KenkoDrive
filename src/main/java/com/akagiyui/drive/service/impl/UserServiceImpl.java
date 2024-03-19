@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public boolean addUser(AddUserRequest user) {
+    public void addUser(AddUserRequest user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new CustomException(ResponseEnum.USER_EXIST);
         }
@@ -126,7 +126,6 @@ public class UserServiceImpl implements UserService {
         realUser.setRoles(roleService.getAllDefaultRoles());
 
         repository.save(realUser);
-        return true;
     }
 
     @Override
@@ -138,12 +137,11 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public boolean delete(String id) {
+    public void delete(String id) {
         if (!repository.existsById(id)) {
             throw new CustomException(ResponseEnum.NOT_FOUND);
         }
         repository.deleteById(id);
-        return true;
     }
 
     @Override
@@ -169,7 +167,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest) {
+    public void sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest) {
         if (!configService.isRegisterEnabled()) {
             throw new CustomException(ResponseEnum.REGISTER_DISABLED);
         }
@@ -196,11 +194,10 @@ public class UserServiceImpl implements UserService {
         String registerInfoKey = "registerInfo:" + verifyRequest.getEmail();
         redisCache.set(registerInfoKey, verifyRequest);
         redisCache.expire(registerInfoKey, emailVerifyTimeout + 1, TimeUnit.MINUTES);
-        return true;
     }
 
     @Override
-    public boolean confirmRegister(RegisterConfirmRequest registerConfirmRequest) {
+    public void confirmRegister(RegisterConfirmRequest registerConfirmRequest) {
         // 从 redis 取回验证码
         String redisKey = "emailVerifyCode:" + registerConfirmRequest.getEmail();
         String verifyCode = redisCache.get(redisKey);
@@ -225,7 +222,6 @@ public class UserServiceImpl implements UserService {
         user.setDisabled(false);
         try {
             repository.save(user);
-            return true;
         } finally {
             // 删除 redis 中的验证码和注册信息
             redisCache.delete(redisKey);
@@ -258,7 +254,7 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public boolean updateInfo(UpdateUserInfoRequest userInfo) {
+    public void updateInfo(UpdateUserInfoRequest userInfo) {
         User user = getUser();
         if (StringUtils.hasText(userInfo.getNickname())) {
             user.setNickname(userInfo.getNickname());
@@ -267,7 +263,6 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userInfo.getEmail());
         }
         repository.save(user);
-        return true;
     }
 
     @Override
@@ -293,20 +288,18 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public Boolean disable(String id, boolean disabled) {
+    public void disable(String id, boolean disabled) {
         User user = findUserByIdWithCache(id);
         // todo 检查是否为超级管理员
         user.setDisabled(disabled);
         repository.save(user);
-        return true;
     }
 
     @Override
-    public boolean resetPassword(String id, String newPassword) {
+    public void resetPassword(String id, String newPassword) {
         User user = findUserByIdWithCache(id);
         user.setPassword(encryptPassword(user.getUsername(), newPassword));
         repository.save(user);
-        return true;
     }
 
     /**

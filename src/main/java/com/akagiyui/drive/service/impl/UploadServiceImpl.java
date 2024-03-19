@@ -62,7 +62,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public boolean requestUpload(PreUploadRequest preUploadRequest) {
+    public void requestUpload(PreUploadRequest preUploadRequest) {
         // 上传文件大小限制
         long uploadFileSizeLimit = configService.getFileUploadMaxSize();
         if (preUploadRequest.getFilesize() > uploadFileSizeLimit) {
@@ -82,7 +82,6 @@ public class UploadServiceImpl implements UploadService {
 
         // 保存上传信息到redis
         saveInfoToRedis(user.getId(), preUploadRequest.getHash(), chunkedInfo);
-        return true;
     }
 
     @Override

@@ -58,8 +58,8 @@ public class RoleController {
      */
     @PostMapping({"", "/"})
     // todo 权限校验
-    public boolean addRole(@RequestBody AddRoleRequest role) {
-        return roleService.addRole(role);
+    public void addRole(@RequestBody AddRoleRequest role) {
+        roleService.addRole(role);
     }
 
     /**

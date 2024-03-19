@@ -94,7 +94,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public boolean saveAvatar(MultipartFile avatar) {
+    public void saveAvatar(MultipartFile avatar) {
         if (avatar.isEmpty()) {
             throw new CustomException(ResponseEnum.BAD_REQUEST);
         }
@@ -122,8 +122,6 @@ public class AvatarServiceImpl implements AvatarService {
             log.error("Save avatar failed", e);
             throw new CustomException(ResponseEnum.INTERNAL_ERROR);
         }
-
-        return true;
     }
 
     /**

@@ -35,8 +35,8 @@ public interface AvatarService {
 
     /**
      * 保存头像
+     *
      * @param avatar 头像
-     * @return 保存结果
      */
-    boolean saveAvatar(MultipartFile avatar);
+    void saveAvatar(MultipartFile avatar);
 }
