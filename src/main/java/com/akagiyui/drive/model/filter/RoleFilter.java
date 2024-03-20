@@ -10,4 +10,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class RoleFilter {
+    /**
+     * 表达式
+     */
+    private String expression;
 }

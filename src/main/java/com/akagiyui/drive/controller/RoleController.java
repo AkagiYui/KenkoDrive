@@ -3,6 +3,7 @@ package com.akagiyui.drive.controller;
 import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
+import com.akagiyui.drive.model.request.UpdateRoleRequest;
 import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.PermissionResponse;
 import com.akagiyui.drive.model.response.RoleInfoResponse;
@@ -10,6 +11,7 @@ import com.akagiyui.drive.service.RoleService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +35,7 @@ public class RoleController {
      */
     @GetMapping({"", "/"})
     @PreAuthorize("permitAll()")
+    @Transactional
     public PageResponse<RoleInfoResponse> getPage(
         @RequestParam(defaultValue = "0") Integer index,
         @RequestParam(defaultValue = "10") Integer size,
@@ -54,19 +57,18 @@ public class RoleController {
      * 添加角色
      *
      * @param role 角色
-     * @return 是否成功
+     * @return 角色id
      */
     @PostMapping({"", "/"})
     // todo 权限校验
-    public void addRole(@RequestBody AddRoleRequest role) {
-        roleService.addRole(role);
+    public String addRole(@RequestBody AddRoleRequest role) {
+        return roleService.addRole(role);
     }
 
     /**
      * 删除角色
      *
      * @param id 角色id
-     * @return 是否成功
      */
     @DeleteMapping("/{id}")
     public void deleteRole(@PathVariable("id") String id) {
@@ -74,11 +76,35 @@ public class RoleController {
     }
 
     /**
+     * 更新角色
+     *
+     * @param id   角色id
+     * @param role 角色
+     */
+    @PutMapping("/{id}")
+    public void updateRole(@PathVariable("id") String id, @RequestBody UpdateRoleRequest role) {
+        roleService.updateRole(id, role);
+    }
+
+    /**
+     * 设置角色状态
+     *
+     * @param id       角色id
+     * @param disabled 是否禁用
+     */
+    @PutMapping("/{id}/status")
+    public void updateStatus(@PathVariable("id") String id, @RequestParam(required = false) Boolean disabled) {
+        if (disabled != null) {
+            roleService.disable(id, disabled);
+        }
+    }
+
+    /**
      * 获取所有权限
      *
      * @return 权限列表
      */
-    @RequestMapping("/permissions")
+    @GetMapping("/permissions")
     @PreAuthorize("permitAll()")
     public List<PermissionResponse> getPermissions() {
         return PermissionResponse.fromPermissionList(roleService.getAllPermissions());

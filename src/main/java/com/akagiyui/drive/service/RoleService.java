@@ -4,6 +4,7 @@ import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
+import com.akagiyui.drive.model.request.UpdateRoleRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -46,8 +47,9 @@ public interface RoleService {
      * 添加角色
      *
      * @param role 角色
+     * @return 角色id
      */
-    void addRole(AddRoleRequest role);
+    String addRole(AddRoleRequest role);
 
     /**
      * 删除角色
@@ -55,4 +57,20 @@ public interface RoleService {
      * @param id 角色id
      */
     void deleteRole(String id);
+
+    /**
+     * 更新角色
+     *
+     * @param id   角色id
+     * @param role 角色
+     */
+    void updateRole(String id, UpdateRoleRequest role);
+
+    /**
+     * 禁用角色
+     *
+     * @param id       角色id
+     * @param disabled 是否禁用
+     */
+    void disable(String id, boolean disabled);
 }

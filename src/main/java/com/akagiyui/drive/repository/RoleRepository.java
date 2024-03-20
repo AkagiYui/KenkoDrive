@@ -2,6 +2,7 @@ package com.akagiyui.drive.repository;
 
 import com.akagiyui.drive.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
  * @author AkagiYui
  */
 @Repository
-public interface RoleRepository extends JpaRepository<Role, String> {
+public interface RoleRepository extends JpaRepository<Role, String>, JpaSpecificationExecutor<Role> {
     /**
      * 找出所有默认角色
      *

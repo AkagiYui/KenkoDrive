@@ -6,12 +6,12 @@ import lombok.Data;
 import java.util.Set;
 
 /**
- * 添加角色 请求
+ * 更新角色 请求
  *
  * @author AkagiYui
  */
 @Data
-public class AddRoleRequest {
+public class UpdateRoleRequest {
     /**
      * 角色名
      */
@@ -32,4 +32,5 @@ public class AddRoleRequest {
      * 是否是默认角色
      */
     private Boolean isDefault;
+
 }

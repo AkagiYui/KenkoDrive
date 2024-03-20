@@ -35,11 +35,29 @@ public class RoleInfoResponse {
      */
     private boolean disabled;
 
+    /**
+     * 是否是默认角色
+     */
+    private boolean isDefault;
+
+    /**
+     * 角色用户数
+     */
+    private long userCount;
+
+    /**
+     * 角色权限
+     */
+    private List<String> permissions;
+
     public RoleInfoResponse(Role role) {
         this.id = role.getId();
         this.name = role.getName();
         this.description = role.getDescription();
         this.disabled = role.getDisabled();
+        this.isDefault = role.getIsDefault();
+        this.userCount = role.getUsers().size();
+        this.permissions = role.getPermissions().stream().map(Enum::name).toList();
     }
 
     /**
