@@ -1,9 +1,6 @@
 name: Qodana
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
 
 jobs:
   qodana:
