@@ -7,3 +7,6 @@ end_of_line = lf # 换行符使用 LF
 charset = utf-8 # 字符集使用 utf-8
 trim_trailing_whitespace = true # 删除行尾的空白字符
 insert_final_newline = true # 文件末尾插入一个空行
+
+[{**.json,**.yml,**.yaml}]
+indent_size = 2
