@@ -1,6 +1,7 @@
 package com.akagiyui.drive.controller;
 
 import com.akagiyui.drive.entity.Role;
+import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
 import com.akagiyui.drive.model.request.UpdateRoleRequest;
@@ -108,5 +109,16 @@ public class RoleController {
     @PreAuthorize("permitAll()")
     public List<PermissionResponse> getPermissions() {
         return PermissionResponse.fromPermissionList(roleService.getAllPermissions());
+    }
+
+    /**
+     * 获取角色用户
+     *
+     * @param id 角色id
+     * @return 用户id列表
+     */
+    @GetMapping("/{id}/users")
+    public List<String> getUsers(@PathVariable("id") String id) {
+        return roleService.getUsers(id).stream().map(User::getId).toList();
     }
 }

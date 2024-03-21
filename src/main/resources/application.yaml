@@ -16,7 +16,7 @@ spring:
     hibernate:
       # 自动修正数据表
       ddl-auto: update
-    # 禁止在视图中操作数据库
+    # 为每一个Http请求分配一个数据库连接
     open-in-view: false
   mvc:
     # 抛出 404 异常

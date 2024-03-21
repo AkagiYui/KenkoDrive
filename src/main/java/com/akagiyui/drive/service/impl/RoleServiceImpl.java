@@ -3,6 +3,7 @@ package com.akagiyui.drive.service.impl;
 import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.entity.Role;
+import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
@@ -12,11 +13,13 @@ import com.akagiyui.drive.service.RoleService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -158,6 +161,23 @@ public class RoleServiceImpl implements RoleService {
             role.setDisabled(disabled);
             roleRepository.save(role);
         }
+    }
+
+    @Override
+    @Transactional
+    public Set<User> getUsers(String id) {
+        // 检查角色是否存在
+        Role role = roleRepository.findById(id).orElseThrow(() -> {
+            log.warn("角色不存在: {}", id);
+            return new CustomException(ResponseEnum.ROLE_NOT_EXIST);
+        });
+        Hibernate.initialize(role.getUsers()); // 初始化 LAZY 属性
+        return role.getUsers();
+    }
+
+    @Override
+    public List<String> findUserIdsById(String id) {
+        return roleRepository.findUserIdsById(id);
     }
 
 }

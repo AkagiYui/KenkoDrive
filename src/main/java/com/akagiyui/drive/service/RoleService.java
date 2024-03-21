@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.Role;
+import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
@@ -8,6 +9,7 @@ import com.akagiyui.drive.model.request.UpdateRoleRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色 Service 接口
@@ -73,4 +75,20 @@ public interface RoleService {
      * @param disabled 是否禁用
      */
     void disable(String id, boolean disabled);
+
+    /**
+     * 获取角色用户
+     *
+     * @param id 角色id
+     * @return 用户列表
+     */
+    Set<User> getUsers(String id);
+
+    /**
+     * 根据角色id查找用户id
+     *
+     * @param id 角色id
+     * @return 用户id列表
+     */
+    List<String> findUserIdsById(String id);
 }
