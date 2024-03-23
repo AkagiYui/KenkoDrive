@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -38,6 +39,19 @@ public class RoleServiceImpl implements RoleService {
 
     @Resource
     private RoleRepository roleRepository;
+
+    /**
+     * 根据id查找角色，不存在则抛出异常
+     *
+     * @param id 角色id
+     * @return 角色
+     */
+    private Role getRoleById(String id) {
+        return roleRepository.findById(id).orElseThrow(() -> {
+            log.warn("角色不存在: {}", id);
+            return new CustomException(ResponseEnum.ROLE_NOT_EXIST);
+        });
+    }
 
     @Override
     public List<Role> getAllRoles() {
@@ -64,6 +78,11 @@ public class RoleServiceImpl implements RoleService {
         };
 
         return roleRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public Set<Role> find(Set<String> ids) {
+        return new HashSet<>(roleRepository.findAllById(ids));
     }
 
     @Override
@@ -103,21 +122,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void deleteRole(String id) {
-        // 检查角色是否存在
-        if (!roleRepository.existsById(id)) {
-            log.warn("角色不存在: {}", id);
-            throw new CustomException(ResponseEnum.ROLE_NOT_EXIST);
-        }
-        roleRepository.deleteById(id);
+        Role role = this.getRoleById(id);
+        roleRepository.delete(role);
     }
 
     @Override
     public void updateRole(String id, UpdateRoleRequest newRole) {
-        // 检查角色是否存在
-        Role oldRole = roleRepository.findById(id).orElseThrow(() -> {
-            log.warn("角色不存在: {}", id);
-            return new CustomException(ResponseEnum.ROLE_NOT_EXIST);
-        });
+        Role oldRole = this.getRoleById(id);
         // 修改角色名
         if (StringUtils.hasText(newRole.getName()) && !Objects.equals(oldRole.getName(), newRole.getName())) {
             if (roleRepository.existsByName(newRole.getName())) {
@@ -152,11 +163,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void disable(String id, boolean disabled) {
-        // 检查角色是否存在
-        Role role = roleRepository.findById(id).orElseThrow(() -> {
-            log.warn("角色不存在: {}", id);
-            return new CustomException(ResponseEnum.ROLE_NOT_EXIST);
-        });
+        Role role = this.getRoleById(id);
         if (!Objects.equals(role.getDisabled(), disabled)) {
             role.setDisabled(disabled);
             roleRepository.save(role);
@@ -166,11 +173,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public Set<User> getUsers(String id) {
-        // 检查角色是否存在
-        Role role = roleRepository.findById(id).orElseThrow(() -> {
-            log.warn("角色不存在: {}", id);
-            return new CustomException(ResponseEnum.ROLE_NOT_EXIST);
-        });
+        Role role = this.getRoleById(id);
         Hibernate.initialize(role.getUsers()); // 初始化 LAZY 属性
         return role.getUsers();
     }

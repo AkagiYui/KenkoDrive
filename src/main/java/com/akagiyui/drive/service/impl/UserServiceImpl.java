@@ -19,6 +19,7 @@ import com.akagiyui.drive.service.MailService;
 import com.akagiyui.drive.service.RoleService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,6 +28,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -80,6 +82,11 @@ public class UserServiceImpl implements UserService {
         return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
 
+    @Override
+    public List<User> findUserByIds(List<String> ids) {
+        return repository.findAllById(ids);
+    }
+
     private User findUserByIdWithCache(String id) {
         return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
@@ -90,10 +97,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(cacheNames = CacheConstants.USER_PAGE, key = "{#index, #size, #userFilter}")
-    public Page<User> find(int index, int size, UserFilter userFilter) {
+    @Cacheable(cacheNames = CacheConstants.USER_PAGE, key = "{#index, #size, #filter}")
+    public Page<User> find(int index, int size, UserFilter filter) {
         Pageable pageable = PageRequest.of(index, size);
-        return repository.findAll(pageable);
+
+        // 条件查询
+        Specification<User> specification = (root, query, cb) -> {
+            if (filter != null && StringUtils.hasText(filter.getExpression())){
+                String queryString = "%" + filter.getExpression() + "%";
+                Predicate usernamePredicate = cb.like(root.get("username"), queryString);
+                Predicate nicknamePredicate = cb.like(root.get("nickname"), queryString);
+                Predicate emailPredicate = cb.like(root.get("email"), queryString);
+                return cb.or(usernamePredicate, nicknamePredicate, emailPredicate);
+            }
+            return null;
+        };
+
+        return repository.findAll(specification, pageable);
     }
 
     @Override
@@ -299,6 +319,24 @@ public class UserServiceImpl implements UserService {
     public void resetPassword(String id, String newPassword) {
         User user = findUserByIdWithCache(id);
         user.setPassword(encryptPassword(user.getUsername(), newPassword));
+        repository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void addRoles(String userId, Set<String> id) {
+        User user = findUserByIdWithCache(userId);
+        Set<Role> roles = roleService.find(id);
+        user.getRoles().addAll(roles);
+        repository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void removeRoles(String userId, Set<String> id) {
+        User user = findUserByIdWithCache(userId);
+        Set<Role> roles = roleService.find(id);
+        user.getRoles().removeAll(roles);
         repository.save(user);
     }
 

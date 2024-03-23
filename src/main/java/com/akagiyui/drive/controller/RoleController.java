@@ -9,6 +9,7 @@ import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.PermissionResponse;
 import com.akagiyui.drive.model.response.RoleInfoResponse;
 import com.akagiyui.drive.service.RoleService;
+import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 角色 控制器
@@ -28,6 +30,9 @@ public class RoleController {
 
     @Resource
     private RoleService roleService;
+
+    @Resource
+    private UserService userService;
 
     /**
      * 获取角色信息
@@ -120,5 +125,27 @@ public class RoleController {
     @GetMapping("/{id}/users")
     public List<String> getUsers(@PathVariable("id") String id) {
         return roleService.getUsers(id).stream().map(User::getId).toList();
+    }
+
+    /**
+     * 分配用户
+     *
+     * @param id      角色id
+     * @param userIds 用户id列表
+     */
+    @PutMapping("/{id}/users")
+    public void setUsers(@PathVariable("id") String id, @RequestBody Set<String> userIds) {
+        userIds.forEach(userId -> userService.addRoles(userId, Set.of(id)));
+    }
+
+    /**
+     * 移除用户
+     *
+     * @param id      角色id
+     * @param userIds 用户id列表
+     */
+    @DeleteMapping("/{id}/users")
+    public void removeUsers(@PathVariable("id") String id, @RequestBody List<String> userIds) {
+        userIds.forEach(userId -> userService.removeRoles(userId, Set.of(id)));
     }
 }

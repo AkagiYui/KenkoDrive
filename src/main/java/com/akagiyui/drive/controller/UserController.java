@@ -213,4 +213,26 @@ public class UserController {
     public void resetPassword(@PathVariable String id,@RequestBody @Valid ResetPasswordRequest request) {
         userService.resetPassword(id, request.getNewPassword());
     }
+
+    /**
+     * 分配角色
+     *
+     * @param id      用户id
+     * @param roleIds 角色id列表
+     */
+    @PutMapping("/{id}/roles")
+    public void setUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
+        userService.addRoles(id, roleIds);
+    }
+
+    /**
+     * 移除角色
+     *
+     * @param id      用户id
+     * @param roleIds 角色id列表
+     */
+    @DeleteMapping("/{id}/roles")
+    public void removeUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
+        userService.removeRoles(id, roleIds);
+    }
 }

@@ -26,6 +26,13 @@ public interface UserService extends UserDetailsService {
     User findUserById(String id);
 
     /**
+     * 根据id查找用户
+     * @param ids 用户id
+     * @return 用户
+     */
+    List<User> findUserByIds(List<String> ids);
+
+    /**
      * 用户注册
      * @param user 用户
      * @return 用户
@@ -141,4 +148,20 @@ public interface UserService extends UserDetailsService {
      * @param newPassword 新密码
      */
     void resetPassword(String id, String newPassword);
+
+    /**
+     * 添加角色
+     *
+     * @param userId 用户ID
+     * @param id    角色ID
+     */
+    void addRoles(String userId, Set<String> id);
+
+    /**
+     * 移除角色
+     *
+     * @param userId 用户ID
+     * @param id    角色ID
+     */
+    void removeRoles(String userId, Set<String> id);
 }

@@ -102,7 +102,11 @@ public enum ResponseEnum {
     /**
      * 角色不存在
      */
-    ROLE_NOT_EXIST(10022, "Role not exist")
+    ROLE_NOT_EXIST(10022, "Role not exist"),
+    /**
+     * 用户不存在
+     */
+    USER_NOT_EXIST(10023, "User not exist"),
     ;
 
     /**

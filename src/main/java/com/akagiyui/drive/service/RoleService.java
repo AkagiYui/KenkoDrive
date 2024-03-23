@@ -39,6 +39,14 @@ public interface RoleService {
     Page<Role> find(Integer index, Integer size, RoleFilter filter);
 
     /**
+     * 根据id查找角色
+     *
+     * @param ids 角色id
+     * @return 角色
+     */
+    Set<Role> find(Set<String> ids);
+
+    /**
      * 获取所有权限
      *
      * @return 权限列表
