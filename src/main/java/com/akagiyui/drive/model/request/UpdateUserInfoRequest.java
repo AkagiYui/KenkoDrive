@@ -22,4 +22,10 @@ public class UpdateUserInfoRequest {
      */
     @Email(message = "{email format is incorrect}")
     private String email;
+
+    /**
+     * 密码
+     */
+    @Size(min = 5, max = 64, message = "{password length must be more than 5}")
+    private String password;
 }

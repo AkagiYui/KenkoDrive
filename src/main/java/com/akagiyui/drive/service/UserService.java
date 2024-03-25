@@ -1,5 +1,6 @@
 package com.akagiyui.drive.service;
 
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.filter.UserFilter;
@@ -55,8 +56,9 @@ public interface UserService extends UserDetailsService {
      * 新增用户
      *
      * @param user 用户
+     * @return 用户ID
      */
-    void addUser(AddUserRequest user);
+    String addUser(AddUserRequest user);
 
     /**
      * 删除用户
@@ -164,4 +166,20 @@ public interface UserService extends UserDetailsService {
      * @param id    角色ID
      */
     void removeRoles(String userId, Set<String> id);
+
+    /**
+     * 更新用户信息
+     *
+     * @param id      用户ID
+     * @param userInfo 用户信息
+     */
+    void updateInfo(String id, UpdateUserInfoRequest userInfo);
+
+    /**
+     * 获取用户角色
+     *
+     * @param id 用户ID
+     * @return 角色列表
+     */
+    Set<Role> getRoles(String id);
 }

@@ -27,7 +27,7 @@ public class AddUserRequest {
      */
     @NotBlank(message = "{password cannot be empty}")
     @NotNull(message = "{password is missing}")
-    @Size(min = 8, max = 64, message = "{password length must be more than 8}")
+    @Size(min = 5, max = 64, message = "{password length must be more than 8}")
     private String password;
 
     /**
@@ -40,7 +40,6 @@ public class AddUserRequest {
      * 邮箱
      */
     @Email(message = "{email format is incorrect}")
-    @NotBlank(message = "{email cannot be empty}")
     private String email;
 
     /**

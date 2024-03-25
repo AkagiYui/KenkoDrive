@@ -38,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -129,23 +130,28 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public void addUser(AddUserRequest user) {
+    public String addUser(AddUserRequest user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new CustomException(ResponseEnum.USER_EXIST);
         }
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new CustomException(ResponseEnum.EMAIL_EXIST);
+
+        User realUser = user.toUser();
+        if (StringUtils.hasText(user.getEmail())) {
+            if (repository.existsByEmail(user.getEmail())) {
+                throw new CustomException(ResponseEnum.EMAIL_EXIST);
+            }
+            realUser.setEmail(user.getEmail());
+        }
+        if (StringUtils.hasText(user.getNickname())) {
+            realUser.setNickname(user.getNickname());
         }
 
-        if (!StringUtils.hasText(user.getNickname())) {
-            user.setNickname(user.getUsername());
-        }
-        User realUser = user.toUser();
         realUser.setPassword(encryptPassword(user.getUsername(), user.getPassword()));
         realUser.setDisabled(false);
         realUser.setRoles(roleService.getAllDefaultRoles());
 
         repository.save(realUser);
+        return realUser.getId();
     }
 
     @Override
@@ -338,6 +344,28 @@ public class UserServiceImpl implements UserService {
         Set<Role> roles = roleService.find(id);
         user.getRoles().removeAll(roles);
         repository.save(user);
+    }
+
+    @Override
+    public void updateInfo(String id, UpdateUserInfoRequest userInfo) {
+        User user = findUserByIdWithCache(id);
+        if (StringUtils.hasText(userInfo.getNickname())) {
+            user.setNickname(userInfo.getNickname());
+        }
+        if (StringUtils.hasText(userInfo.getEmail())) {
+            user.setEmail(userInfo.getEmail());
+        }
+        if (StringUtils.hasText(userInfo.getPassword())) {
+            user.setPassword(encryptPassword(user.getUsername(), userInfo.getPassword()));
+        }
+        repository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public Set<Role> getRoles(String id) {
+        User user = findUserByIdWithCache(id);
+        return new HashSet<>(user.getRoles());
     }
 
     /**

@@ -2,6 +2,7 @@ package com.akagiyui.drive.controller;
 
 import com.akagiyui.drive.component.limiter.Limit;
 import com.akagiyui.drive.component.permission.RequirePermission;
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.UserFilter;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 /**
@@ -56,12 +58,12 @@ public class UserController {
      * 新增用户
      *
      * @param user 用户
-     * @return 是否成功
+     * @return 用户ID
      */
-    @PostMapping
+    @PostMapping({"", "/"})
     @RequirePermission(Permission.USER_ADD)
-    void add(@Validated @RequestBody AddUserRequest user) {
-        userService.addUser(user);
+    public String add(@Validated @RequestBody AddUserRequest user) {
+        return userService.addUser(user);
     }
 
     /**
@@ -154,15 +156,37 @@ public class UserController {
      */
     @PutMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public void updateUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
+    public void updateLoginUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
         userService.updateInfo(userInfo);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param id      用户id
+     * @param userInfo 用户信息
+     */
+    @PutMapping("/{id}")
+    public void updateUserInfo(@PathVariable String id, @RequestBody @Valid UpdateUserInfoRequest userInfo) {
+        userService.updateInfo(id, userInfo);
+    }
+
+    /**
+     * 获取用户角色
+     *
+     * @param id 用户id
+     * @return 角色列表
+     */
+    @GetMapping("/{id}/role")
+    public Set<String> getRoles(@PathVariable String id) {
+        Set<Role> roles = userService.getRoles(id);
+        return roles.stream().map(Role::getId).collect(Collectors.toSet());
     }
 
     /**
      * 上传头像
      *
      * @param avatar 头像文件
-     * @return 是否成功
      */
     @PostMapping("/avatar")
     @PreAuthorize("isAuthenticated()")
@@ -220,7 +244,7 @@ public class UserController {
      * @param id      用户id
      * @param roleIds 角色id列表
      */
-    @PutMapping("/{id}/roles")
+    @PutMapping("/{id}/role")
     public void setUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
         userService.addRoles(id, roleIds);
     }
@@ -231,7 +255,7 @@ public class UserController {
      * @param id      用户id
      * @param roleIds 角色id列表
      */
-    @DeleteMapping("/{id}/roles")
+    @DeleteMapping("/{id}/role")
     public void removeUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
         userService.removeRoles(id, roleIds);
     }

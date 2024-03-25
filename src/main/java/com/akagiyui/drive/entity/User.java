@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     /**
      * 邮箱
      */
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String email;
 
     /**

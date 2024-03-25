@@ -83,7 +83,7 @@ public class CustomCompositeCacheManager implements CacheManager {
      * 不使用Redis缓存
      */
     public void deactivateRedisCacheManager() {
-        log.error("Redis is offline, deactivate RedisCacheManager");
+        log.warn("Redis is offline, deactivate RedisCacheManager");
         isRedisOnline = false;
     }
 
