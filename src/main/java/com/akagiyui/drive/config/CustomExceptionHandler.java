@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.akagiyui.common.ResponseEnum.*;
 
@@ -114,12 +115,15 @@ public class CustomExceptionHandler {
     }
 
     /**
-     * 200 自定义异常
+     * 200/403 自定义异常
      */
-    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(CustomException.class)
-    public ResponseResult<Object> customException(CustomException e) {
-        return ResponseResult.response(e.getStatus());
+    public ResponseEntity<Object> customException(CustomException e) {
+        ResponseResult<Object> responseBody = ResponseResult.response(e.getStatus());
+        if (Objects.equals(e.getStatus(), UNAUTHORIZED)) {
+            return new ResponseEntity<>(responseBody, HttpStatus.FORBIDDEN); // 403 Forbidden
+        }
+        return new ResponseEntity<>(responseBody, HttpStatus.OK); // 200 OK
     }
 
     /**
