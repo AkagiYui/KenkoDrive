@@ -4,6 +4,7 @@ import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.entity.Folder;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.repository.FolderRepository;
 import com.akagiyui.drive.service.FolderService;
 import com.akagiyui.drive.service.UserService;
@@ -11,7 +12,9 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 文件夹 服务实现类
@@ -57,5 +60,26 @@ public class FolderServiceImpl implements FolderService {
         parentId = StringUtils.hasText(parentId) ? parentId : null;
 
         return folderRepository.findByUserIdAndParentId(user.getId(), parentId);
+    }
+
+    @Override
+    public List<FolderResponse> getFolderChain(String folderId) {
+        User user = userService.getUser();
+        if (!StringUtils.hasText(folderId)) {
+            return new ArrayList<>();
+        }
+
+        Folder folder = folderRepository.findById(folderId).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
+        if (!Objects.equals(folder.getUser().getId(), user.getId())) {
+            throw new CustomException(ResponseEnum.NOT_FOUND);
+        }
+
+        List<FolderResponse> folderChain = new ArrayList<>();
+        while (folder != null) {
+            folderChain.add(0, new FolderResponse(folder));
+            folder = folder.getParent();
+        }
+
+        return folderChain;
     }
 }

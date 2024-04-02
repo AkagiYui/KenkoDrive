@@ -116,7 +116,7 @@ public class FileController {
         List<UserFileResponse> files = UserFileResponse.fromUserFileList(userFileService.getFiles(folderId));
         List<FolderResponse> folders = FolderResponse.fromFolderList(folderService.getSubFolders(folderId));
 
-        return new FolderContentResponse(files, folders);
+        return new FolderContentResponse(files, folders, folderService.getFolderChain(folderId));
     }
 
     /**

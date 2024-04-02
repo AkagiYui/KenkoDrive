@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.Folder;
+import com.akagiyui.drive.model.response.FolderResponse;
 
 import java.util.List;
 
@@ -34,4 +35,12 @@ public interface FolderService {
      * @return 子文件夹列表
      */
     List<Folder> getSubFolders(String parentId);
+
+    /**
+     * 获取文件夹链
+     *
+     * @param folderId 文件夹ID
+     * @return 文件夹链
+     */
+    List<FolderResponse> getFolderChain(String folderId);
 }

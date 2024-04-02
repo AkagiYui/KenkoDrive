@@ -23,8 +23,14 @@ public class FolderContentResponse {
      */
     private List<FolderResponse> folders;
 
-    public FolderContentResponse(List<UserFileResponse> files, List<FolderResponse> folders) {
+    /**
+     * 文件夹链
+     */
+    private List<FolderResponse> folderChain;
+
+    public FolderContentResponse(List<UserFileResponse> files, List<FolderResponse> folders, List<FolderResponse> folderChain) {
         this.files = files;
         this.folders = folders;
+        this.folderChain = folderChain;
     }
 }

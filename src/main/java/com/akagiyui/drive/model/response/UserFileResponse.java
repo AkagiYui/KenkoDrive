@@ -34,11 +34,17 @@ public class UserFileResponse {
      */
     private String type;
 
+    /**
+     * 创建时间
+     */
+    private long createTime;
+
     public UserFileResponse(UserFile userFile) {
         this.id = userFile.getId();
         this.name = userFile.getName();
         this.size = userFile.getFileInfo().getSize();
         this.type = userFile.getFileInfo().getType();
+        this.createTime = userFile.getCreateTime().getTime();
     }
 
     /**

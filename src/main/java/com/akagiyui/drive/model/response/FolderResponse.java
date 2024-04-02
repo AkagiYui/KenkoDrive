@@ -4,7 +4,6 @@ import com.akagiyui.drive.entity.Folder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,12 +27,12 @@ public class FolderResponse {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private long createTime;
 
     public FolderResponse(Folder folder) {
         this.id = folder.getId();
         this.name = folder.getName();
-        this.createTime = folder.getCreateTime();
+        this.createTime = folder.getCreateTime().getTime();
     }
 
     /**
