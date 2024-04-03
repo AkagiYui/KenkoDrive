@@ -63,7 +63,7 @@ public class UserController {
     @PostMapping({"", "/"})
     @RequirePermission(Permission.USER_ADD)
     public String add(@Validated @RequestBody AddUserRequest user) {
-        return userService.addUser(user);
+        return userService.addUser(user).getId();
     }
 
     /**
