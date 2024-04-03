@@ -62,6 +62,14 @@ public interface RoleService {
     String addRole(AddRoleRequest role);
 
     /**
+     * 添加角色
+     *
+     * @param role 角色
+     * @return 角色
+     */
+    Role addRole(Role role);
+
+    /**
      * 删除角色
      *
      * @param id 角色id

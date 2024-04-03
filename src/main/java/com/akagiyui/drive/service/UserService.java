@@ -58,7 +58,7 @@ public interface UserService extends UserDetailsService {
      * @param user 用户
      * @return 用户ID
      */
-    String addUser(AddUserRequest user);
+    User addUser(AddUserRequest user);
 
     /**
      * 删除用户

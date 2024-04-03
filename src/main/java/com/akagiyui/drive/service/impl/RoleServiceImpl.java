@@ -121,6 +121,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public Role addRole(Role role) {
+        return roleRepository.save(role);
+    }
+
+    @Override
     public void deleteRole(String id) {
         Role role = this.getRoleById(id);
         roleRepository.delete(role);

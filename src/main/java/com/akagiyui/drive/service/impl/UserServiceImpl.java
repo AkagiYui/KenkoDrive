@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public String addUser(AddUserRequest user) {
+    public User addUser(AddUserRequest user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new CustomException(ResponseEnum.USER_EXIST);
         }
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         realUser.setRoles(roleService.getAllDefaultRoles());
 
         repository.save(realUser);
-        return realUser.getId();
+        return realUser;
     }
 
     @Override
