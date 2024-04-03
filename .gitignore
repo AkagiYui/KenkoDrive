@@ -1,5 +1,7 @@
 HELP.md
 *.env*
+*.local.yaml
+*.local.yml
 .gradle
 build/
 data/

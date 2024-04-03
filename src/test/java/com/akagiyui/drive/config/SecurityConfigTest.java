@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * Spring Security 测试
  *
@@ -18,6 +21,9 @@ class SecurityConfigTest {
 
     @Test
     void passwordEncoder() {
-        System.out.println(passwordEncoder.encode("123456"));
+        String encoded = passwordEncoder.encode("123456");
+        System.out.println(encoded);
+        assertNotNull(encoded);
+        assertNotEquals("123456", encoded);
     }
 }

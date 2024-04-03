@@ -1,11 +1,14 @@
 spring:
   datasource:
-    url: jdbc:mysql://mysql:3306/test?user=test&password=test&useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
   data:
     redis:
       host: redis
   mail:
     host: smtp.163.com
+  config:
+    import: optional:classpath:application-test.local.yaml
 application:
   storage:
     local:

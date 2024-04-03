@@ -8,6 +8,8 @@ import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.util.Locale;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 class KenkoDriveApplicationTests {
 
@@ -16,11 +18,12 @@ class KenkoDriveApplicationTests {
 
     @Test
     void contextLoads() {
+        assertEquals(1, 2 - 1);
     }
 
     @Test
     void i18nTest() {
         Locale locale = LocaleContextHolder.getLocale();
-        System.out.println(messageSource.getMessage("TEST", new Object[]{}, locale));
+        assertEquals("测试", messageSource.getMessage("TEST", new Object[]{}, locale));
     }
 }
