@@ -1,5 +1,6 @@
 package com.akagiyui.drive.controller;
 
+import com.akagiyui.drive.model.request.CreateFolderRequest;
 import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.service.FolderService;
 import jakarta.annotation.Resource;
@@ -38,8 +39,7 @@ public class FolderController {
      * @return 文件夹信息
      */
     @PostMapping({"", "/"})
-    public FolderResponse createFolder(@RequestParam(name = "parent", required = false) String parentId,
-                                       @RequestParam("name") String name) {
-        return new FolderResponse(folderService.createFolder(name, parentId));
+    public FolderResponse createFolder(@RequestBody CreateFolderRequest request) {
+        return new FolderResponse(folderService.createFolder(request.getName(), request.getParent()));
     }
 }
