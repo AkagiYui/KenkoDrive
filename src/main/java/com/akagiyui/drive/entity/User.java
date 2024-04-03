@@ -20,7 +20,7 @@ import java.util.List;
 @ToString(exclude = "roles")
 @Accessors(chain = true)
 @Entity
-@Table
+@Table(name = "user_info") // user/system_user均会造成h2数据库关键字冲突
 @DynamicInsert
 public class User extends BaseEntity {
     /**
