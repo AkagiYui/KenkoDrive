@@ -34,8 +34,7 @@ public class FolderController {
     /**
      * 创建文件夹
      *
-     * @param parentId 父文件夹ID
-     * @param name     文件夹名
+     * @param request 创建文件夹请求
      * @return 文件夹信息
      */
     @PostMapping({"", "/"})
