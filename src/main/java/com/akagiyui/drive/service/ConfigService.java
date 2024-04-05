@@ -1,5 +1,7 @@
 package com.akagiyui.drive.service;
 
+import java.util.Map;
+
 /**
  * 配置 服务接口
  *
@@ -66,4 +68,9 @@ public interface ConfigService {
      * 设置 全局文件上传大小限制
      */
     long setFileUploadMaxSize(long maxSize);
+
+    /**
+     * 获取配置
+     */
+    Map<String, Object> getConfig();
 }

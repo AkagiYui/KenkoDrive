@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -148,5 +149,15 @@ public class ConfigServiceImpl implements ConfigService {
     public long setFileUploadMaxSize(long maxSize) {
         save(FILE_UPLOAD_MAX_SIZE, maxSize);
         return maxSize;
+    }
+
+    @Override
+    public Map<String, Object> getConfig() {
+        return Map.of(
+                REGISTER_ENABLED, isRegisterEnabled(),
+                IS_INITIALIZED, isInitialized(),
+                FILE_UPLOAD_CHUNK_SIZE, getFileUploadChunkSize(),
+                FILE_UPLOAD_MAX_SIZE, getFileUploadMaxSize()
+        );
     }
 }

@@ -132,7 +132,6 @@ public class UserController {
      * 确认注册
      *
      * @param registerConfirmRequest 注册请求体
-     * @return 是否成功
      */
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
