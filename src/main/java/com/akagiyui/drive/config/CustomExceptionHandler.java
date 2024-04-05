@@ -4,6 +4,7 @@ import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.common.ResponseResult;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.common.exception.TooManyRequestsException;
+import com.fasterxml.jackson.core.JsonParseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -83,6 +84,10 @@ public class CustomExceptionHandler {
         // 目前可预见的是 JSON 解析错误
         Throwable cause = e.getCause();
         if (cause != null) {
+            if (cause instanceof JsonParseException) {
+                return ResponseResult.response(BAD_REQUEST, "JSON parse error");
+            }
+            log.error("Bad request", cause);
             return ResponseResult.response(BAD_REQUEST, cause.getMessage());
         }
         // 无请求体错误
