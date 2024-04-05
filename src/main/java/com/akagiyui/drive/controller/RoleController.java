@@ -12,7 +12,6 @@ import com.akagiyui.drive.model.response.PermissionResponse;
 import com.akagiyui.drive.model.response.RoleInfoResponse;
 import com.akagiyui.drive.service.RoleService;
 import com.akagiyui.drive.service.UserService;
-import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,12 +28,13 @@ import java.util.Set;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
+    private final RoleService roleService;
+    private final UserService userService;
 
-    @Resource
-    private RoleService roleService;
-
-    @Resource
-    private UserService userService;
+    public RoleController(RoleService roleService, UserService userService) {
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
     /**
      * 获取角色信息

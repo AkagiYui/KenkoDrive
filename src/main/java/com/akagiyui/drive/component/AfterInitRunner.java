@@ -3,7 +3,6 @@ package com.akagiyui.drive.component;
 import com.akagiyui.drive.service.ConfigService;
 import com.akagiyui.drive.task.InitializeTask;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -19,7 +18,7 @@ public class AfterInitRunner implements ApplicationRunner {
     private final ConfigService configService;
     private final InitializeTask initializeTask;
 
-    public AfterInitRunner(@Autowired ConfigService configService, @Autowired InitializeTask initializeTask) {
+    public AfterInitRunner(ConfigService configService, InitializeTask initializeTask) {
         this.configService = configService;
         this.initializeTask = initializeTask;
     }

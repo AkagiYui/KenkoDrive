@@ -8,7 +8,6 @@ import com.akagiyui.drive.model.response.FolderContentResponse;
 import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.model.response.UserFileResponse;
 import com.akagiyui.drive.service.*;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
@@ -38,21 +37,20 @@ import java.util.List;
 @RequestMapping("/file")
 @Slf4j
 public class FileController {
+    private final StorageService storageService;
+    private final FileInfoService fileInfoService;
+    private final FolderService folderService;
+    private final UserFileService userFileService;
+    private final UploadService uploadService;
 
-    @Resource
-    private StorageService storageService;
-
-    @Resource
-    private FileInfoService fileInfoService;
-
-    @Resource
-    private FolderService folderService;
-
-    @Resource
-    private UserFileService userFileService;
-
-    @Resource
-    private UploadService uploadService;
+    public FileController(StorageService storageService, FileInfoService fileInfoService, FolderService folderService,
+                          UserFileService userFileService, UploadService uploadService) {
+        this.storageService = storageService;
+        this.fileInfoService = fileInfoService;
+        this.folderService = folderService;
+        this.userFileService = userFileService;
+        this.uploadService = uploadService;
+    }
 
     /**
      * 上传文件
@@ -96,10 +94,10 @@ public class FileController {
     @PostMapping("/upload/{hash}/chunk")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     public void uploadChunk(
-            @PathVariable("hash") String fileHash,
-            @RequestParam("file") MultipartFile chunk,
-            @RequestParam("hash") String chunkHash,
-            @RequestParam("index") @Min(1) int chunkIndex
+        @PathVariable("hash") String fileHash,
+        @RequestParam("file") MultipartFile chunk,
+        @RequestParam("hash") String chunkHash,
+        @RequestParam("index") @Min(1) int chunkIndex
     ) {
         uploadService.uploadChunk(fileHash, chunk, chunkHash, chunkIndex);
     }
@@ -141,7 +139,8 @@ public class FileController {
         // todo 权限校验
 
         // 获取文件
-        FileInfo fileInfo = fileInfoService.getFileInfo(id);
+        FileInfo fileInfo = userFileService.getFileInfo(id);
+
         InputStreamResource fileStream = storageService.getFile(fileInfo.getStorageKey());
         fileInfoService.recordDownload(fileInfo);
 
@@ -152,8 +151,8 @@ public class FileController {
 
         // 返回文件的 ResponseEntity
         return ResponseEntity.ok()
-                .headers(headers)
-                .body(fileStream);
+            .headers(headers)
+            .body(fileStream);
     }
 
     /**
@@ -164,7 +163,7 @@ public class FileController {
     @GetMapping("/{id}/download")
     public ResponseEntity<StreamingResponseBody> test(@PathVariable String id, @RequestHeader HttpHeaders headers) {
         // 读取文件
-        FileInfo fileInfo = fileInfoService.getFileInfo(id);
+        FileInfo fileInfo = userFileService.getFileInfo(id);
         InputStreamResource fileStream = storageService.getFile(fileInfo.getStorageKey());
         fileInfoService.recordDownload(fileInfo);
         long mediaLength = fileInfo.getSize();
@@ -207,13 +206,13 @@ public class FileController {
             };
         } catch (IOException e) {
             return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
-                    .headers(responseHeaders)
-                    .body(null);
+                .headers(responseHeaders)
+                .body(null);
         }
 
         return ResponseEntity.status(HttpServletResponse.SC_PARTIAL_CONTENT)
-                .headers(responseHeaders)
-                .body(streamBody);
+            .headers(responseHeaders)
+            .body(streamBody);
     }
 
     /**

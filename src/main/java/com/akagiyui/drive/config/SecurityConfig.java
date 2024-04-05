@@ -10,7 +10,6 @@ import com.akagiyui.drive.filter.CustomPasswordHandleFilter;
 import com.akagiyui.drive.filter.JwtAuthenticationFilter;
 import com.akagiyui.drive.model.LoginUserDetails;
 import com.akagiyui.drive.model.response.LoginResponse;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -43,23 +42,26 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
-    @Resource
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Resource
-    CustomPasswordHandleFilter customPasswordHandleFilter;
-
-    @Resource
-    AuthenticationEntryPoint authenticationEntryPoint;
-
-    @Resource
-    AccessDeniedHandler accessDeniedHandler;
-
-    @Resource
-    JwtUtils jwtUtils;
-
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomPasswordHandleFilter customPasswordHandleFilter;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AccessDeniedHandler accessDeniedHandler;
+    private final JwtUtils jwtUtils;
     public static final String LOGIN_URL = "/user/token";
+
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            CustomPasswordHandleFilter customPasswordHandleFilter,
+            AuthenticationEntryPoint authenticationEntryPoint,
+            AccessDeniedHandler accessDeniedHandler,
+            JwtUtils jwtUtils
+    ) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customPasswordHandleFilter = customPasswordHandleFilter;
+        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
+        this.jwtUtils = jwtUtils;
+    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -81,6 +83,7 @@ public class SecurityConfig {
                         .requestMatchers(mvc.matchers("/server/version")).permitAll()
                         .requestMatchers(mvc.matchers("/info/**")).permitAll()
                         .requestMatchers(mvc.matchers("/user/register/**")).permitAll()
+                        .requestMatchers(mvc.matchers("/sse")).permitAll()
                         .anyRequest().authenticated() // 其他请求需要认证
                 )
                 // 关闭 CSRF

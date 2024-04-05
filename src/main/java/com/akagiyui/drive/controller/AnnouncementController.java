@@ -8,7 +8,6 @@ import com.akagiyui.drive.model.response.AnnouncementDisplayResponse;
 import com.akagiyui.drive.model.response.AnnouncementResponse;
 import com.akagiyui.drive.service.AnnouncementService;
 import com.akagiyui.drive.service.UserService;
-import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +22,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/announcement")
 public class AnnouncementController {
+    private final AnnouncementService announcementService;
+    private final UserService userService;
 
-    @Resource
-    private AnnouncementService announcementService;
-
-    @Resource
-    private UserService userService;
+    public AnnouncementController(AnnouncementService announcementService, UserService userService) {
+        this.announcementService = announcementService;
+        this.userService = userService;
+    }
 
     /**
      * 新增公告

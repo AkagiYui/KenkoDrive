@@ -2,7 +2,6 @@ package com.akagiyui.drive.task;
 
 import com.akagiyui.drive.service.FileInfoService;
 import com.akagiyui.drive.service.UserFileService;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,12 +14,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class RemoveUnusedFileTask {
+    private final FileInfoService fileInfoService;
+    private final UserFileService userFileService;
 
-    @Resource
-    private FileInfoService fileInfoService;
-
-    @Resource
-    private UserFileService userFileService;
+    public RemoveUnusedFileTask(FileInfoService fileInfoService, UserFileService userFileService) {
+        this.fileInfoService = fileInfoService;
+        this.userFileService = userFileService;
+    }
 
     /**
      * 每周四凌晨4点执行

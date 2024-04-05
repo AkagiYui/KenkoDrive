@@ -8,7 +8,6 @@ import com.akagiyui.drive.service.ConfigService;
 import com.akagiyui.drive.service.RoleService;
 import com.akagiyui.drive.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -29,9 +28,7 @@ public class InitializeTask {
     private final RoleService roleService;
     private final UserService userService;
 
-    public InitializeTask(@Autowired ConfigService configService,
-                          @Autowired RoleService roleService,
-                        @Autowired UserService userService) {
+    public InitializeTask(ConfigService configService, RoleService roleService, UserService userService) {
         this.configService = configService;
         this.roleService = roleService;
         this.userService = userService;

@@ -5,7 +5,6 @@ import io.lettuce.core.event.connection.ConnectionDeactivatedEvent;
 import io.lettuce.core.resource.ClientResources;
 import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.Cache;
@@ -29,31 +28,30 @@ import java.util.*;
 @Component
 @Primary
 public class CustomCompositeCacheManager implements CacheManager {
-
     /**
      * 本地缓存管理器
      */
-    @Resource
-    private CaffeineCacheManager caffeineCacheManager;
-
+    private final CaffeineCacheManager caffeineCacheManager;
     /**
      * Redis缓存管理器
      */
-    @Resource
-    private RedisCacheManager redisCacheManager;
-
+    private final RedisCacheManager redisCacheManager;
     /**
      * Redis连接工厂
      */
-    @Resource
-    private LettuceConnectionFactory lettuceConnectionFactory;
-
+    private final LettuceConnectionFactory lettuceConnectionFactory;
     /**
      * 空缓存管理器
      */
     private final NoOpCacheManager noOpCacheManager = new NoOpCacheManager();
-
     private boolean isRedisOnline = false;
+
+    public CustomCompositeCacheManager(CaffeineCacheManager caffeineCacheManager, RedisCacheManager redisCacheManager,
+                                       LettuceConnectionFactory lettuceConnectionFactory) {
+        this.caffeineCacheManager = caffeineCacheManager;
+        this.redisCacheManager = redisCacheManager;
+        this.lettuceConnectionFactory = lettuceConnectionFactory;
+    }
 
     @Override
     @Nullable

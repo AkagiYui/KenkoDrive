@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 public class RedisCache {
 
     @Resource
-    RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 缓存基本对象

@@ -11,7 +11,6 @@ import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.UserService;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -35,12 +34,13 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    private final UserService userService;
+    private final AvatarService avatarService;
 
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private AvatarService avatarService;
+    public UserController(UserService userService, AvatarService avatarService) {
+        this.userService = userService;
+        this.avatarService = avatarService;
+    }
 
     /**
      * 根据用户id查找用户

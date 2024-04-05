@@ -1,13 +1,12 @@
 package com.akagiyui.drive.service.impl;
 
 import com.akagiyui.common.ResponseEnum;
-import com.akagiyui.drive.entity.User;
 import com.akagiyui.common.exception.CustomException;
+import com.akagiyui.common.utils.FileUtil;
+import com.akagiyui.drive.entity.User;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.StorageService;
 import com.akagiyui.drive.service.UserService;
-import com.akagiyui.common.utils.FileUtil;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,14 +36,16 @@ public class AvatarServiceImpl implements AvatarService {
      */
     private static final List<String> AVATAR_TYPES = new ArrayList<>();
 
-    @Resource
-    StorageService storageService;
-
-    @Resource
-    UserService userService;
-
     @Value("${application.avatar.default:static/default-avatar.jpg}")
     private String defaultAvatarPath;
+
+    private final StorageService storageService;
+    private final UserService userService;
+
+    public AvatarServiceImpl(UserService userService, StorageService storageService) {
+        this.userService = userService;
+        this.storageService = storageService;
+    }
 
     static {
         // 初始化允许上传的头像的文件类型

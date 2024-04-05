@@ -5,7 +5,6 @@ import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.request.CreateFolderRequest;
 import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.service.FolderService;
-import jakarta.annotation.Resource;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/folder")
 public class FolderController {
+    private final FolderService folderService;
 
-    @Resource
-    private FolderService folderService;
+    public FolderController(FolderService folderService) {
+        this.folderService = folderService;
+    }
 
     /**
      * 获取文件夹列表
