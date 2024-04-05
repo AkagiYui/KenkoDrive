@@ -23,6 +23,35 @@ public enum Permission {
      * 个人文件下载
      */
     PERSONAL_DOWNLOAD("个人文件下载"),
+    /**
+     * 创建文件夹
+     */
+    FOLDER_CREATE("创建文件夹"),
+    /**
+     * 删除文件夹
+     */
+    FOLDER_DELETE("删除文件夹"),
+
+    /**
+     * 获取角色信息
+     */
+    ROLE_VIEW("获取角色信息"),
+    /**
+     * 添加角色
+     */
+    ROLE_ADD("添加角色"),
+    /**
+     * 修改角色
+     */
+    ROLE_UPDATE("修改角色"),
+    /**
+     * 删除角色
+     */
+    ROLE_DELETE("删除角色"),
+    /**
+     * 分配角色
+     */
+    ROLE_ASSIGN("分配角色"),
 
     /**
      * 用户查看
@@ -57,6 +86,15 @@ public enum Permission {
      * 获取所有公告
      */
     ANNOUNCEMENT_GET_ALL("获取所有公告"),
+
+    /**
+     * 获取设置
+     */
+    CONFIGURATION_GET("获取设置"),
+    /**
+     * 修改设置
+     */
+    CONFIGURATION_UPDATE("修改设置"),
     ;
 
     /**

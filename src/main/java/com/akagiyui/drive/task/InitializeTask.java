@@ -84,7 +84,9 @@ public class InitializeTask {
         user.setIsDefault(true);
         user.setPermissions(new HashSet<>(Arrays.asList(
             Permission.PERSONAL_UPLOAD,
-            Permission.PERSONAL_DOWNLOAD
+            Permission.PERSONAL_DOWNLOAD,
+            Permission.FOLDER_CREATE,
+            Permission.FOLDER_DELETE
         )));
         roleService.addRole(user);
     }

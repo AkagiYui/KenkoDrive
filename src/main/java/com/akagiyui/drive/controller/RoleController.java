@@ -1,7 +1,9 @@
 package com.akagiyui.drive.controller;
 
+import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.RoleFilter;
 import com.akagiyui.drive.model.request.AddRoleRequest;
 import com.akagiyui.drive.model.request.UpdateRoleRequest;
@@ -40,7 +42,7 @@ public class RoleController {
      * @return 角色信息 列表
      */
     @GetMapping({"", "/"})
-    @PreAuthorize("permitAll()")
+    @RequirePermission(Permission.ROLE_VIEW)
     @Transactional
     public PageResponse<RoleInfoResponse> getPage(
         @RequestParam(defaultValue = "0") Integer index,
@@ -66,7 +68,7 @@ public class RoleController {
      * @return 角色id
      */
     @PostMapping({"", "/"})
-    // todo 权限校验
+    @RequirePermission(Permission.ROLE_ADD)
     public String addRole(@RequestBody AddRoleRequest role) {
         return roleService.addRole(role);
     }
@@ -77,6 +79,7 @@ public class RoleController {
      * @param id 角色id
      */
     @DeleteMapping("/{id}")
+    @RequirePermission(Permission.ROLE_DELETE)
     public void deleteRole(@PathVariable("id") String id) {
         roleService.deleteRole(id);
     }
@@ -88,6 +91,7 @@ public class RoleController {
      * @param role 角色
      */
     @PutMapping("/{id}")
+    @RequirePermission(Permission.ROLE_UPDATE)
     public void updateRole(@PathVariable("id") String id, @RequestBody UpdateRoleRequest role) {
         roleService.updateRole(id, role);
     }
@@ -99,6 +103,7 @@ public class RoleController {
      * @param disabled 是否禁用
      */
     @PutMapping("/{id}/status")
+    @RequirePermission(Permission.ROLE_UPDATE)
     public void updateStatus(@PathVariable("id") String id, @RequestParam(required = false) Boolean disabled) {
         if (disabled != null) {
             roleService.disable(id, disabled);
@@ -123,6 +128,7 @@ public class RoleController {
      * @return 用户id列表
      */
     @GetMapping("/{id}/users")
+    @RequirePermission(Permission.USER_VIEW)
     public List<String> getUsers(@PathVariable("id") String id) {
         return roleService.getUsers(id).stream().map(User::getId).toList();
     }
@@ -134,6 +140,7 @@ public class RoleController {
      * @param userIds 用户id列表
      */
     @PutMapping("/{id}/users")
+    @RequirePermission(Permission.ROLE_ASSIGN)
     public void setUsers(@PathVariable("id") String id, @RequestBody Set<String> userIds) {
         userIds.forEach(userId -> userService.addRoles(userId, Set.of(id)));
     }
@@ -145,6 +152,7 @@ public class RoleController {
      * @param userIds 用户id列表
      */
     @DeleteMapping("/{id}/users")
+    @RequirePermission(Permission.ROLE_ASSIGN)
     public void removeUsers(@PathVariable("id") String id, @RequestBody List<String> userIds) {
         userIds.forEach(userId -> userService.removeRoles(userId, Set.of(id)));
     }

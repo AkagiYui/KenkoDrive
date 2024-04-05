@@ -1,9 +1,12 @@
 package com.akagiyui.drive.controller;
 
+import com.akagiyui.drive.component.permission.RequirePermission;
+import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.request.CreateFolderRequest;
 import com.akagiyui.drive.model.response.FolderResponse;
 import com.akagiyui.drive.service.FolderService;
 import jakarta.annotation.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class FolderController {
      * @return 文件夹列表
      */
     @GetMapping({"", "/"})
+    @PreAuthorize("isAuthenticated()")
     public List<FolderResponse> listFolder(@RequestParam(name = "parent", required = false) String parentId) {
         return FolderResponse.fromFolderList(folderService.getSubFolders(parentId));
     }
@@ -38,6 +42,7 @@ public class FolderController {
      * @return 文件夹信息
      */
     @PostMapping({"", "/"})
+    @RequirePermission(Permission.FOLDER_CREATE)
     public FolderResponse createFolder(@RequestBody CreateFolderRequest request) {
         return new FolderResponse(folderService.createFolder(request.getName(), request.getParent()));
     }

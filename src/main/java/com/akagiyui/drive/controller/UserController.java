@@ -167,6 +167,7 @@ public class UserController {
      * @param userInfo 用户信息
      */
     @PutMapping("/{id}")
+    @RequirePermission(Permission.USER_UPDATE)
     public void updateUserInfo(@PathVariable String id, @RequestBody @Valid UpdateUserInfoRequest userInfo) {
         userService.updateInfo(id, userInfo);
     }
@@ -178,6 +179,7 @@ public class UserController {
      * @return 角色列表
      */
     @GetMapping("/{id}/role")
+    @RequirePermission(Permission.USER_VIEW)
     public Set<String> getRoles(@PathVariable String id) {
         Set<Role> roles = userService.getRoles(id);
         return roles.stream().map(Role::getId).collect(Collectors.toSet());
@@ -245,6 +247,7 @@ public class UserController {
      * @param roleIds 角色id列表
      */
     @PutMapping("/{id}/role")
+    @RequirePermission(Permission.ROLE_ASSIGN)
     public void setUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
         userService.addRoles(id, roleIds);
     }
@@ -256,6 +259,7 @@ public class UserController {
      * @param roleIds 角色id列表
      */
     @DeleteMapping("/{id}/role")
+    @RequirePermission(Permission.ROLE_ASSIGN)
     public void removeUsers(@PathVariable("id") String id, @RequestBody Set<String> roleIds) {
         userService.removeRoles(id, roleIds);
     }

@@ -1,8 +1,10 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.drive.component.permission.RequirePermission
+import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.service.ConfigService
-import jakarta.annotation.Resource
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -29,6 +31,7 @@ open class ServerController(
      * 是否开放注册
      */
     @GetMapping("/config/is-register-enabled")
+    @PreAuthorize("permitAll()")
     open fun getConfig(): Boolean {
         return configService.isRegisterEnabled()
     }
@@ -37,6 +40,7 @@ open class ServerController(
      * 设置 是否开放注册
      */
     @PutMapping("/config/is-register-enabled")
+    @RequirePermission(Permission.CONFIGURATION_UPDATE)
     open fun setConfig(@RequestParam enabled: Boolean) {
         configService.setRegisterEnabled(enabled)
     }

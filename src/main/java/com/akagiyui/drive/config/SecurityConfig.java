@@ -147,8 +147,8 @@ public class SecurityConfig {
         LoginUserDetails loginUserDetails = (LoginUserDetails)authentication.getPrincipal();
 
         User user = loginUserDetails.getUser();
-        String jwt = jwtUtils.createJwt(user);
-        LoginResponse loginResponse = new LoginResponse(jwt, null);
+        String token = jwtUtils.createJwt(user);
+        LoginResponse loginResponse = new LoginResponse(token, null);
         ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse);
     }
 
