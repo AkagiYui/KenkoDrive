@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -50,11 +51,11 @@ public class SecurityConfig {
     public static final String LOGIN_URL = "/user/token";
 
     public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomPasswordHandleFilter customPasswordHandleFilter,
-            AuthenticationEntryPoint authenticationEntryPoint,
-            AccessDeniedHandler accessDeniedHandler,
-            JwtUtils jwtUtils
+        JwtAuthenticationFilter jwtAuthenticationFilter,
+        CustomPasswordHandleFilter customPasswordHandleFilter,
+        AuthenticationEntryPoint authenticationEntryPoint,
+        AccessDeniedHandler accessDeniedHandler,
+        JwtUtils jwtUtils
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customPasswordHandleFilter = customPasswordHandleFilter;
@@ -78,34 +79,35 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, RequestMatcherBuilder mvc) throws Exception {
         return http
-                .authorizeHttpRequests(a -> a
-                        // 允许指定路径通过
-                        .requestMatchers(mvc.matchers("/server/version")).permitAll()
-                        .requestMatchers(mvc.matchers("/info/**")).permitAll()
-                        .requestMatchers(mvc.matchers("/user/register/**")).permitAll()
-                        .requestMatchers(mvc.matchers("/sse")).permitAll()
-                        .anyRequest().authenticated() // 其他请求需要认证
-                )
-                // 关闭 CSRF
-                .csrf(AbstractHttpConfigurer::disable)
-                // 关闭 Session
-                .sessionManagement(s -> s
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // 添加 JWT 过滤器
-                .addFilterBefore(customPasswordHandleFilter, UsernamePasswordAuthenticationFilter.class) // 添加密码处理过滤器
-                .formLogin(conf -> conf
-                        .loginProcessingUrl(LOGIN_URL)
-                        .successHandler(this::onAuthenticationSuccess)
-                        .failureHandler(this::onAuthenticationFailure)
-                        .permitAll()
-                )
-                .exceptionHandling(conf -> conf
-                        .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler)
-                )
-                .cors(Customizer.withDefaults())
-                .build();
+            .authorizeHttpRequests(a -> a
+                // 允许指定路径通过
+                .requestMatchers(HttpMethod.GET, "/system/version").permitAll()
+                .requestMatchers(HttpMethod.GET, "/system/config/register").permitAll()
+                .requestMatchers(mvc.matchers("/user/register/**")).permitAll()
+                .requestMatchers(mvc.matchers("/sse")).permitAll()
+                .anyRequest().authenticated() // 其他请求需要认证
+            )
+
+            // 关闭 CSRF
+            .csrf(AbstractHttpConfigurer::disable)
+            // 关闭 Session
+            .sessionManagement(s -> s
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // 添加 JWT 过滤器
+            .addFilterBefore(customPasswordHandleFilter, UsernamePasswordAuthenticationFilter.class) // 添加密码处理过滤器
+            .formLogin(conf -> conf
+                .loginProcessingUrl(LOGIN_URL)
+                .successHandler(this::onAuthenticationSuccess)
+                .failureHandler(this::onAuthenticationFailure)
+                .permitAll()
+            )
+            .exceptionHandling(conf -> conf
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
+            )
+            .cors(Customizer.withDefaults())
+            .build();
     }
 
     /**
@@ -132,9 +134,9 @@ public class SecurityConfig {
      * 认证失败处理
      */
     private void onAuthenticationFailure(
-            HttpServletRequest httpServletRequest,
-            HttpServletResponse response,
-            AuthenticationException e
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse response,
+        AuthenticationException e
     ) {
         ResponseResult.writeResponse(response, HttpStatus.UNAUTHORIZED, ResponseEnum.UNAUTHORIZED);
     }
@@ -143,11 +145,11 @@ public class SecurityConfig {
      * 认证成功处理
      */
     private void onAuthenticationSuccess(
-            HttpServletRequest httpServletRequest,
-            HttpServletResponse response,
-            Authentication authentication
+        HttpServletRequest httpServletRequest,
+        HttpServletResponse response,
+        Authentication authentication
     ) {
-        LoginUserDetails loginUserDetails = (LoginUserDetails)authentication.getPrincipal();
+        LoginUserDetails loginUserDetails = (LoginUserDetails) authentication.getPrincipal();
 
         User user = loginUserDetails.getUser();
         String token = jwtUtils.createJwt(user);
