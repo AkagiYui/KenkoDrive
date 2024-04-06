@@ -2,6 +2,7 @@ package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.Announcement;
 import com.akagiyui.drive.model.filter.AnnouncementFilter;
+import com.akagiyui.drive.model.request.UpdateAnnouncementRequest;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -53,4 +54,12 @@ public interface AnnouncementService {
      * @param id 公告id
      */
     void delete(String id);
+
+    /**
+     * 更新公告
+     *
+     * @param id      公告id
+     * @param request 更新内容
+     */
+    void update(String id, UpdateAnnouncementRequest request);
 }

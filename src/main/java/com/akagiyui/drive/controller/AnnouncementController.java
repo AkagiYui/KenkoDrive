@@ -5,6 +5,7 @@ import com.akagiyui.drive.entity.Announcement;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.AnnouncementFilter;
 import com.akagiyui.drive.model.request.AddAnnouncementRequest;
+import com.akagiyui.drive.model.request.UpdateAnnouncementRequest;
 import com.akagiyui.drive.model.response.AnnouncementDisplayResponse;
 import com.akagiyui.drive.model.response.AnnouncementResponse;
 import com.akagiyui.drive.model.response.PageResponse;
@@ -97,5 +98,17 @@ public class AnnouncementController {
     @RequirePermission(Permission.ANNOUNCEMENT_DELETE)
     public void deleteAnnouncement(@PathVariable String id) {
         announcementService.delete(id);
+    }
+
+    /**
+     * 修改公告
+     *
+     * @param id      公告id
+     * @param request 更新请求
+     */
+    @PutMapping("/{id}")
+    @RequirePermission(Permission.ANNOUNCEMENT_UPDATE)
+    public void updateAnnouncement(@PathVariable String id, @Validated @RequestBody UpdateAnnouncementRequest request) {
+        announcementService.update(id, request);
     }
 }
