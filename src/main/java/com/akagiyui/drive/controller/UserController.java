@@ -11,7 +11,6 @@ import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.model.response.UserInfoResponse;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.UserService;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -124,7 +123,7 @@ public class UserController {
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1)
-    public void getEmailVerifyCode(@RequestBody @Valid EmailVerifyCodeRequest verifyRequest) {
+    public void getEmailVerifyCode(@RequestBody @Validated EmailVerifyCodeRequest verifyRequest) {
         userService.sendEmailVerifyCode(verifyRequest);
     }
 
@@ -135,7 +134,7 @@ public class UserController {
      */
     @PostMapping("/register")
     @PreAuthorize("isAnonymous()")
-    public void confirmRegister(@RequestBody @Valid RegisterConfirmRequest registerConfirmRequest) {
+    public void confirmRegister(@RequestBody @Validated RegisterConfirmRequest registerConfirmRequest) {
         userService.confirmRegister(registerConfirmRequest);
     }
 
@@ -155,7 +154,7 @@ public class UserController {
      */
     @PutMapping("/info")
     @PreAuthorize("isAuthenticated()")
-    public void updateLoginUserInfo(@RequestBody @Valid UpdateUserInfoRequest userInfo) {
+    public void updateLoginUserInfo(@RequestBody @Validated UpdateUserInfoRequest userInfo) {
         userService.updateInfo(userInfo);
     }
 
@@ -167,7 +166,7 @@ public class UserController {
      */
     @PutMapping("/{id}")
     @RequirePermission(Permission.USER_UPDATE)
-    public void updateUserInfo(@PathVariable String id, @RequestBody @Valid UpdateUserInfoRequest userInfo) {
+    public void updateUserInfo(@PathVariable String id, @RequestBody @Validated UpdateUserInfoRequest userInfo) {
         userService.updateInfo(id, userInfo);
     }
 
@@ -235,7 +234,7 @@ public class UserController {
      */
     @PutMapping("/{id}/password")
     @RequirePermission(Permission.USER_UPDATE)
-    public void resetPassword(@PathVariable String id,@RequestBody @Valid ResetPasswordRequest request) {
+    public void resetPassword(@PathVariable String id, @RequestBody @Validated ResetPasswordRequest request) {
         userService.resetPassword(id, request.getNewPassword());
     }
 
