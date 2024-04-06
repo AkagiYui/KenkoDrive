@@ -2,6 +2,7 @@ package com.akagiyui.drive.repository;
 
 import com.akagiyui.drive.entity.Announcement;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author AkagiYui
  */
-public interface AnnouncementRepository extends JpaRepository<Announcement, String> {
+public interface AnnouncementRepository extends JpaRepository<Announcement, String>, JpaSpecificationExecutor<Announcement> {
 
     /**
      * 查询所有启用的公告

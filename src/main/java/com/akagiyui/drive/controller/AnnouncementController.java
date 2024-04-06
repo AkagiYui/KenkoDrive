@@ -3,11 +3,14 @@ package com.akagiyui.drive.controller;
 import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.Announcement;
 import com.akagiyui.drive.model.Permission;
+import com.akagiyui.drive.model.filter.AnnouncementFilter;
 import com.akagiyui.drive.model.request.AddAnnouncementRequest;
 import com.akagiyui.drive.model.response.AnnouncementDisplayResponse;
 import com.akagiyui.drive.model.response.AnnouncementResponse;
+import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.service.AnnouncementService;
 import com.akagiyui.drive.service.UserService;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,8 +49,20 @@ public class AnnouncementController {
      */
     @GetMapping({"", "/"})
     @RequirePermission(Permission.ANNOUNCEMENT_GET_ALL)
-    public List<AnnouncementResponse> getAnnouncementList(@RequestParam(defaultValue = "false") Boolean all) {
-        return AnnouncementResponse.fromAnnouncementList(announcementService.getAnnouncementList(all));
+    public PageResponse<AnnouncementResponse> getAnnouncementList(
+        @RequestParam(defaultValue = "0") Integer index,
+        @RequestParam(defaultValue = "10") Integer size,
+        @ModelAttribute AnnouncementFilter filter
+    ) {
+        Page<Announcement> announcementPage = announcementService.find(index, size, filter);
+        List<Announcement> announcementList = announcementPage.getContent();
+        List<AnnouncementResponse> responseList = AnnouncementResponse.fromAnnouncementList(announcementList);
+        return new PageResponse<AnnouncementResponse>()
+            .setPage(index)
+            .setSize(size)
+            .setPageCount(announcementPage.getTotalPages())
+            .setTotal(announcementPage.getTotalElements())
+            .setList(responseList);
     }
 
     /**

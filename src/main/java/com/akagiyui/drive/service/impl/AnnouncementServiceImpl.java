@@ -1,10 +1,17 @@
 package com.akagiyui.drive.service.impl;
 
 import com.akagiyui.drive.entity.Announcement;
+import com.akagiyui.drive.model.filter.AnnouncementFilter;
 import com.akagiyui.drive.repository.AnnouncementRepository;
 import com.akagiyui.drive.service.AnnouncementService;
 import jakarta.annotation.Resource;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -35,5 +42,23 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public List<Announcement> getAnnouncementDisplayList() {
         return announcementRepository.findAnnouncementsByEnabledIsTrueOrderByUpdateTimeDesc();
+    }
+
+    @Override
+    public Page<Announcement> find(Integer index, Integer size, AnnouncementFilter filter) {
+        Pageable pageable = PageRequest.of(index, size);
+
+        // 条件查询
+        Specification<Announcement> specification = (root, query, cb) -> {
+            if (filter != null && StringUtils.hasText(filter.getExpression())) {
+                String queryString = "%" + filter.getExpression() + "%";
+                Predicate titlePredicate = cb.like(root.get("title"), queryString);
+                Predicate contentPredicate = cb.like(root.get("content"), queryString);
+                return cb.or(titlePredicate, contentPredicate);
+            }
+            return null;
+        };
+
+        return announcementRepository.findAll(specification, pageable);
     }
 }

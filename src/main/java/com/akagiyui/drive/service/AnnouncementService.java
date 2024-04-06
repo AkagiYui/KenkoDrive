@@ -1,6 +1,8 @@
 package com.akagiyui.drive.service;
 
 import com.akagiyui.drive.entity.Announcement;
+import com.akagiyui.drive.model.filter.AnnouncementFilter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -28,4 +30,12 @@ public interface AnnouncementService {
      */
     List<Announcement> getAnnouncementDisplayList();
 
+    /**
+     * 获取公告列表
+     *
+     * @param index  页码
+     * @param size   每页数量
+     * @param filter 筛选条件
+     */
+    Page<Announcement> find(Integer index, Integer size, AnnouncementFilter filter);
 }
