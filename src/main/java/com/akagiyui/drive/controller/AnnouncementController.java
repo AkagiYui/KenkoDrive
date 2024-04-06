@@ -74,11 +74,28 @@ public class AnnouncementController {
         return AnnouncementDisplayResponse.fromAnnouncementList(announcementService.getAnnouncementDisplayList());
     }
 
+    /**
+     * 更新公告状态
+     *
+     * @param id       公告id
+     * @param disabled 是否关闭
+     */
     @PutMapping("/{id}/status")
     @RequirePermission(Permission.ANNOUNCEMENT_UPDATE)
     public void updateStatus(@PathVariable String id, @RequestParam(required = false) Boolean disabled) {
         if (disabled != null) {
             announcementService.disable(id, disabled);
         }
+    }
+
+    /**
+     * 删除公告
+     *
+     * @param id 公告id
+     */
+    @DeleteMapping("/{id}")
+    @RequirePermission(Permission.ANNOUNCEMENT_DELETE)
+    public void deleteAnnouncement(@PathVariable String id) {
+        announcementService.delete(id);
     }
 }

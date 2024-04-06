@@ -46,4 +46,11 @@ public interface AnnouncementService {
      * @param disabled 公告开关
      */
     void disable(String id, boolean disabled);
+
+    /**
+     * 删除公告
+     *
+     * @param id 公告id
+     */
+    void delete(String id);
 }

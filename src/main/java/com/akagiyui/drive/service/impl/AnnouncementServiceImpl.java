@@ -72,4 +72,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         announcement.setEnabled(!disabled);
         announcementRepository.save(announcement);
     }
+
+    @Override
+    public void delete(String id) {
+        Announcement announcement = announcementRepository.findById(id).orElseThrow(
+            () -> new CustomException(ResponseEnum.NOT_FOUND)
+        );
+        announcementRepository.delete(announcement);
+    }
 }
