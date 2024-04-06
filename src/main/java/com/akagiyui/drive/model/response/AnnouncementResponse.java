@@ -4,7 +4,6 @@ import com.akagiyui.drive.entity.Announcement;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,12 +43,12 @@ public class AnnouncementResponse {
     /**
      * 发布时间
      */
-    private Date createTime;
+    private long createTime;
 
     /**
      * 修改时间
      */
-    private Date updateTime;
+    private long updateTime;
 
     public AnnouncementResponse(Announcement announcement) {
         this.id = announcement.getId();
@@ -57,8 +56,8 @@ public class AnnouncementResponse {
         this.content = announcement.getContent();
         this.userId = announcement.getAuthor().getId();
         this.enabled = announcement.getEnabled();
-        this.createTime = announcement.getCreateTime();
-        this.updateTime = announcement.getUpdateTime();
+        this.createTime = announcement.getCreateTime().getTime();
+        this.updateTime = announcement.getUpdateTime().getTime();
     }
 
     /**
