@@ -1,5 +1,7 @@
 package com.akagiyui.drive.service.impl;
 
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.entity.Announcement;
 import com.akagiyui.drive.model.filter.AnnouncementFilter;
 import com.akagiyui.drive.repository.AnnouncementRepository;
@@ -60,5 +62,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         };
 
         return announcementRepository.findAll(specification, pageable);
+    }
+
+    @Override
+    public void disable(String id, boolean disabled) {
+        Announcement announcement = announcementRepository.findById(id).orElseThrow(
+            () -> new CustomException(ResponseEnum.NOT_FOUND)
+        );
+        announcement.setEnabled(!disabled);
+        announcementRepository.save(announcement);
     }
 }

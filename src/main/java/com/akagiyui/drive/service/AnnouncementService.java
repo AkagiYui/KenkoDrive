@@ -38,4 +38,12 @@ public interface AnnouncementService {
      * @param filter 筛选条件
      */
     Page<Announcement> find(Integer index, Integer size, AnnouncementFilter filter);
+
+    /**
+     * 设置公告状态
+     *
+     * @param id       公告id
+     * @param disabled 公告开关
+     */
+    void disable(String id, boolean disabled);
 }

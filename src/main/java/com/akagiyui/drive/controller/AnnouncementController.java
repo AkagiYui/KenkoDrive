@@ -74,4 +74,11 @@ public class AnnouncementController {
         return AnnouncementDisplayResponse.fromAnnouncementList(announcementService.getAnnouncementDisplayList());
     }
 
+    @PutMapping("/{id}/status")
+    @RequirePermission(Permission.ANNOUNCEMENT_UPDATE)
+    public void updateStatus(@PathVariable String id, @RequestParam(required = false) Boolean disabled) {
+        if (disabled != null) {
+            announcementService.disable(id, disabled);
+        }
+    }
 }
