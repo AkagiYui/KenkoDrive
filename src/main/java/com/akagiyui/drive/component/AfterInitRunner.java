@@ -34,5 +34,6 @@ public class AfterInitRunner implements ApplicationRunner {
             configService.setInitialized(true);
             log.info("Initialize success");
         }
+        log.debug("==================== ApplicationInitialized ====================");
     }
 }
