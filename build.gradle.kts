@@ -1,17 +1,23 @@
 plugins {
-    java
+    java // Gradle 内置的 Java 插件，提供 Java 项目的构建支持
     id("org.springframework.boot") version "3.1.8" // Spring Boot
-    id("io.spring.dependency-management") version "1.1.4" // 依赖管理
+    id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
     kotlin("jvm") version "1.9.20" // Kotlin 支持
+    id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
 }
 
-group = "com.akagiyui"
-version = "0.0.1"
+group = "com.akagiyui" // 项目组织
+version = "0.0.1" // 项目版本
 java {
     sourceCompatibility = JavaVersion.VERSION_17
 }
 
 configurations {
+    /**
+     * 让 compileOnly 配置继承自 annotationProcessor 配置的所有依赖
+     * 添加到 compileOnly 中的任何库将被视为注解处理器
+     * 但仅在编译时有效，不会被打包到 JAR 文件中
+     */
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
     }
@@ -21,7 +27,7 @@ buildscript {
     repositories {
         mavenLocal()
         maven {
-            url = uri("https://maven.aliyun.com/repository/public/")
+            setUrl("https://maven.aliyun.com/repository/public/")
         }
         mavenCentral()
     }
@@ -30,7 +36,7 @@ buildscript {
 repositories {
     mavenLocal()
     maven {
-        url = uri("https://maven.aliyun.com/repository/public/")
+        setUrl("https://maven.aliyun.com/repository/public/")
     }
     mavenCentral()
 }
@@ -69,18 +75,24 @@ dependencies {
     implementation("io.minio:minio:$minioVersion")  // MinIO 客户端
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")  // Caffeine 内存缓存
 
+    // scope: provided
     compileOnly("org.projectlombok:lombok")  // Lombok
 
+    // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
 
+    // 注解处理器
     annotationProcessor("org.projectlombok:lombok")
 
+    // scope: test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2") // H2 数据库，用于测试
 }
 
+// gradle test 任务配置
 tasks.withType<Test> {
+    // 设置 Spring Boot 的测试配置文件
     systemProperty("spring.profiles.active", "test")
     useJUnitPlatform()
 }

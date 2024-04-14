@@ -16,15 +16,15 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [x] 用户注册
 - [x] 用户名登录/邮箱登录
-- [ ] 重置密码
+- [x] 重置密码
 - [x] 用户信息获取/修改
 - [x] 用户头像获取/修改
 - [ ] 用户文件上传/删除/下载
 - [ ] 文件分享/分享文件下载
-- [ ] 文件夹
+- [x] 文件夹
 - [ ] 文件夹分享
 - [ ] 游客广场
-- [ ] 管理员用户管理
+- [x] 管理员用户管理
 - [ ] 管理员文件管理
 - [ ] 文件搜索
 - [ ] 文件内容检索
@@ -172,6 +172,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [知乎: ObjectMapper，别再像个二货一样一直new了！](https://zhuanlan.zhihu.com/p/498705670)
 - [哔哩哔哩: 【java工程师必知】SpringBoot Validation入参校验国际化](https://www.bilibili.com/video/av742302746/)
 - [哔哩哔哩: 嘿嘿，我发现了百度网盘秒传的秘密！](https://www.bilibili.com/video/av1751974636)
+- [哔哩哔哩: 【IT老齐508】二十分钟快速上手Gradle](https://www.bilibili.com/video/av1602972088)
 - [CSDN: 有关HikariPool-1 – Failed to validate connection com.mysql.cj.jdbc.ConnectionImp 错误的产生原因与解决方法](https://blog.csdn.net/qq_45886144/article/details/128984915)
 - [CSDN: 数据库连接池选型 Druid vs HikariCP性能对比](https://blog.csdn.net/weixin_39098944/article/details/109228618)
 - [CSDN: SpringBoot 使用 beforeBodyWrite 实现统一的接口返回类型](https://blog.csdn.net/qq_37170583/article/details/107470337)
