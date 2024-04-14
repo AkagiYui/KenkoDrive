@@ -36,6 +36,11 @@ public class AnnouncementResponse {
     private String userId;
 
     /**
+     * 用户名
+     */
+    private String username;
+
+    /**
      * 已启用
      */
     private boolean enabled;
@@ -55,6 +60,7 @@ public class AnnouncementResponse {
         this.title = announcement.getTitle();
         this.content = announcement.getContent();
         this.userId = announcement.getAuthor().getId();
+        this.username = announcement.getAuthor().getUsername();
         this.enabled = announcement.getEnabled();
         this.createTime = announcement.getCreateTime().getTime();
         this.updateTime = announcement.getUpdateTime().getTime();

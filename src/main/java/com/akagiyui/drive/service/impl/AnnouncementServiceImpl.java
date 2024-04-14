@@ -41,8 +41,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void addAnnouncement(Announcement announcement) {
-        announcementRepository.save(announcement);
+    public Announcement addAnnouncement(Announcement announcement) {
+        return announcementRepository.save(announcement);
     }
 
     @Override

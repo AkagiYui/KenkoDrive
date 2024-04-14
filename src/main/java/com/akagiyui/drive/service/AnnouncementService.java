@@ -16,8 +16,10 @@ public interface AnnouncementService {
 
     /**
      * 新增公告
+     *
+     * @return 公告id
      */
-    void addAnnouncement(Announcement announcement);
+    Announcement addAnnouncement(Announcement announcement);
 
     /**
      * 获取公告列表
