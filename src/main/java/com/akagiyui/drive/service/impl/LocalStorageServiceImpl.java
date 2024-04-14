@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service.impl;
 
 import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CreateFolderException;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.model.StorageFile;
 import com.akagiyui.drive.service.StorageService;
@@ -30,18 +31,17 @@ public class LocalStorageServiceImpl implements StorageService {
     @PostConstruct
     public void init() {
         // 检查根目录是否存在，不存在则创建
-        log.debug("Local storage root dir: " + root);
+        log.debug("Local storage root dir: , {}", root);
         File rootDir = new File(root);
         if (!rootDir.exists() && (!rootDir.mkdirs())) {
-            throw new RuntimeException("创建根目录失败"); // todo 自定义异常
+            throw new CreateFolderException("Create local storage root dir failed");
         }
 
         // 检查临时分片目录是否存在，不存在则创建
         tempChunkDir = root + File.separator + "temp";
         File tempChunkDirFile = new File(tempChunkDir);
         if (!tempChunkDirFile.exists() && (!tempChunkDirFile.mkdirs())) {
-            throw new RuntimeException("创建临时分片目录失败"); // todo 自定义异常
-
+            throw new CreateFolderException("Create temp chunk dir failed");
         }
     }
 
@@ -144,13 +144,13 @@ public class LocalStorageServiceImpl implements StorageService {
     private File getChunkFile(String userId, String fileHash, int chunkIndex) {
         File userDir = new File(tempChunkDir + File.separator + userId);
         if (!userDir.exists() && (!userDir.mkdirs())) {
-            throw new RuntimeException("创建用户目录失败");
+            throw new CreateFolderException("创建用户目录失败");
         }
 
         // 如果 fileHash 目录不存在，则创建
         File fileDir = new File(userDir + File.separator + fileHash);
         if (!fileDir.exists() && (!fileDir.mkdirs())) {
-            throw new RuntimeException("创建文件目录失败");
+            throw new CreateFolderException("创建文件目录失败");
         }
 
         // 分片文件名为分片序号
@@ -225,7 +225,7 @@ public class LocalStorageServiceImpl implements StorageService {
     private void createParentDir(File file) {
         File parent = file.getParentFile();
         if (!parent.exists() && (!parent.mkdirs())) {
-            throw new RuntimeException("创建父目录失败");
+            throw new CreateFolderException("创建父目录失败");
         }
     }
 }

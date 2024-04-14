@@ -1,6 +1,6 @@
 plugins {
     java // Gradle 内置的 Java 插件，提供 Java 项目的构建支持
-    id("org.springframework.boot") version "3.1.8" // Spring Boot
+    id("org.springframework.boot") version "3.2.4" // Spring Boot
     id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
     kotlin("jvm") version "1.9.20" // Kotlin 支持
     id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
@@ -9,7 +9,7 @@ plugins {
 group = "com.akagiyui" // 项目组织
 version = "0.0.1" // 项目版本
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -113,5 +113,5 @@ extensions.findByName("buildScan")?.withGroovyBuilder {
 
 // Kotlin 代码生成版本
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }

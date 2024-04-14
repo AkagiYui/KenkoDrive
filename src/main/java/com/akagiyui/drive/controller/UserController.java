@@ -118,7 +118,6 @@ public class UserController {
      * 获取邮件验证码
      *
      * @param verifyRequest 预注册请求体
-     * @return 是否成功
      */
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")

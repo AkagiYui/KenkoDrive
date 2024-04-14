@@ -171,7 +171,7 @@ public class FileController {
         // 获取范围
         // todo 支持多范围  https://zhuanlan.zhihu.com/p/620113538?utm_id=0
         List<HttpRange> ranges = headers.getRange();
-        HttpRange range = ranges.isEmpty() ? null : ranges.get(0);
+        HttpRange range = ranges.isEmpty() ? null : ranges.getFirst();
         log.debug("range: {}", range);
         long start = range != null ? range.getRangeStart(mediaLength) : 0; // 开始位置
         long end = range != null ? range.getRangeEnd(mediaLength) : mediaLength - 1; // 结束位置

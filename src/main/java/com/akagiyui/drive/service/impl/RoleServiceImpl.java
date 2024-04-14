@@ -94,7 +94,6 @@ public class RoleServiceImpl implements RoleService {
     public String addRole(AddRoleRequest role) {
         // 检查角色名是否重复
         if (roleRepository.existsByName(role.getName())) {
-            log.warn("角色名重复: {}", role.getName());
             throw new CustomException(ResponseEnum.ROLE_EXIST);
         }
         Set<Permission> permissions;
@@ -104,7 +103,6 @@ public class RoleServiceImpl implements RoleService {
                 .map(Permission::valueOf)
                 .collect(Collectors.toSet());
         } catch (IllegalArgumentException e) {
-            log.warn("权限不存在: {}", role.getPermissions());
             throw new CustomException(ResponseEnum.PERMISSION_NOT_EXIST);
         }
         // 添加角色
@@ -137,7 +135,6 @@ public class RoleServiceImpl implements RoleService {
         // 修改角色名
         if (StringUtils.hasText(newRole.getName()) && !Objects.equals(oldRole.getName(), newRole.getName())) {
             if (roleRepository.existsByName(newRole.getName())) {
-                log.warn("角色名重复: {}", newRole.getName());
                 throw new CustomException(ResponseEnum.ROLE_EXIST);
             }
             oldRole.setName(newRole.getName());
@@ -158,7 +155,7 @@ public class RoleServiceImpl implements RoleService {
                     .map(Permission::valueOf)
                     .collect(Collectors.toSet());
             } catch (IllegalArgumentException e) {
-                log.warn("权限不存在: {}", newRole.getPermissions());
+                log.warn("Permission not found: {}", newRole.getPermissions());
                 throw new CustomException(ResponseEnum.PERMISSION_NOT_EXIST);
             }
             oldRole.setPermissions(permissions);

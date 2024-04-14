@@ -76,7 +76,7 @@ public class FolderServiceImpl implements FolderService {
 
         List<FolderResponse> folderChain = new ArrayList<>();
         while (folder != null) {
-            folderChain.add(0, new FolderResponse(folder));
+            folderChain.addFirst(new FolderResponse(folder));
             folder = folder.getParent();
         }
 

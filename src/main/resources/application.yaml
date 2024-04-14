@@ -12,15 +12,16 @@ spring:
   profiles:
     # 激活 生产环境 配置
     active: prod
+  threads:
+    virtual:
+      # 开启虚拟线程支持
+      enabled: true
   jpa:
     hibernate:
       # 自动修正数据表
       ddl-auto: update
     # 为每一个Http请求分配一个数据库连接
     open-in-view: false
-  mvc:
-    # 抛出 404 异常
-    throw-exception-if-no-handler-found: true
   web:
     resources:
       # 关闭静态资源映射
@@ -65,3 +66,5 @@ application:
       root: ./data
   avatar:
     default: static/default-avatar.jpg
+logging:
+  include-application-name: false
