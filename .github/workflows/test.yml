@@ -13,7 +13,7 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -25,9 +25,11 @@ jobs:
         run: chmod +x gradlew
 
       # 在 GitHub Actions 时使用官方源
+      # 将 Redis 的 host 替换为 127.0.0.1
       - name: Replace Gradle Wrapper Distribution Url
         run: |
           sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
+          sed -i 's#host: redis#host: 127.0.0.1#' src/main/resources/application-test.yaml
 
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -40,7 +42,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew build --no-daemon -x test --warning-mode all
 
       - name: Test with Gradle
-        run: ./gradlew test --no-daemon
+        run: ./gradlew test --no-daemon --warning-mode all
