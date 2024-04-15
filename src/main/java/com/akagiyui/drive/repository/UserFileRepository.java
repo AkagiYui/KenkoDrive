@@ -41,4 +41,13 @@ public interface UserFileRepository extends JpaRepository<UserFile, String> {
      * @return 用户文件是否存在
      */
     boolean existsByFileInfoId(String fileInfoId);
+
+    /**
+     * 根据用户ID、ID获取用户文件
+     *
+     * @param userId 用户ID
+     * @param id     ID
+     * @return 用户文件
+     */
+    UserFile findByUserIdAndId(String userId, String id);
 }

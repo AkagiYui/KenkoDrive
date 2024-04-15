@@ -49,4 +49,10 @@ public class UserFileServiceImpl implements UserFileService {
     public boolean existByFileId(String fileId) {
         return userFileRepository.existsByFileInfoId(fileId);
     }
+
+    @Override
+    public FileInfo getFileInfo(String folderId) {
+        User user = userService.getUser();
+        return userFileRepository.findByUserIdAndId(user.getId(), folderId).getFileInfo();
+    }
 }

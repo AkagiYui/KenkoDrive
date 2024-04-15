@@ -28,4 +28,9 @@ public interface UserFileService {
      * 判断文件是否有用户关联
      */
     boolean existByFileId(String fileId);
+
+    /**
+     * 获取文件信息
+     */
+    FileInfo getFileInfo(String id);
 }
