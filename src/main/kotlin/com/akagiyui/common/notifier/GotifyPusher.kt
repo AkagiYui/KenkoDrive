@@ -1,5 +1,6 @@
 package com.akagiyui.common.notifier
 
+import com.akagiyui.common.delegate.LoggerDelegate
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.*
 import org.springframework.web.client.RestTemplate
@@ -20,6 +21,8 @@ class GotifyPusher(
      */
     apiKey: String,
 ) {
+    private val log by LoggerDelegate()
+
     /**
      * Gotify 请求头
      */
@@ -73,12 +76,14 @@ class GotifyPusher(
             headers,
         )
 
-        return restTemplate.exchange(
+        val exchange = restTemplate.exchange(
             "$host/message",
             HttpMethod.POST,
             entity,
             String::class.java,
         )
+        log.debug("Push message to Gotify: $title")
+        return exchange
     }
 
 }
