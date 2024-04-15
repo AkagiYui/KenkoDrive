@@ -15,7 +15,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     steps:
-      - uses: dorny/test-reporter@v1
+      - uses: phoenix-actions/test-reporting@v8
         with:
           name: JUnit Tests
           artifact: test-results
