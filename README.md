@@ -1,6 +1,14 @@
 # KenkoDrive 我的云盘
 
-计划作为毕业设计，立项于 2023年5月31日。项目整体结构清晰，职责明确，注释全面，开箱即用。
+![GitHub License](https://img.shields.io/github/license/AkagiYui/KenkoDrive)
+![GitHub top language](https://img.shields.io/github/languages/top/AkagiYui/KenkoDrive)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive)
+![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive)
+![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive)
+
+一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` 的 Web 云盘应用单体后端。
+项目整体结构清晰，职责明确，注释全面，开箱即用。
 
 GitHub仓库：[github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)
 
@@ -85,7 +93,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 ## 技术栈
 
 - [x] [Gradle 包管理](build.gradle.kts)
-- [x] [Spring Boot 3.1](src/main/java/com/akagiyui/drive/KenkoDriveApplication.java)
+- [x] [Spring Boot 3.2](src/main/java/com/akagiyui/drive/KenkoDriveApplication.java)
 - [x] [Spring Security（跨域与认证授权）](src/main/java/com/akagiyui/drive/config/SecurityConfig.java)
 - [x] MySQL 数据库
 - [x] [Spring Cache 缓存](src/main/java/com/akagiyui/drive/config/CacheConfig.java)
