@@ -49,6 +49,10 @@ spring:
             enable: true
   messages:
     basename: i18n/messages
+sentry:
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
 application:
   # 应用版本号，自动从 build.gradle 中获取
   version: ${version?:unknown}

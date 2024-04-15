@@ -1,8 +1,16 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     java // Gradle 内置的 Java 插件，提供 Java 项目的构建支持
     id("org.springframework.boot") version "3.2.4" // Spring Boot
     id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
-    kotlin("jvm") version "1.9.20" // Kotlin 支持
+    kotlin("jvm") version "1.9.23" // Kotlin 支持
+    /**
+     * Kotlin Spring 插件
+     * https://kotlinlang.org/docs/all-open-plugin.html#spring-support
+     */
+    kotlin("plugin.spring") version "1.9.23"
+
     id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
 }
 
@@ -74,6 +82,8 @@ dependencies {
     implementation("net.coobird:thumbnailator:$thumbnailatorVersion")  // 缩略图生成
     implementation("io.minio:minio:$minioVersion")  // MinIO 客户端
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")  // Caffeine 内存缓存
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin") // 对Kotlin类和数据类的序列化/反序列化的支持
+    implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射库
 
     // scope: provided
     compileOnly("org.projectlombok:lombok")  // Lombok
@@ -97,6 +107,19 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        // 严格检查 JSR-305 注解，如 @NonNull、@Nullable
+        freeCompilerArgs += "-Xjsr305=strict"
+        jvmTarget = "21"
+    }
+}
+
+// Kotlin 代码生成版本
+kotlin {
+    jvmToolchain(21)
+}
+
 tasks.processResources {
     // 替换配置文件中的占位符
     // IDEA 构建警告，但不影响构建：https://youtrack.jetbrains.com/issue/IDEA-296490/Unsupported-action-found-org.gradle.api.internal.file.copy.MatchingCopyAction
@@ -111,7 +134,10 @@ extensions.findByName("buildScan")?.withGroovyBuilder {
     setProperty("termsOfServiceAgree", "yes")
 }
 
-// Kotlin 代码生成版本
-kotlin {
-    jvmToolchain(21)
+// Sentry 配置
+sentry {
+    includeSourceContext.set(true)
+    org.set("akagiyui")
+    projectName.set("kenkodrive-springboot")
+    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
 }
