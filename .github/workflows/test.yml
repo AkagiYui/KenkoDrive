@@ -3,7 +3,7 @@ name: Spring Boot Test
 on: [ push, pull_request ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     services:
@@ -51,7 +51,7 @@ jobs:
         run: ./gradlew test --no-daemon --warning-mode all
 
       - name: Upload test results
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-results
