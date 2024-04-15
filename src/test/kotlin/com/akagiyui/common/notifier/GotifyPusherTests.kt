@@ -1,9 +1,7 @@
-package com.akagiyui.drive.notifier
+package com.akagiyui.common.notifier
 
-import com.akagiyui.common.notifier.GotifyPusher
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.web.client.ResourceAccessException
 
 /**
@@ -11,11 +9,10 @@ import org.springframework.web.client.ResourceAccessException
  *
  * @author AkagiYui
  */
-@SpringBootTest
-class GotifyPusherTest {
+class GotifyPusherTests {
 
     @Test
-    @Disabled
+    @Disabled("no gotify server for test")
     fun sendMessage() {
         val gotifyPusher = GotifyPusher(
             "https://gotify.server",
