@@ -1,12 +1,12 @@
 # KenkoDrive 我的云盘
 
-![GitHub License](https://img.shields.io/github/license/AkagiYui/KenkoDrive)
+[![GitHub License](https://img.shields.io/github/license/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive?tab=readme-ov-file#MIT-1-ov-file)
 ![GitHub top language](https://img.shields.io/github/languages/top/AkagiYui/KenkoDrive)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive)
-![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/commits/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/commits/)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml)
-![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml)](https://github.com/AkagiYui/KenkoDrive/actions/workflows/test.yml)
+[![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/stargazers)
 
 一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` 的 Web 云盘应用单体后端。
 项目整体结构清晰，职责明确，注释全面，开箱即用。

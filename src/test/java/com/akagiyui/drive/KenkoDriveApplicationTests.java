@@ -24,7 +24,7 @@ class KenkoDriveApplicationTests {
     @Test
     void i18nTest() {
         Locale locale = LocaleContextHolder.getLocale();
-        //assertEquals("测试", messageSource.getMessage("TEST", new Object[]{}, locale));
+        System.out.println("locale: " + locale);
         if (locale.equals(Locale.SIMPLIFIED_CHINESE)) {
             assertEquals("测试", messageSource.getMessage("TEST", new Object[]{}, locale));
         } else {

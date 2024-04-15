@@ -31,6 +31,9 @@ jobs:
           sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
           sed -i 's#host: redis#host: 127.0.0.1#' src/main/resources/application-test.yaml
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -52,4 +55,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: build/test-results
+          path: |
+            build/reports
+            build/test-results
