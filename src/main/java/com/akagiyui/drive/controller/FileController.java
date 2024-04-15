@@ -80,7 +80,6 @@ public class FileController {
      * 请求上传文件
      *
      * @param request 请求内容
-     * @return 是否成功
      */
     @PostMapping("/upload/request")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
@@ -219,7 +218,6 @@ public class FileController {
      * 删除文件
      *
      * @param id 文件id
-     * @return 是否成功
      */
     @DeleteMapping("/{id}")
     public void deleteFile(@PathVariable String id) {
