@@ -26,7 +26,7 @@ jobs:
 
       # 在 GitHub Actions 时使用官方源
       # 将 Redis 的 host 替换为 127.0.0.1
-      - name: Replace Gradle Wrapper Distribution Url
+      - name: Replace Some Configurations
         run: |
           sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
           sed -i 's#host: redis#host: 127.0.0.1#' src/main/resources/application-test.yaml
@@ -42,7 +42,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon -x test --warning-mode all
+        run: ./gradlew build --no-daemon -x test --warning-mode all --scan
 
       - name: Test with Gradle
         run: ./gradlew test --no-daemon --warning-mode all
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results
