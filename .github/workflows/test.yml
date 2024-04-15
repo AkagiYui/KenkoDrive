@@ -29,6 +29,8 @@ jobs:
       - name: Replace Some Configurations
         run: |
           sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
+          sed -i 's#maven.aliyun.com/repository/gradle-plugin#plugins.gradle.org/m2#g' settings.gradle.kts
+          sed -i 's#maven.aliyun.com/repository/public#repo1.maven.org/maven2#g' build.gradle.kts
           sed -i 's#host: redis#host: 127.0.0.1#' src/main/resources/application-test.yaml
 
       - name: Setup Gradle
@@ -48,7 +50,7 @@ jobs:
         run: ./gradlew build --no-daemon -x test --warning-mode all --scan
 
       - name: Test with Gradle
-        run: ./gradlew test --no-daemon --warning-mode all
+        run: ./gradlew test --no-daemon --warning-mode all --scan
 
       - name: Upload test results
         if: always()

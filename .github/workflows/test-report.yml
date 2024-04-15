@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: dorny/test-reporter@v1
         with:
+          name: JUnit Tests
           artifact: test-results
           path: 'test-results/test/TEST-*.xml'
           reporter: java-junit
