@@ -18,6 +18,11 @@ group = "com.akagiyui" // 项目组织
 version = "0.0.1" // 项目版本
 java {
     sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+        vendor = JvmVendorSpec.GRAAL_VM
+    }
 }
 
 configurations {

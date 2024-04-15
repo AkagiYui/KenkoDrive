@@ -1,0 +1,46 @@
+name: Spring Boot Test
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'liberica'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 在 GitHub Actions 时使用官方源
+      - name: Replace Gradle Wrapper Distribution Url
+        run: |
+          sed -i 's#mirrors.cloud.tencent.com/gradle#services.gradle.org/distributions#g' gradle/wrapper/gradle-wrapper.properties
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}"
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon
+
+      - name: Test with Gradle
+        run: ./gradlew test --no-daemon

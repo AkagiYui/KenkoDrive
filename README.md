@@ -5,6 +5,7 @@
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive)
 ![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml)
 ![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive)
 
 一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` 的 Web 云盘应用单体后端。
@@ -114,13 +115,15 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## RoadMap
 
-|   需求    | 状态  |    完成时间    |
-|:-------:|:---:|:----------:|
-| 前端自动部署  | 已完成 | 2023年6月1日  |
-| 后端自动部署  | 已完成 | 2023年6月26日 |
-| 用户注册/登录 | 已完成 | 2023年7月25日 |
-| 用户权限校验  | 已完成 | 2023年8月15日 |
-| 断点续传下载  | 已完成 | 2023年8月19日 |
+|        需求        | 状态  |    完成时间    |
+|:----------------:|:---:|:----------:|
+|      前端自动部署      | 已完成 | 2023年6月1日  |
+|      后端自动部署      | 已完成 | 2023年6月26日 |
+|     用户注册/登录      | 已完成 | 2023年7月25日 |
+|      用户权限校验      | 已完成 | 2023年8月15日 |
+|      断点续传下载      | 已完成 | 2023年8月19日 |
+|    升级到Java21     | 已完成 | 2024年4月14日 |
+| 升级到SpringBoot3.2 | 已完成 | 2024年4月14日 |
 
 ## 原理解析
 
@@ -137,7 +140,6 @@ API 文档：https://apifox.com/apidoc/project-2811497
 9. 后端 如果分片哈希值与前端传来的分片哈希值不一致，则丢弃并返回错误信息
 10. 后端 如果分片哈希值与前端传来的分片哈希值一致，则将分片文件写入临时文件夹，返回成功信息
 11. 后端 如果所有分片上传完成，则添加异步任务，将临时文件夹中的分片文件合并为一个文件，写入文件系统，删除临时文件夹
-
 
 ## 总结与展望
 
