@@ -1,5 +1,5 @@
 version: "1.0"
-projectJDK: 17
+projectJDK: 21
 linter: jetbrains/qodana-jvm:latest
 profile:
   name: qodana.recommended
@@ -14,7 +14,7 @@ bootstrap: |
   <project version="4">
     <component name="ExternalStorageConfigurationManager" enabled="true" />
     <component name="NullableNotNullManager">
-      <option name="myDefaultNullable" value="org.jetbrains.annotation.Nullable" /> 
+      <option name="myDefaultNullable" value="org.jetbrains.annotation.Nullable" />
       <option name="myDefaultNotNull" value="org.jetbrains.annotation.NotNull" />
     </component>
   </project>

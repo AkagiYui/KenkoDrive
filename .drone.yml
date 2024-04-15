@@ -26,7 +26,7 @@ services:
 
 steps:
   - name: test and create cache
-    image: gradle:jdk17-alpine
+    image: gradle:8.7.0-jdk21-alpine
     failure: ignore
     volumes:
       - name: gradle-cache
@@ -35,7 +35,7 @@ steps:
       - gradle test -i
 
   - name: build jar package
-    image: gradle:jdk17-alpine
+    image: gradle:8.7.0-jdk21-alpine
     volumes:
       - name: gradle-cache
         path: /home/gradle/.gradle

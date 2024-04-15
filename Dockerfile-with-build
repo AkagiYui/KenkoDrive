@@ -1,9 +1,9 @@
-FROM gradle:jdk17-alpine as builder
+FROM gradle:8.7.0-jdk21-alpine as builder
 COPY . /job
 WORKDIR /job
 RUN gradle bootJar
 
-FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
+FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 COPY --from=builder /job/build/libs/*.jar /app.jar
 EXPOSE 6677
 ENTRYPOINT ["java", "-jar", "/app.jar"]

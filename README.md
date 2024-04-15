@@ -151,7 +151,9 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 - [Drone官方文档](https://docs.drone.io/)
 - [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
+- [Spring官方文档: Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
 - [柏码知识库](https://itbaima.net/document)
+- [在 Kotlin 中使用 SLF4J](https://flapypan.top/kotlin-slf4j)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Spring 框架缓存故障自动切换](https://kyon.life/post/dynamic-switch-cache-in-spring/)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)

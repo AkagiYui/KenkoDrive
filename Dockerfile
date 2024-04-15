@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jre-17-slim-musl
+FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 LABEL maintainer="AkagiYui"
 
 COPY build/libs/*.jar /app/app.jar
