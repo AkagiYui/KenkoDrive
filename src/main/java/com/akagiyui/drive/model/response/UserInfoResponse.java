@@ -1,6 +1,8 @@
 package com.akagiyui.drive.model.response;
 
+import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.Permission;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -40,6 +42,11 @@ public class UserInfoResponse {
      */
     private Date registerTime;
 
+    /**
+     * 权限
+     */
+    private List<String> permissions;
+
     public UserInfoResponse(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
@@ -47,6 +54,10 @@ public class UserInfoResponse {
         this.email = user.getEmail();
         this.disabled = user.getDisabled();
         this.registerTime = user.getCreateTime();
+
+        List<Role> roles = user.getRoles();
+        List<Permission> allPermissions = roles.stream().flatMap(role -> role.getPermissions().stream()).toList();
+        this.permissions = allPermissions.stream().map(Permission::name).toList();
     }
 
     public static List<UserInfoResponse> fromUserList(List<User> users) {

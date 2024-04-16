@@ -95,6 +95,10 @@ public enum Permission {
      * 修改设置
      */
     CONFIGURATION_UPDATE("修改设置"),
+    /**
+     * 前端启用调试模式
+     */
+    FRONTEND_ENABLE_DEBUG_MODE("前端启用调试模式"),
     ;
 
     /**
