@@ -65,7 +65,7 @@ public class AvatarServiceImpl implements AvatarService {
 
     private byte[] getDefaultAvatar() {
         if (defaultAvatar == null) {
-            File file = FileUtil.getResourceFile(defaultAvatarPath);
+            File file = FileUtil.INSTANCE.getResourceFile(defaultAvatarPath);
             try (InputStream inputStream = file.toURI().toURL().openStream()){
                 defaultAvatar = inputStream.readAllBytes();
             } catch (IOException e) {
