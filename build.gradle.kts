@@ -8,6 +8,8 @@ plugins {
     /**
      * Kotlin Spring 插件
      * https://kotlinlang.org/docs/all-open-plugin.html#spring-support
+     *
+     * 自动为 Spring Bean 添加 open 修饰符
      */
     kotlin("plugin.spring") version "1.9.23"
 
