@@ -15,6 +15,6 @@ class KenkoDriveApplication
 
 fun main(args: Array<String>) {
     runApplication<KenkoDriveApplication>(*args) {
-        setBannerMode(Banner.Mode.OFF) // 关闭 Spring Boot 启动图标
+        setBannerMode(Banner.Mode.CONSOLE) // 只在控制台输出 Spring Boot 启动图标
     }
 }
