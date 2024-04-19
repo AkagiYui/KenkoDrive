@@ -44,6 +44,9 @@ buildscript {
         maven {
             setUrl("https://maven.aliyun.com/repository/public/")
         }
+        maven {
+            setUrl("https://mirrors.huaweicloud.com/repository/maven/")
+        }
         mavenCentral()
     }
 }
@@ -52,6 +55,9 @@ repositories {
     mavenLocal()
     maven {
         setUrl("https://maven.aliyun.com/repository/public/")
+    }
+    maven {
+        setUrl("https://mirrors.huaweicloud.com/repository/maven/")
     }
     mavenCentral()
 }
@@ -120,11 +126,6 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs += "-Xjsr305=strict"
         jvmTarget = "21"
     }
-}
-
-// Kotlin 代码生成版本
-kotlin {
-    jvmToolchain(21)
 }
 
 tasks.processResources {
