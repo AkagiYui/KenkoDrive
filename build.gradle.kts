@@ -36,6 +36,11 @@ java {
     }
 }
 
+allOpen {
+    // 为 JPA 实体类添加 open 修饰符
+    annotation("jakarta.persistence.MappedSuperclass")
+}
+
 /**
  * 该插件仅用于在 Java 与 Kotlin 混合编程时让编译器识别 Lombok 注解，
  * 应当在过渡时期结束后移除
