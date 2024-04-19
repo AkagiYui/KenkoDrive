@@ -1,26 +1,23 @@
-package com.akagiyui.drive.repository;
+package com.akagiyui.drive.repository
 
-import com.akagiyui.drive.entity.FileInfo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
-import java.util.stream.Stream;
+import com.akagiyui.drive.entity.FileInfo
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+import java.util.stream.Stream
 
 /**
  * 文件信息操作接口
  *
  * @author AkagiYui
  */
-@Repository
-public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
+interface FileInfoRepository : JpaRepository<FileInfo, String> {
     /**
      * 根据哈希查找文件
      *
      * @param hash 文件哈希
      * @return 文件
      */
-    FileInfo getFirstByHash(String hash);
+    fun getFirstByHash(hash: String): FileInfo
 
     /**
      * 根据哈希查找文件
@@ -28,7 +25,7 @@ public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
      * @param hash 文件哈希
      * @return 是否存在
      */
-    boolean existsByHash(String hash);
+    fun existsByHash(hash: String): Boolean
 
     /**
      * 记录一次下载
@@ -36,12 +33,12 @@ public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
      * @param id 文件ID
      */
     @Query("update FileInfo f set f.downloadCount = f.downloadCount + 1 where f.id = ?1")
-    void recordDownload(String id);
+    fun recordDownload(id: String)
 
     /**
      * 获取所有文件信息，按更新时间升序，优先遍历长时间未更新的文件
      *
      * @return 文件信息流
      */
-    Stream<FileInfo> findAllByOrderByUpdateTimeAsc();
+    fun findAllByOrderByUpdateTimeAsc(): Stream<FileInfo>
 }

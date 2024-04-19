@@ -134,7 +134,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [Drone官方文档](https://docs.drone.io/)
 - [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
 - [Spring官方文档: Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
-- [Kotlin官方文档：Lombok compiler plugin](https://kotlinlang.org/docs/lombok.html)
+- [Kotlin官方文档: Lombok compiler plugin](https://kotlinlang.org/docs/lombok.html)
 - [柏码知识库](https://itbaima.net/document)
 - [在 Kotlin 中使用 SLF4J](https://flapypan.top/kotlin-slf4j)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
@@ -174,6 +174,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [CSDN: 【spring boot - JPA--H2报错】H2 error: “Syntax error in SQL statement ... expected identifier“](https://blog.csdn.net/wondersfan/article/details/126631804)
 - [CSDN: 前端 ts 使用枚举爆红 元素隐式具有 “any“ 类型，因为索引表达式的类型不为 “number“,根据名字获取数字，根据数字获取字符](https://blog.csdn.net/weixin_45973327/article/details/131985139)
 - [CSDN: 【进阶】logback之 AsyncAppender 的原理、源码及避坑建议](https://blog.csdn.net/BASK2312/article/details/128504636)
+- [CSDN: JPA不用@Repository--笔记](https://blog.csdn.net/zero_cctv/article/details/109322211)
 - [简书: Spring Boot - 数据校验](https://www.jianshu.com/p/e69a1f187482)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
 

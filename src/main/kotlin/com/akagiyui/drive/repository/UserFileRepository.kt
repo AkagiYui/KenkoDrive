@@ -1,19 +1,15 @@
-package com.akagiyui.drive.repository;
+package com.akagiyui.drive.repository
 
-import com.akagiyui.drive.entity.Folder;
-import com.akagiyui.drive.entity.UserFile;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import com.akagiyui.drive.entity.Folder
+import com.akagiyui.drive.entity.UserFile
+import org.springframework.data.jpa.repository.JpaRepository
 
 /**
  * 用户文件关联 操作接口
  *
  * @author AkagiYui
  */
-@Repository
-public interface UserFileRepository extends JpaRepository<UserFile, String> {
+interface UserFileRepository : JpaRepository<UserFile, String> {
 
     /**
      * 根据用户ID、文件信息ID、文件夹判断用户文件是否存在
@@ -23,7 +19,7 @@ public interface UserFileRepository extends JpaRepository<UserFile, String> {
      * @param folder     文件夹
      * @return 用户文件是否存在
      */
-    boolean existsByUserIdAndFileInfoIdAndFolder(String userId, String fileInfoId, Folder folder);
+    fun existsByUserIdAndFileInfoIdAndFolder(userId: String, fileInfoId: String, folder: Folder): Boolean
 
     /**
      * 根据用户ID、文件夹ID获取用户文件列表
@@ -32,7 +28,7 @@ public interface UserFileRepository extends JpaRepository<UserFile, String> {
      * @param folderId 文件夹ID
      * @return 用户文件列表
      */
-    List<UserFile> findByUserIdAndFolderId(String userId, String folderId);
+    fun findByUserIdAndFolderId(userId: String, folderId: String): List<UserFile>
 
     /**
      * 根据文件信息ID判断用户文件是否存在
@@ -40,7 +36,7 @@ public interface UserFileRepository extends JpaRepository<UserFile, String> {
      * @param fileInfoId 文件信息ID
      * @return 用户文件是否存在
      */
-    boolean existsByFileInfoId(String fileInfoId);
+    fun existsByFileInfoId(fileInfoId: String): Boolean
 
     /**
      * 根据用户ID、ID获取用户文件
@@ -49,5 +45,6 @@ public interface UserFileRepository extends JpaRepository<UserFile, String> {
      * @param id     ID
      * @return 用户文件
      */
-    UserFile findByUserIdAndId(String userId, String id);
+    fun findByUserIdAndId(userId: String, id: String): UserFile
+
 }
