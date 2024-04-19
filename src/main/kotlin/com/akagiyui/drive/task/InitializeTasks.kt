@@ -1,0 +1,82 @@
+package com.akagiyui.drive.task
+
+import com.akagiyui.drive.entity.Role
+import com.akagiyui.drive.model.Permission
+import com.akagiyui.drive.model.request.AddUserRequest
+import com.akagiyui.drive.service.ConfigService
+import com.akagiyui.drive.service.RoleService
+import com.akagiyui.drive.service.UserService
+import org.hibernate.query.sqm.tree.SqmNode.log
+import org.springframework.stereotype.Component
+
+/**
+ * 初始化任务，用于初始化一些数据
+ * 注意：该任务具有危险性，也许会破坏数据，并且仅在第一次启动时自动执行
+ *
+ * @author AkagiYui
+ */
+@Component
+class InitializeTasks(
+    private val configService: ConfigService,
+    private val roleService: RoleService,
+    private val userService: UserService,
+) {
+
+    fun preCheck() {
+        log.info("Start pre check")
+        // 检查是否已经初始化
+        if (configService.isInitialized) {
+            log.warn("Already initialized")
+        }
+    }
+
+    fun initConfig() {
+        log.info("Start init config")
+        // 初始化配置
+        // 设置注册功能关闭
+        configService.setRegisterEnabled(false)
+        // 设置文件上传大小限制为100MB
+        configService.setFileUploadMaxSize(1024L * 1024 * 100)
+        // 设置文件上传分块大小为5MB
+        configService.setFileUploadChunkSize(1024 * 1024 * 5)
+    }
+
+    fun addRoleAndUser() {
+        log.info("Start add role")
+        // 添加角色
+        // 添加超级管理员角色
+        val admin = Role()
+        admin.setName("超级管理员")
+        admin.setDescription("拥有所有权限")
+        admin.setDisabled(false)
+        admin.setIsDefault(false)
+        admin.setPermissions(HashSet(Permission.entries))
+        roleService.addRole(admin)
+
+        // 添加管理员用户
+        val adminUserRequest = AddUserRequest()
+        adminUserRequest.username = "admin"
+        adminUserRequest.password = "admin"
+        adminUserRequest.nickname = "管理员"
+        val adminUser = userService.addUser(adminUserRequest)
+        userService.addRoles(adminUser.id, HashSet(listOf(admin.id)))
+
+        // 添加普通用户角色
+        val user = Role()
+        user.setName("普通用户")
+        user.setDescription("允许上传下载自己的文件")
+        user.setDisabled(false)
+        user.setIsDefault(true)
+        user.setPermissions(
+            HashSet(
+                listOf(
+                    Permission.PERSONAL_UPLOAD,
+                    Permission.PERSONAL_DOWNLOAD,
+                    Permission.FOLDER_CREATE,
+                    Permission.FOLDER_DELETE,
+                ),
+            ),
+        )
+        roleService.addRole(user)
+    }
+}

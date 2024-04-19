@@ -134,6 +134,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [Drone官方文档](https://docs.drone.io/)
 - [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
 - [Spring官方文档: Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
+- [Kotlin官方文档：Lombok compiler plugin](https://kotlinlang.org/docs/lombok.html)
 - [柏码知识库](https://itbaima.net/document)
 - [在 Kotlin 中使用 SLF4J](https://flapypan.top/kotlin-slf4j)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
@@ -183,6 +184,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 如需查看完整的commit日志，请查看[GitHub提交](https://github.com/AkagiYui/KenkoDrive/commits)。
 
 ### 2024年4月
+
+- 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
 
 - 新增了`日志数据库记录器`，将日志记录到数据库中
 

@@ -14,6 +14,15 @@ plugins {
     kotlin("plugin.spring") version "1.9.23"
 
     id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
+
+    /**
+     * 该插件仅用于在 Java 与 Kotlin 混合编程时让编译器识别 Lombok 注解，
+     * 应当在过渡时期结束后移除
+     *
+     * https://youtrack.jetbrains.com/issue/KT-7112
+     */
+    kotlin("plugin.lombok") version "1.9.23"
+    id("io.freefair.lombok") version "8.6"
 }
 
 group = "com.akagiyui" // 项目组织
@@ -25,6 +34,14 @@ java {
         languageVersion.set(JavaLanguageVersion.of(21))
         vendor = JvmVendorSpec.GRAAL_VM
     }
+}
+
+/**
+ * 该插件仅用于在 Java 与 Kotlin 混合编程时让编译器识别 Lombok 注解，
+ * 应当在过渡时期结束后移除
+ */
+kotlinLombok {
+    lombokConfigurationFile(file("src/main/java/lombok.config"))
 }
 
 configurations {

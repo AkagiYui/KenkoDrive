@@ -1,7 +1,7 @@
 package com.akagiyui.drive.component;
 
 import com.akagiyui.drive.service.ConfigService;
-import com.akagiyui.drive.task.InitializeTask;
+import com.akagiyui.drive.task.InitializeTasks;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 public class AfterInitRunner implements ApplicationRunner {
 
     private final ConfigService configService;
-    private final InitializeTask initializeTask;
+    private final InitializeTasks initializeTasks;
 
-    public AfterInitRunner(ConfigService configService, InitializeTask initializeTask) {
+    public AfterInitRunner(ConfigService configService, InitializeTasks initializeTasks) {
         this.configService = configService;
-        this.initializeTask = initializeTask;
+        this.initializeTasks = initializeTasks;
     }
 
     @Override
@@ -28,9 +28,9 @@ public class AfterInitRunner implements ApplicationRunner {
         log.debug("====================== ApplicationStarted ======================");
         // 初始化检查
         if (!configService.isInitialized()) {
-            initializeTask.preCheck();
-            initializeTask.initConfig();
-            initializeTask.addRoleAndUser();
+            initializeTasks.preCheck();
+            initializeTasks.initConfig();
+            initializeTasks.addRoleAndUser();
             configService.setInitialized(true);
             log.info("Initialize success");
         }
