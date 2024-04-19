@@ -23,19 +23,20 @@ public class ConfigServiceImpl implements ConfigService {
     /**
      * 是否开放注册 键名
      */
-    private static final String REGISTER_ENABLED = "registerEnabled";
+    public static final String REGISTER_ENABLED = "registerEnabled";
     /**
      * 是否初始化 键名
      */
-    private static final String IS_INITIALIZED = "isInitialized";
+    public static final String IS_INITIALIZED = "isInitialized";
     /**
      * 文件分片大小 键名
      */
-    private static final String FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize";
+    public static final String FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize";
     /**
      * 全局文件上传大小限制 键名
      */
-    private static final String FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize";
+    public static final String FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize";
+
     private final ConfigRepository configRepository;
 
     public ConfigServiceImpl(ConfigRepository configRepository) {
