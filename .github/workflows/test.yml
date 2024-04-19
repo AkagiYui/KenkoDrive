@@ -37,7 +37,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon -x test --warning-mode all --scan
+        run: ./gradlew assemble --no-daemon --warning-mode all --scan
 
       - name: Test with Gradle
         run: ./gradlew test --no-daemon --warning-mode all --scan

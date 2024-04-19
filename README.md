@@ -184,6 +184,8 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ### 2024年4月
 
+- 新增了`日志数据库记录器`，将日志记录到数据库中
+
 - 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
 - 更新了 Docker 镜像构建脚本、 Drone 流水线脚本
 - 新增了 slf4j 日志对象获取委托类
