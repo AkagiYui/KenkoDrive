@@ -1,16 +1,14 @@
-package com.akagiyui.drive.service;
+package com.akagiyui.drive.service
 
-import com.akagiyui.drive.entity.Folder;
-import com.akagiyui.drive.model.response.FolderResponse;
-
-import java.util.List;
+import com.akagiyui.drive.entity.Folder
+import com.akagiyui.drive.model.response.FolderResponse
 
 /**
  * 文件夹 服务接口
  *
  * @author AkagiYui
  */
-public interface FolderService {
+interface FolderService {
     /**
      * 创建文件夹
      *
@@ -18,7 +16,7 @@ public interface FolderService {
      * @param parentId 父文件夹ID
      * @return 创建的文件夹
      */
-    Folder createFolder(String name, String parentId);
+    fun createFolder(name: String, parentId: String?): Folder
 
     /**
      * 在根目录下创建文件夹
@@ -26,7 +24,7 @@ public interface FolderService {
      * @param name 文件夹名
      * @return 创建的文件夹
      */
-    Folder createFolder(String name);
+    fun createFolder(name: String): Folder
 
     /**
      * 获取子文件夹
@@ -34,7 +32,7 @@ public interface FolderService {
      * @param parentId 父文件夹ID
      * @return 子文件夹列表
      */
-    List<Folder> getSubFolders(String parentId);
+    fun getSubFolders(parentId: String?): List<Folder>
 
     /**
      * 获取文件夹链
@@ -42,5 +40,6 @@ public interface FolderService {
      * @param folderId 文件夹ID
      * @return 文件夹链
      */
-    List<FolderResponse> getFolderChain(String folderId);
+    fun getFolderChain(folderId: String): List<FolderResponse>
+
 }

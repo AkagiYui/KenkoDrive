@@ -4,11 +4,13 @@ import com.akagiyui.common.ResponseEnum;
 import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.common.utils.FileUtil;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.AvatarContent;
 import com.akagiyui.drive.service.AvatarService;
 import com.akagiyui.drive.service.StorageService;
 import com.akagiyui.drive.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.akagiyui.drive.component.StaticField.*;
+
 /**
  * 头像服务实现类
  *
@@ -36,17 +40,6 @@ public class AvatarServiceImpl implements AvatarService {
      */
     private static final List<String> AVATAR_TYPES = new ArrayList<>();
 
-    @Value("${application.avatar.default:static/default-avatar.jpg}")
-    private String defaultAvatarPath;
-
-    private final StorageService storageService;
-    private final UserService userService;
-
-    public AvatarServiceImpl(UserService userService, StorageService storageService) {
-        this.userService = userService;
-        this.storageService = storageService;
-    }
-
     static {
         // 初始化允许上传的头像的文件类型
         AVATAR_TYPES.add("image/jpeg");
@@ -58,15 +51,24 @@ public class AvatarServiceImpl implements AvatarService {
         AVATAR_TYPES.add("image/x-png");
     }
 
+    private final StorageService storageService;
+    private final UserService userService;
+    @Value("${application.avatar.default:static/default-avatar.jpg}")
+    private String defaultAvatarPath;
     /**
      * 默认头像缓存，避免每次都读取文件
      */
     private byte[] defaultAvatar = null;
 
+    public AvatarServiceImpl(UserService userService, StorageService storageService) {
+        this.userService = userService;
+        this.storageService = storageService;
+    }
+
     private byte[] getDefaultAvatar() {
         if (defaultAvatar == null) {
             File file = FileUtil.INSTANCE.getResourceFile(defaultAvatarPath);
-            try (InputStream inputStream = file.toURI().toURL().openStream()){
+            try (InputStream inputStream = file.toURI().toURL().openStream()) {
                 defaultAvatar = inputStream.readAllBytes();
             } catch (IOException e) {
                 log.error("Load default avatar failed", e);
@@ -77,7 +79,7 @@ public class AvatarServiceImpl implements AvatarService {
     }
 
     @Override
-    public byte[] getAvatar() {
+    public @NotNull AvatarContent getAvatar() {
         String avatarKey = getAvatarKey();
         byte[] avatar;
         if (storageService.exists(avatarKey)) {
@@ -91,7 +93,7 @@ public class AvatarServiceImpl implements AvatarService {
         } else {
             avatar = getDefaultAvatar();
         }
-        return avatar;
+        return new AvatarContent(avatar, IMAGE_FORMAT);
     }
 
     @Override

@@ -7,8 +7,8 @@ import com.akagiyui.drive.model.filter.AnnouncementFilter;
 import com.akagiyui.drive.model.request.UpdateAnnouncementRequest;
 import com.akagiyui.drive.repository.AnnouncementRepository;
 import com.akagiyui.drive.service.AnnouncementService;
-import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,13 +20,17 @@ import java.util.List;
 
 /**
  * 公告服务实现类
+ *
  * @author AkagiYui
  */
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    @Resource
-    private AnnouncementRepository announcementRepository;
+    private final AnnouncementRepository announcementRepository;
+
+    public AnnouncementServiceImpl(AnnouncementRepository announcementRepository) {
+        this.announcementRepository = announcementRepository;
+    }
 
     /**
      * 根据id查找公告或抛出异常
@@ -41,12 +45,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public Announcement addAnnouncement(Announcement announcement) {
+    public @NotNull Announcement addAnnouncement(@NotNull Announcement announcement) {
         return announcementRepository.save(announcement);
     }
 
     @Override
-    public List<Announcement> getAnnouncementList(boolean all) {
+    public @NotNull List<Announcement> getAnnouncementList(boolean all) {
         if (all) {
             return announcementRepository.findAll();
         } else {
@@ -55,12 +59,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> getAnnouncementDisplayList() {
+    public @NotNull List<Announcement> getAnnouncementDisplayList() {
         return announcementRepository.findAnnouncementsByEnabledIsTrueOrderByUpdateTimeDesc();
     }
 
     @Override
-    public Page<Announcement> find(Integer index, Integer size, AnnouncementFilter filter) {
+    public @NotNull Page<Announcement> find(int index, int size, AnnouncementFilter filter) {
         Pageable pageable = PageRequest.of(index, size);
 
         // 条件查询
@@ -78,20 +82,20 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void disable(String id, boolean disabled) {
+    public void disable(@NotNull String id, boolean disabled) {
         Announcement announcement = getAnnouncement(id);
         announcement.setEnabled(!disabled);
         announcementRepository.save(announcement);
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(@NotNull String id) {
         Announcement announcement = getAnnouncement(id);
         announcementRepository.delete(announcement);
     }
 
     @Override
-    public void update(String id, UpdateAnnouncementRequest request) {
+    public void update(@NotNull String id, UpdateAnnouncementRequest request) {
         Announcement announcement = getAnnouncement(id);
         if (StringUtils.hasText(request.getTitle())) {
             announcement.setTitle(request.getTitle());
@@ -101,4 +105,5 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
         announcementRepository.save(announcement);
     }
+
 }

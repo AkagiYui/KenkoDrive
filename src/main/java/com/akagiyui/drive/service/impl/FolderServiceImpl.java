@@ -9,6 +9,7 @@ import com.akagiyui.drive.repository.FolderRepository;
 import com.akagiyui.drive.service.FolderService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -31,7 +32,7 @@ public class FolderServiceImpl implements FolderService {
     private UserService userService;
 
     @Override
-    public Folder createFolder(String name, String parentId) {
+    public @NotNull Folder createFolder(@NotNull String name, String parentId) {
         User user = userService.getUser();
 
         parentId = StringUtils.hasText(parentId) ? parentId : null;
@@ -42,20 +43,20 @@ public class FolderServiceImpl implements FolderService {
         }
 
         Folder folder = new Folder()
-                .setName(name)
-                .setParent(parentFolder)
-                .setUser(user);
+            .setName(name)
+            .setParent(parentFolder)
+            .setUser(user);
         folderRepository.save(folder);
         return folder;
     }
 
     @Override
-    public Folder createFolder(String name) {
+    public @NotNull Folder createFolder(@NotNull String name) {
         return createFolder(name, null);
     }
 
     @Override
-    public List<Folder> getSubFolders(String parentId) {
+    public @NotNull List<Folder> getSubFolders(String parentId) {
         User user = userService.getUser();
         parentId = StringUtils.hasText(parentId) ? parentId : null;
 
@@ -63,7 +64,7 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public List<FolderResponse> getFolderChain(String folderId) {
+    public @NotNull List<FolderResponse> getFolderChain(@NotNull String folderId) {
         User user = userService.getUser();
         if (!StringUtils.hasText(folderId)) {
             return new ArrayList<>();

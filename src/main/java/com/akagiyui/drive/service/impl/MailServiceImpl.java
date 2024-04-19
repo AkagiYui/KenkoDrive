@@ -4,6 +4,7 @@ import com.akagiyui.drive.service.MailService;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,9 +13,9 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 
-
 /**
  * 邮件服务 实现
+ *
  * @author AkagiYui
  */
 @Service
@@ -29,7 +30,7 @@ public class MailServiceImpl implements MailService {
     String sendFrom;
 
     @Override
-    public void sendEmailVerifyCode(String to, String code, Long timeout) {
+    public void sendEmailVerifyCode(@NotNull String to, @NotNull String code, long timeout) {
         String subject = "Kenko Drive 邮箱验证码";
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {

@@ -25,7 +25,7 @@ class InitializeTasks(
     fun preCheck() {
         log.info("Start pre check")
         // 检查是否已经初始化
-        if (configService.isInitialized) {
+        if (configService.isInitialized()) {
             log.warn("Already initialized")
         }
     }

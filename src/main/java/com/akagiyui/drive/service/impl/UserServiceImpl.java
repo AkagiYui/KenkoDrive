@@ -20,7 +20,9 @@ import com.akagiyui.drive.service.RoleService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
+import kotlin.NotImplementedError;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -79,12 +81,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = CacheConstants.USER_BY_ID, key = "#id")
-    public User findUserById(String id) {
+    public @NotNull User findUserById(@NotNull String id) {
         return repository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
 
     @Override
-    public List<User> findUserByIds(List<String> ids) {
+    public @NotNull List<User> findUserByIds(@NotNull List<String> ids) {
         return repository.findAllById(ids);
     }
 
@@ -93,18 +95,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
-        return null;
+    public @NotNull User register(@NotNull User user) {
+        throw new NotImplementedError("register");
     }
 
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_PAGE, key = "{#index, #size, #filter}")
-    public Page<User> find(int index, int size, UserFilter filter) {
+    public @NotNull Page<User> find(int index, int size, UserFilter filter) {
         Pageable pageable = PageRequest.of(index, size);
 
         // 条件查询
         Specification<User> specification = (root, query, cb) -> {
-            if (filter != null && StringUtils.hasText(filter.getExpression())){
+            if (filter != null && StringUtils.hasText(filter.getExpression())) {
                 String queryString = "%" + filter.getExpression() + "%";
                 Predicate usernamePredicate = cb.like(root.get("username"), queryString);
                 Predicate nicknamePredicate = cb.like(root.get("nickname"), queryString);
@@ -119,18 +121,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_LIST)
-    public List<User> find() {
+    public @NotNull List<User> find() {
         return repository.findAll();
     }
 
     @Override
     @CacheEvict(cacheNames = {
-            CacheConstants.USER_BY_ID,
-            CacheConstants.USER_PAGE,
-            CacheConstants.USER_LIST,
-            CacheConstants.USER_EXIST,
+        CacheConstants.USER_BY_ID,
+        CacheConstants.USER_PAGE,
+        CacheConstants.USER_LIST,
+        CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public User addUser(AddUserRequest user) {
+    public @NotNull User addUser(AddUserRequest user) {
         if (repository.existsByUsername(user.getUsername())) {
             throw new CustomException(ResponseEnum.USER_EXIST);
         }
@@ -156,14 +158,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheEvict(cacheNames = {
-            CacheConstants.USER_BY_ID,
-            CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
-            CacheConstants.USER_PAGE,
-            CacheConstants.USER_LIST,
-            CacheConstants.USER_EXIST,
+        CacheConstants.USER_BY_ID,
+        CacheConstants.USER_DETAILS,
+        CacheConstants.USER_LOGIN_DETAILS,
+        CacheConstants.USER_PAGE,
+        CacheConstants.USER_LIST,
+        CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public void delete(String id) {
+    public void delete(@NotNull String id) {
         if (!repository.existsById(id)) {
             throw new CustomException(ResponseEnum.NOT_FOUND);
         }
@@ -172,28 +174,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_EXIST, key = "#username")
-    public boolean isExist(String username) {
+    public boolean isExist(@NotNull String username) {
         return repository.existsById(username);
     }
 
     @Override
-    public User getUser() {
+    public @NotNull User getUser() {
         // 从 SecurityContextHolder 中获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUserDetails userDetails = (LoginUserDetails)authentication.getPrincipal();
+        LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
         return userDetails.getUser();
     }
 
     @Override
     @Cacheable(cacheNames = CacheConstants.USER_LOGIN_DETAILS, key = "#userId")
     @Transactional
-    public LoginUserDetails getUserDetails(String userId) {
+    public @NotNull LoginUserDetails getUserDetails(@NotNull String userId) {
         User user = findUserById(userId);
         return new LoginUserDetails(user);
     }
 
     @Override
-    public void sendEmailVerifyCode(EmailVerifyCodeRequest verifyRequest) {
+    public void sendEmailVerifyCode(@NotNull EmailVerifyCodeRequest verifyRequest) {
         if (!configService.isRegisterEnabled()) {
             throw new CustomException(ResponseEnum.REGISTER_DISABLED);
         }
@@ -256,12 +258,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String encryptPassword(String username, String password) {
+    public @NotNull String encryptPassword(@NotNull String username, @NotNull String password) {
         return encryptPassword(username, password, false);
     }
 
     @Override
-    public String encryptPassword(String username, String password, boolean raw) {
+    public @NotNull String encryptPassword(@NotNull String username, @NotNull String password, boolean raw) {
         @SuppressWarnings("UnnecessaryLocalVariable")
         // 密码加密核心
         String encode = password;
@@ -273,12 +275,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @CacheEvict(cacheNames = {
-            CacheConstants.USER_BY_ID,
-            CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
-            CacheConstants.USER_PAGE,
-            CacheConstants.USER_LIST,
-            CacheConstants.USER_EXIST,
+        CacheConstants.USER_BY_ID,
+        CacheConstants.USER_DETAILS,
+        CacheConstants.USER_LOGIN_DETAILS,
+        CacheConstants.USER_PAGE,
+        CacheConstants.USER_LIST,
+        CacheConstants.USER_EXIST,
     }, allEntries = true)
     public void updateInfo(UpdateUserInfoRequest userInfo) {
         User user = getUser();
@@ -293,28 +295,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Set<String> getPermission() {
+    public @NotNull Set<String> getPermission() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUserDetails userDetails = (LoginUserDetails)authentication.getPrincipal();
+        LoginUserDetails userDetails = (LoginUserDetails) authentication.getPrincipal();
         return userDetails.getPermissions();
     }
 
     @Override
-    public Set<String> getRole() {
+    public @NotNull Set<String> getRole() {
         User user = getUser();
         return user.getRoles().stream().map(Role::getId).collect(Collectors.toSet());
     }
 
     @Override
     @CacheEvict(cacheNames = {
-            CacheConstants.USER_BY_ID,
-            CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
-            CacheConstants.USER_PAGE,
-            CacheConstants.USER_LIST,
-            CacheConstants.USER_EXIST,
+        CacheConstants.USER_BY_ID,
+        CacheConstants.USER_DETAILS,
+        CacheConstants.USER_LOGIN_DETAILS,
+        CacheConstants.USER_PAGE,
+        CacheConstants.USER_LIST,
+        CacheConstants.USER_EXIST,
     }, allEntries = true)
-    public void disable(String id, boolean disabled) {
+    public void disable(@NotNull String id, boolean disabled) {
         User user = findUserByIdWithCache(id);
         // todo 检查是否为超级管理员
         user.setDisabled(disabled);
@@ -322,7 +324,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String id, String newPassword) {
+    public void resetPassword(@NotNull String id, @NotNull String newPassword) {
         User user = findUserByIdWithCache(id);
         user.setPassword(encryptPassword(user.getUsername(), newPassword));
         repository.save(user);
@@ -330,7 +332,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void addRoles(String userId, Set<String> id) {
+    public void addRoles(@NotNull String userId, @NotNull Set<String> id) {
         User user = findUserByIdWithCache(userId);
         Set<Role> roles = roleService.find(id);
         user.getRoles().addAll(roles);
@@ -339,7 +341,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void removeRoles(String userId, Set<String> id) {
+    public void removeRoles(@NotNull String userId, @NotNull Set<String> id) {
         User user = findUserByIdWithCache(userId);
         Set<Role> roles = roleService.find(id);
         user.getRoles().removeAll(roles);
@@ -347,7 +349,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateInfo(String id, UpdateUserInfoRequest userInfo) {
+    public void updateInfo(@NotNull String id, UpdateUserInfoRequest userInfo) {
         User user = findUserByIdWithCache(id);
         if (StringUtils.hasText(userInfo.getNickname())) {
             user.setNickname(userInfo.getNickname());
@@ -363,7 +365,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public Set<Role> getRoles(String id) {
+    public @NotNull Set<Role> getRoles(@NotNull String id) {
         User user = findUserByIdWithCache(id);
         return new HashSet<>(user.getRoles());
     }

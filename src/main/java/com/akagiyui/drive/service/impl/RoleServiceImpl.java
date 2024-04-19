@@ -14,6 +14,7 @@ import jakarta.annotation.Resource;
 import jakarta.persistence.criteria.Predicate;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,22 +55,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public @NotNull List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
     @Override
-    public List<Role> getAllDefaultRoles() {
+    public @NotNull List<Role> getAllDefaultRoles() {
         return roleRepository.findAllByIsDefaultIsTrue();
     }
 
     @Override
-    public Page<Role> find(Integer index, Integer size, RoleFilter filter) {
+    public @NotNull Page<Role> find(int index, int size, RoleFilter filter) {
         Pageable pageable = PageRequest.of(index, size);
 
         // 条件查询
         Specification<Role> specification = (root, query, cb) -> {
-            if (filter != null && StringUtils.hasText(filter.getExpression())){
+            if (filter != null && StringUtils.hasText(filter.getExpression())) {
                 Predicate namePredicate = cb.like(root.get("name"), "%" + filter.getExpression() + "%");
                 Predicate descriptionPredicate = cb.like(root.get("description"), "%" + filter.getExpression() + "%");
                 return cb.or(namePredicate, descriptionPredicate);
@@ -81,17 +82,17 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Set<Role> find(Set<String> ids) {
+    public @NotNull Set<Role> find(@NotNull Set<String> ids) {
         return new HashSet<>(roleRepository.findAllById(ids));
     }
 
     @Override
-    public List<Permission> getAllPermissions() {
+    public @NotNull List<Permission> getAllPermissions() {
         return List.of(Permission.values());
     }
 
     @Override
-    public String addRole(AddRoleRequest role) {
+    public @NotNull String addRole(AddRoleRequest role) {
         // 检查角色名是否重复
         if (roleRepository.existsByName(role.getName())) {
             throw new CustomException(ResponseEnum.ROLE_EXIST);
@@ -119,18 +120,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role addRole(Role role) {
+    public @NotNull Role addRole(@NotNull Role role) {
         return roleRepository.save(role);
     }
 
     @Override
-    public void deleteRole(String id) {
+    public void deleteRole(@NotNull String id) {
         Role role = this.getRoleById(id);
         roleRepository.delete(role);
     }
 
     @Override
-    public void updateRole(String id, UpdateRoleRequest newRole) {
+    public void updateRole(@NotNull String id, UpdateRoleRequest newRole) {
         Role oldRole = this.getRoleById(id);
         // 修改角色名
         if (StringUtils.hasText(newRole.getName()) && !Objects.equals(oldRole.getName(), newRole.getName())) {
@@ -164,7 +165,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void disable(String id, boolean disabled) {
+    public void disable(@NotNull String id, boolean disabled) {
         Role role = this.getRoleById(id);
         if (!Objects.equals(role.getDisabled(), disabled)) {
             role.setDisabled(disabled);
@@ -174,14 +175,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public Set<User> getUsers(String id) {
+    public @NotNull Set<User> getUsers(@NotNull String id) {
         Role role = this.getRoleById(id);
         Hibernate.initialize(role.getUsers()); // 初始化 LAZY 属性
         return role.getUsers();
     }
 
     @Override
-    public List<String> findUserIdsById(String id) {
+    public @NotNull List<String> findUserIdsById(@NotNull String id) {
         return roleRepository.findUserIdsById(id);
     }
 

@@ -1,10 +1,9 @@
-package com.akagiyui.drive.service;
+package com.akagiyui.drive.service
 
-import com.akagiyui.drive.model.StorageFile;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.scheduling.annotation.Async;
-
-import java.io.OutputStream;
+import com.akagiyui.drive.model.StorageFile
+import org.springframework.core.io.InputStreamResource
+import org.springframework.scheduling.annotation.Async
+import java.io.OutputStream
 
 /**
  * 存储 服务接口
@@ -15,17 +14,17 @@ import java.io.OutputStream;
  *
  * @author AkagiYui
  */
-public interface StorageService {
+interface StorageService {
     /**
      * 获取文件
      */
-    InputStreamResource getFile(String key);
+    fun getFile(key: String): InputStreamResource
 
     /**
      * 保存文件
      */
     @Async
-    void saveFile(String key, byte[] content);
+    fun saveFile(key: String, content: ByteArray)
 
     /**
      * 保存文件，请手动关闭输出流
@@ -33,7 +32,7 @@ public interface StorageService {
      * @param key 文件名
      * @return 文件输出流
      */
-    OutputStream saveFile(String key);
+    fun saveFile(key: String): OutputStream
 
     /**
      * 保存文件
@@ -42,28 +41,29 @@ public interface StorageService {
      * @param overwrite 是否覆盖
      * @return 文件输出流
      */
-    OutputStream saveFile(String key, boolean overwrite);
+    fun saveFile(key: String, overwrite: Boolean): OutputStream
 
     /**
      * 文件是否存在
      */
-    boolean exists(String key);
+    fun exists(key: String): Boolean
 
     /**
      * 删除文件
      */
     @Async
-    void deleteFile(String key);
+    fun deleteFile(key: String)
 
     /**
      * 存储分片
      */
-    void saveChunk(String userId, String fileHash, int chunkIndex, byte[] content);
+    fun saveChunk(userId: String, fileHash: String, chunkIndex: Int, content: ByteArray)
 
     /**
      * 合并分片
      *
      * @return
      */
-    StorageFile mergeChunk(String userId, String fileHash, int chunkCount);
+    fun mergeChunk(userId: String, fileHash: String, chunkCount: Int): StorageFile
+
 }

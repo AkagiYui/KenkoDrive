@@ -20,8 +20,8 @@ class RoleServiceTests @Autowired constructor(
      */
     @Test
     fun getAllPermissions() {
-        val expected = listOf(*Permission.entries.toTypedArray())
-        val actual = roleService.allPermissions
+        val expected = enumValues<Permission>().toList()
+        val actual = roleService.getAllPermissions()
         Assertions.assertEquals(expected, actual)
     }
 

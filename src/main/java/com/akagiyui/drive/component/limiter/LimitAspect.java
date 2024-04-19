@@ -3,12 +3,12 @@ package com.akagiyui.drive.component.limiter;
 import com.akagiyui.common.exception.TooManyRequestsException;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.RateLimiter;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;

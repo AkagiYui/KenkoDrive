@@ -2,10 +2,10 @@ package com.akagiyui.drive.service.impl;
 
 import cn.hutool.crypto.digest.DigestAlgorithm;
 import cn.hutool.crypto.digest.Digester;
-import com.akagiyui.drive.component.CacheConstants;
 import com.akagiyui.common.ResponseEnum;
-import com.akagiyui.drive.entity.FileInfo;
 import com.akagiyui.common.exception.CustomException;
+import com.akagiyui.drive.component.CacheConstants;
+import com.akagiyui.drive.entity.FileInfo;
 import com.akagiyui.drive.repository.FileInfoRepository;
 import com.akagiyui.drive.service.FileInfoService;
 import com.akagiyui.drive.service.StorageService;
@@ -13,6 +13,7 @@ import com.akagiyui.drive.service.UserFileService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -64,7 +65,7 @@ public class FileInfoServiceImpl implements FileInfoService {
     }
 
     @Override
-    public List<FileInfo> saveFile(List<MultipartFile> files) {
+    public @NotNull List<FileInfo> saveFile(List<? extends MultipartFile> files) {
         List<FileInfo> fileInfos = new ArrayList<>();
         for (MultipartFile file : files) {
             // 读取文件信息
@@ -103,6 +104,9 @@ public class FileInfoServiceImpl implements FileInfoService {
 
             // 添加用户与文件的关联记录
             FileInfo fileInfo = fileInfoRepository.getFirstByHash(hash);
+            if (fileInfo == null) {
+                throw new CustomException(ResponseEnum.INTERNAL_ERROR);
+            }
             userFileService.addAssociation(userService.getUser(), fileInfo, null);
 
             // 记录返回结果
@@ -119,19 +123,19 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     @CacheEvict(value = CacheConstants.FILE_INFO, key = "#id")
-    public void deleteFile(String id) {
+    public void deleteFile(@NotNull String id) {
         FileInfo fileInfo = getFileInfoWithoutCache(id);
         storageService.deleteFile(fileInfo.getStorageKey());
         fileInfoRepository.delete(fileInfo);
     }
 
     @Override
-    public Stream<FileInfo> getAllFileInfo() {
+    public @NotNull Stream<FileInfo> getAllFileInfo() {
         return fileInfoRepository.findAllByOrderByUpdateTimeAsc();
     }
 
     @Override
-    public void addFileInfo(FileInfo fileInfo) {
+    public void addFileInfo(@NotNull FileInfo fileInfo) {
         fileInfoRepository.save(fileInfo);
     }
 }

@@ -3,7 +3,7 @@ package com.akagiyui.drive.service.impl;
 import com.akagiyui.drive.entity.KeyValueConfig;
 import com.akagiyui.drive.repository.ConfigRepository;
 import com.akagiyui.drive.service.ConfigService;
-import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,27 @@ import java.util.function.Supplier;
 @Service
 public class ConfigServiceImpl implements ConfigService {
 
-    @Resource
-    private ConfigRepository configRepository;
+    /**
+     * 是否开放注册 键名
+     */
+    private static final String REGISTER_ENABLED = "registerEnabled";
+    /**
+     * 是否初始化 键名
+     */
+    private static final String IS_INITIALIZED = "isInitialized";
+    /**
+     * 文件分片大小 键名
+     */
+    private static final String FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize";
+    /**
+     * 全局文件上传大小限制 键名
+     */
+    private static final String FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize";
+    private final ConfigRepository configRepository;
+
+    public ConfigServiceImpl(ConfigRepository configRepository) {
+        this.configRepository = configRepository;
+    }
 
     /**
      * 通过配置项键查找配置项值
@@ -101,64 +120,64 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).REGISTER_ENABLED")
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).REGISTER_ENABLED")
     public boolean isRegisterEnabled() {
         return findBoolean(REGISTER_ENABLED, () -> setRegisterEnabled(true));
     }
 
     @Override
-    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).REGISTER_ENABLED")
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).REGISTER_ENABLED")
     public boolean setRegisterEnabled(boolean enabled) {
         save(REGISTER_ENABLED, enabled);
         return enabled;
     }
 
     @Override
-    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).IS_INITIALIZED")
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).IS_INITIALIZED")
     public boolean isInitialized() {
         return findBoolean(IS_INITIALIZED, () -> setInitialized(false));
     }
 
     @Override
-    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).IS_INITIALIZED")
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).IS_INITIALIZED")
     public boolean setInitialized(boolean initialized) {
         save(IS_INITIALIZED, initialized);
         return initialized;
     }
 
     @Override
-    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_CHUNK_SIZE")
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).FILE_UPLOAD_CHUNK_SIZE")
     public int getFileUploadChunkSize() {
         return findInteger(FILE_UPLOAD_CHUNK_SIZE, () -> setFileUploadChunkSize(5 * 1024 * 1024));
     }
 
     @Override
-    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_CHUNK_SIZE")
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).FILE_UPLOAD_CHUNK_SIZE")
     public int setFileUploadChunkSize(int chunkSize) {
         save(FILE_UPLOAD_CHUNK_SIZE, chunkSize);
         return chunkSize;
     }
 
     @Override
-    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_MAX_SIZE")
+    @Cacheable(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).FILE_UPLOAD_MAX_SIZE")
     public long getFileUploadMaxSize() {
         return findLong(FILE_UPLOAD_MAX_SIZE, () -> setFileUploadMaxSize(100L * 1024 * 1024));
     }
 
     @Override
-    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.ConfigService).FILE_UPLOAD_MAX_SIZE")
+    @CachePut(value = "config", key = "T(com.akagiyui.drive.service.impl.ConfigServiceImpl).FILE_UPLOAD_MAX_SIZE")
     public long setFileUploadMaxSize(long maxSize) {
         save(FILE_UPLOAD_MAX_SIZE, maxSize);
         return maxSize;
     }
 
     @Override
-    public Map<String, Object> getConfig() {
+    public @NotNull Map<String, Object> getConfig() {
         return Map.of(
-                REGISTER_ENABLED, isRegisterEnabled(),
-                IS_INITIALIZED, isInitialized(),
-                FILE_UPLOAD_CHUNK_SIZE, getFileUploadChunkSize(),
-                FILE_UPLOAD_MAX_SIZE, getFileUploadMaxSize()
+            REGISTER_ENABLED, isRegisterEnabled(),
+            IS_INITIALIZED, isInitialized(),
+            FILE_UPLOAD_CHUNK_SIZE, getFileUploadChunkSize(),
+            FILE_UPLOAD_MAX_SIZE, getFileUploadMaxSize()
         );
     }
 }

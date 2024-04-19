@@ -6,8 +6,8 @@ import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.model.StorageFile;
 import com.akagiyui.drive.service.StorageService;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class LocalStorageServiceImpl implements StorageService {
     }
 
     @Override
-    public InputStreamResource getFile(String key) {
+    public @NotNull InputStreamResource getFile(@NotNull String key) {
         File file = new File(root + File.separator + key);
         if (!file.exists()) {
             throw new CustomException(ResponseEnum.NOT_FOUND);
@@ -59,7 +59,7 @@ public class LocalStorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void saveFile(String key, byte[] content) {
+    public void saveFile(@NotNull String key, byte @NotNull [] content) {
         // todo key 中可能包含路径，需要处理
         File file = new File(root + File.separator + key);
         if (file.exists()) {
@@ -73,12 +73,12 @@ public class LocalStorageServiceImpl implements StorageService {
     }
 
     @Override
-    public OutputStream saveFile(String key) {
+    public @NotNull OutputStream saveFile(@NotNull String key) {
         return saveFile(key, false);
     }
 
     @Override
-    public OutputStream saveFile(String key, boolean overwrite) {
+    public @org.jetbrains.annotations.NotNull OutputStream saveFile(@NotNull String key, boolean overwrite) {
         File file = new File(root + File.separator + key);
         createParentDir(file);
         if (file.exists()) {
@@ -99,13 +99,13 @@ public class LocalStorageServiceImpl implements StorageService {
     }
 
     @Override
-    public boolean exists(String key) {
+    public boolean exists(@NotNull String key) {
         File file = new File(root + File.separator + key);
         return file.exists();
     }
 
     @Override
-    public void deleteFile(String key) {
+    public void deleteFile(@NotNull String key) {
         File file = new File(root + File.separator + key);
         if (!file.exists()) {
             throw new CustomException(ResponseEnum.NOT_FOUND);

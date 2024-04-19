@@ -11,6 +11,7 @@ import com.akagiyui.drive.model.StorageFile;
 import com.akagiyui.drive.model.request.PreUploadRequest;
 import com.akagiyui.drive.service.*;
 import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -45,6 +46,9 @@ public class UploadServiceImpl implements UploadService {
 
     @Resource
     private UserFileService userFileService;
+
+    @Resource
+    private TaskExecutor taskExecutor;
 
     private boolean isInfoInRedis(String userId, String hash) {
         String redisKey = "upload:" + userId + ":" + hash;
@@ -85,7 +89,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public void uploadChunk(String fileHash, MultipartFile chunk, String chunkHash, int chunkIndex) {
+    public void uploadChunk(@NotNull String fileHash, MultipartFile chunk, @NotNull String chunkHash, int chunkIndex) {
         if (chunk.isEmpty()) {
             throw new CustomException(ResponseEnum.BAD_REQUEST);
         }
@@ -126,7 +130,7 @@ public class UploadServiceImpl implements UploadService {
         saveInfoToRedis(user.getId(), fileHash, chunkedInfo);
 
         storageService.saveChunk(user.getId(), fileHash, chunkIndex, chunkBytes);
-        if (chunkedInfo.isUploadFinish()){
+        if (chunkedInfo.isUploadFinish()) {
             taskExecutor.execute(() -> {
                 // 合并分片
                 StorageFile storageFile = storageService.mergeChunk(user.getId(), fileHash, chunkedInfo.getChunkCount());
@@ -144,7 +148,4 @@ public class UploadServiceImpl implements UploadService {
             });
         }
     }
-
-    @Resource
-    private TaskExecutor taskExecutor;
 }

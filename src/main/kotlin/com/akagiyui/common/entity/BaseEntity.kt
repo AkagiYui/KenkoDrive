@@ -26,7 +26,7 @@ abstract class BaseEntity : Serializable {
     @Id
     @GeneratedValue(generator = "snowflakeId")
     @GenericGenerator(name = "snowflakeId", type = SnowFlakeIdGenerator::class)
-    var id: String? = null
+    lateinit var id: String
 
     /**
      * 更新时间

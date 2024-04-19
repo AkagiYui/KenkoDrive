@@ -1,5 +1,7 @@
 package com.akagiyui.drive.service.impl;
 
+import com.akagiyui.common.ResponseEnum;
+import com.akagiyui.common.exception.CustomException;
 import com.akagiyui.drive.entity.FileInfo;
 import com.akagiyui.drive.entity.Folder;
 import com.akagiyui.drive.entity.User;
@@ -8,6 +10,7 @@ import com.akagiyui.drive.repository.UserFileRepository;
 import com.akagiyui.drive.service.UserFileService;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,27 +35,31 @@ public class UserFileServiceImpl implements UserFileService {
         }
 
         UserFile userFile = new UserFile()
-                .setUser(user)
-                .setFileInfo(fileInfo)
-                .setName(fileInfo.getName())
-                .setFolder(folder);
+            .setUser(user)
+            .setFileInfo(fileInfo)
+            .setName(fileInfo.getName())
+            .setFolder(folder);
         userFileRepository.save(userFile);
     }
 
     @Override
-    public List<UserFile> getFiles(String folderId) {
+    public @NotNull List<UserFile> getFiles(@NotNull String folderId) {
         User user = userService.getUser();
         return userFileRepository.findByUserIdAndFolderId(user.getId(), folderId);
     }
 
     @Override
-    public boolean existByFileId(String fileId) {
+    public boolean existByFileId(@NotNull String fileId) {
         return userFileRepository.existsByFileInfoId(fileId);
     }
 
     @Override
-    public FileInfo getFileInfo(String folderId) {
+    public @NotNull FileInfo getFileInfo(@NotNull String folderId) {
         User user = userService.getUser();
-        return userFileRepository.findByUserIdAndId(user.getId(), folderId).getFileInfo();
+        UserFile association = userFileRepository.findByUserIdAndId(user.getId(), folderId);
+        if (association == null) {
+            throw new CustomException(ResponseEnum.NOT_FOUND);
+        }
+        return association.getFileInfo();
     }
 }

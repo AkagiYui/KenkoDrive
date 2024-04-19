@@ -1,32 +1,29 @@
-package com.akagiyui.drive.service;
+package com.akagiyui.drive.service
 
-import com.akagiyui.drive.entity.Role;
-import com.akagiyui.drive.entity.User;
-import com.akagiyui.drive.model.Permission;
-import com.akagiyui.drive.model.filter.RoleFilter;
-import com.akagiyui.drive.model.request.AddRoleRequest;
-import com.akagiyui.drive.model.request.UpdateRoleRequest;
-import org.springframework.data.domain.Page;
-
-import java.util.List;
-import java.util.Set;
+import com.akagiyui.drive.entity.Role
+import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.Permission
+import com.akagiyui.drive.model.filter.RoleFilter
+import com.akagiyui.drive.model.request.AddRoleRequest
+import com.akagiyui.drive.model.request.UpdateRoleRequest
+import org.springframework.data.domain.Page
 
 /**
  * 角色 Service 接口
  *
  * @author AkagiYui
  */
-public interface RoleService {
+interface RoleService {
 
     /**
      * 获取所有角色
      */
-    List<Role> getAllRoles();
+    fun getAllRoles(): List<Role>
 
     /**
      * 获取所有默认角色
      */
-    List<Role> getAllDefaultRoles();
+    fun getAllDefaultRoles(): List<Role>
 
     /**
      * 分页查询角色
@@ -36,7 +33,7 @@ public interface RoleService {
      * @param filter 查询条件
      * @return 角色分页
      */
-    Page<Role> find(Integer index, Integer size, RoleFilter filter);
+    fun find(index: Int, size: Int, filter: RoleFilter?): Page<Role>
 
     /**
      * 根据id查找角色
@@ -44,14 +41,14 @@ public interface RoleService {
      * @param ids 角色id
      * @return 角色
      */
-    Set<Role> find(Set<String> ids);
+    fun find(ids: Set<String>): Set<Role>
 
     /**
      * 获取所有权限
      *
      * @return 权限列表
      */
-    List<Permission> getAllPermissions();
+    fun getAllPermissions(): List<Permission>
 
     /**
      * 添加角色
@@ -59,7 +56,7 @@ public interface RoleService {
      * @param role 角色
      * @return 角色id
      */
-    String addRole(AddRoleRequest role);
+    fun addRole(role: AddRoleRequest): String
 
     /**
      * 添加角色
@@ -67,14 +64,14 @@ public interface RoleService {
      * @param role 角色
      * @return 角色
      */
-    Role addRole(Role role);
+    fun addRole(role: Role): Role
 
     /**
      * 删除角色
      *
      * @param id 角色id
      */
-    void deleteRole(String id);
+    fun deleteRole(id: String)
 
     /**
      * 更新角色
@@ -82,7 +79,7 @@ public interface RoleService {
      * @param id   角色id
      * @param role 角色
      */
-    void updateRole(String id, UpdateRoleRequest role);
+    fun updateRole(id: String, role: UpdateRoleRequest)
 
     /**
      * 禁用角色
@@ -90,7 +87,7 @@ public interface RoleService {
      * @param id       角色id
      * @param disabled 是否禁用
      */
-    void disable(String id, boolean disabled);
+    fun disable(id: String, disabled: Boolean)
 
     /**
      * 获取角色用户
@@ -98,7 +95,7 @@ public interface RoleService {
      * @param id 角色id
      * @return 用户列表
      */
-    Set<User> getUsers(String id);
+    fun getUsers(id: String): Set<User>
 
     /**
      * 根据角色id查找用户id
@@ -106,5 +103,6 @@ public interface RoleService {
      * @param id 角色id
      * @return 用户id列表
      */
-    List<String> findUserIdsById(String id);
+    fun findUserIdsById(id: String): List<String>
+
 }

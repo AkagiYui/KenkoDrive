@@ -4,6 +4,7 @@ import com.akagiyui.drive.component.limiter.Limit;
 import com.akagiyui.drive.component.permission.RequirePermission;
 import com.akagiyui.drive.entity.Role;
 import com.akagiyui.drive.entity.User;
+import com.akagiyui.drive.model.AvatarContent;
 import com.akagiyui.drive.model.Permission;
 import com.akagiyui.drive.model.filter.UserFilter;
 import com.akagiyui.drive.model.request.*;
@@ -201,13 +202,15 @@ public class UserController {
     @GetMapping("/avatar")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<byte[]> getAvatar() {
+        AvatarContent avatar = avatarService.getAvatar();
+
         HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.valueOf("image/" + AvatarService.IMAGE_FORMAT));
+        header.setContentType(MediaType.valueOf("image/" + avatar.getContentType()));
 
         return ResponseEntity
                 .ok()
                 .headers(header)
-                .body(avatarService.getAvatar());
+            .body(avatar.getContent());
     }
 
     /**
