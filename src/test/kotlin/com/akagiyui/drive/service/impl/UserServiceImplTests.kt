@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional
  * @author AkagiYui
  */
 @SpringBootTest
-class UserServiceImplTests(
-    @Autowired private val userService: UserService,
-    @Autowired private val userRepository: UserRepository,
+class UserServiceImplTests @Autowired constructor(
+    private val userService: UserService,
+    private val userRepository: UserRepository,
 ) {
 
     @Test

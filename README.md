@@ -186,6 +186,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ### 2024年4月
 
+- 在构造函数上添加`@Autowired`注解而不是在参数上添加
 - 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
 
 - 新增了`日志数据库记录器`，将日志记录到数据库中

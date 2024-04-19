@@ -12,7 +12,9 @@ import java.util.*
  * @author AkagiYui
  */
 @SpringBootTest
-class KenkoDriveApplicationTests(@Autowired private val messageSource: MessageSource) {
+class KenkoDriveApplicationTests @Autowired constructor(
+    private val messageSource: MessageSource,
+) {
     @Test
     fun contextLoads() {
         Assertions.assertEquals(1, 2 - 1)

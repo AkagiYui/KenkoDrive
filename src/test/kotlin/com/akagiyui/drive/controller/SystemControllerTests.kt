@@ -16,7 +16,9 @@ import org.springframework.http.HttpStatus
  * @author AkagiYui
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SystemControllerTests(@Autowired val restTemplate: TestRestTemplate) {
+class SystemControllerTests @Autowired constructor(
+    val restTemplate: TestRestTemplate,
+) {
     @BeforeAll
     fun setup() {
         println(">> Setup")

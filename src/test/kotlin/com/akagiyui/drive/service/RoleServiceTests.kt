@@ -11,7 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest
  * @author AkagiYui
  */
 @SpringBootTest
-class RoleServiceTests(@Autowired private val roleService: RoleService) {
+class RoleServiceTests @Autowired constructor(
+    private val roleService: RoleService,
+) {
 
     /**
      * 获取所有角色

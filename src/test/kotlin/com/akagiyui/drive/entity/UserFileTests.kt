@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.Transactional
  * @author AkagiYui
  */
 @SpringBootTest
-class UserFileTests(
-    @Autowired private val userRepository: UserRepository,
-    @Autowired private val fileInfoRepository: FileInfoRepository,
-    @Autowired private val userFileRepository: UserFileRepository,
+class UserFileTests @Autowired constructor(
+    private val userRepository: UserRepository,
+    private val fileInfoRepository: FileInfoRepository,
+    private val userFileRepository: UserFileRepository,
 ) {
 
     @Test

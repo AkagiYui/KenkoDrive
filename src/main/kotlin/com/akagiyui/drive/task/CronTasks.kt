@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component
  * @author AkagiYui
  */
 @Component
-class CronTasks(
-    @Autowired private val fileInfoService: FileInfoService,
-    @Autowired private val userFileService: UserFileService,
+class CronTasks @Autowired constructor(
+    private val fileInfoService: FileInfoService,
+    private val userFileService: UserFileService,
 ) {
     private val log by LoggerDelegate()
 

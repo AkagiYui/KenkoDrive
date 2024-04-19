@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional
  * @author AkagiYui
  */
 @SpringBootTest
-class RoleRepositoryTests(@Autowired private val roleRepository: RoleRepository) {
+class RoleRepositoryTests @Autowired constructor(
+    private val roleRepository: RoleRepository,
+) {
 
     @Test
     fun findAllTest() {

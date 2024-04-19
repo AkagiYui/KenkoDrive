@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
  * @author AkagiYui
  */
 @SpringBootTest
-class SecurityConfigTests(@Autowired private val passwordEncoder: PasswordEncoder) {
+class SecurityConfigTests @Autowired constructor(
+    private val passwordEncoder: PasswordEncoder,
+) {
 
     @Test
     fun passwordEncoder() {
