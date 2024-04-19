@@ -1,6 +1,6 @@
 package com.akagiyui.drive.filter;
 
-import com.akagiyui.common.utils.CustomRequestWrapper;
+import com.akagiyui.common.utils.RequestWrapper;
 import com.akagiyui.drive.config.SecurityConfig;
 import com.akagiyui.drive.service.UserService;
 import jakarta.annotation.Resource;
@@ -39,7 +39,7 @@ public class CustomPasswordHandleFilter extends OncePerRequestFilter {
             // todo RSA 加解密
             if (StringUtils.hasText(rawUsername) && StringUtils.hasText(rawPassword)) {
                 String encryptedPassword = userService.encryptPassword(rawUsername, rawPassword, true);
-                CustomRequestWrapper requestWrapper = new CustomRequestWrapper(request);
+                RequestWrapper requestWrapper = new RequestWrapper(request);
                 requestWrapper.setParameter("password", encryptedPassword);
                 filterChain.doFilter(requestWrapper, response);
                 return;
