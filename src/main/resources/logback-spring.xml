@@ -73,7 +73,7 @@
         <appender-ref ref="LOG_FILE"/>
     </appender>
     <!--单位ms。当LoggerContext停止时，由于队列中可能会有没有打印的日志内容，因此需要等待一段时间，等待队列处理完毕。-->
-    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook">
+    <shutdownHook class="ch.qos.logback.core.hook.DefaultShutdownHook">
         <delay>1000</delay>
     </shutdownHook>
 

@@ -1,7 +1,7 @@
 spring:
   jpa:
     # 开启 SQL 日志
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         # 格式化 SQL 日志
@@ -13,7 +13,7 @@ logging:
   # 日志级别
   level:
     # 默认日志级别
-    root: info
+    root: warn
     com.akagiyui: trace
     org.hibernate.SQL: info
     org.hibernate.type.descriptor.sql.BasicBinder: info
