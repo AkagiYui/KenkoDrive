@@ -23,7 +23,7 @@ interface UserRepository : JpaRepository<User, String>, JpaSpecificationExecutor
      * @return 用户
      */
     @Query("select u from User u where u.username = ?1 or u.email = ?1")
-    fun getFirstByUsernameOrEmail(text: String): User
+    fun getFirstByUsernameOrEmail(text: String): User?
 
     /**
      * 邮箱是否存在

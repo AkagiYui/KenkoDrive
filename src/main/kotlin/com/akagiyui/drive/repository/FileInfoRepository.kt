@@ -17,7 +17,7 @@ interface FileInfoRepository : JpaRepository<FileInfo, String> {
      * @param hash 文件哈希
      * @return 文件
      */
-    fun getFirstByHash(hash: String): FileInfo
+    fun getFirstByHash(hash: String): FileInfo?
 
     /**
      * 根据哈希查找文件

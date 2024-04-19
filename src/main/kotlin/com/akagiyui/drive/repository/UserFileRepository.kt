@@ -45,6 +45,6 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
      * @param id     ID
      * @return 用户文件
      */
-    fun findByUserIdAndId(userId: String, id: String): UserFile
+    fun findByUserIdAndId(userId: String, id: String): UserFile?
 
 }

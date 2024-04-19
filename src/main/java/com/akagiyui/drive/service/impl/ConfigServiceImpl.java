@@ -30,7 +30,8 @@ public class ConfigServiceImpl implements ConfigService {
      * @return 配置项值
      */
     private Optional<String> findByKey(String key) {
-        return configRepository.findByConfigKey(key).map(KeyValueConfig::getConfigValue);
+        KeyValueConfig byConfigKey = configRepository.findByConfigKey(key);
+        return Optional.ofNullable(byConfigKey).map(KeyValueConfig::getConfigValue);
     }
 
     /**
