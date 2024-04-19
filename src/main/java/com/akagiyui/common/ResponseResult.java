@@ -62,8 +62,10 @@ public class ResponseResult<T> {
      * @return 响应体
      */
     public static <T> ResponseResult<T> response(ResponseEnum status, T data) {
-        if (status == ResponseEnum.BAD_REQUEST && data instanceof String && StringUtils.hasText((String) data)) {
-            return response(status.getCode(), (String) data, null);
+        if (status == ResponseEnum.BAD_REQUEST
+            && (data instanceof String string)
+            && StringUtils.hasText(string)) {
+            return response(status.getCode(), string, null);
         }
         return response(status.getCode(), status.getMsg(), data);
     }
