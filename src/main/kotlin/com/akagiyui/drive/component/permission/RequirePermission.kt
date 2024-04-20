@@ -11,5 +11,5 @@ import com.akagiyui.drive.model.Permission
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 annotation class RequirePermission(
-    val value: Array<Permission> = [],
+    vararg val value: Permission = [],
 )
