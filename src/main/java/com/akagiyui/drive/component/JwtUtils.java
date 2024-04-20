@@ -23,6 +23,7 @@ public class JwtUtils {
      */
     @Value("${application.jwt.key:DEFAULT_KEY}")
     private byte[] key;
+
     /**
      * 过期时间
      */
