@@ -5,7 +5,7 @@ package com.akagiyui.common
  *
  * @author AkagiYui
  */
-enum class ResponseEnum(private val code: Int, private val msg: String) {
+enum class ResponseEnum(val code: Int, val msg: String) {
     /**
      * 成功
      */
@@ -127,6 +127,4 @@ enum class ResponseEnum(private val code: Int, private val msg: String) {
     USER_NOT_EXIST(10023, "User not exist"),
     ;
 
-    fun getCode() = code
-    fun getMsg() = msg
 }
