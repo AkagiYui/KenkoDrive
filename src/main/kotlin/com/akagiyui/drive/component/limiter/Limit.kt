@@ -1,7 +1,7 @@
-package com.akagiyui.drive.component.limiter;
+package com.akagiyui.drive.component.limiter
 
-import java.lang.annotation.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeUnit
+
 
 /**
  * 限流注解
@@ -13,28 +13,28 @@ import java.util.concurrent.TimeUnit;
  * 注解生命周期：运行时
  * @author AkagiYui
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD})
-@Documented
-public @interface Limit {
+@MustBeDocumented
+@Target(AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Limit(
     /**
      * 资源的key，唯一
      * 作用：不同的接口，不同的流量控制
      */
-    String key() default "";
+    val key: String = "",
 
     /**
      * 每秒放入令牌桶的token数量
      */
-    double permitsPerSecond();
+    val permitsPerSecond: Double,
 
     /**
      * 获取令牌最大等待时间
      */
-    long timeout();
+    val timeout: Long = 0,
 
     /**
      * 等待时间单位(例:分钟/秒/毫秒) 默认:毫秒
      */
-    TimeUnit timeunit() default TimeUnit.MILLISECONDS;
-}
+    val timeunit: TimeUnit = TimeUnit.MILLISECONDS,
+)
