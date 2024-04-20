@@ -12,7 +12,6 @@ import com.akagiyui.drive.model.response.PageResponse;
 import com.akagiyui.drive.service.AnnouncementService;
 import com.akagiyui.drive.service.UserService;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,7 +69,7 @@ public class AnnouncementController {
      * 获取用于首页展示的公告列表
      */
     @GetMapping("/index")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public List<AnnouncementDisplayResponse> getIndexAnnouncementList() {
         return AnnouncementDisplayResponse.fromAnnouncementList(announcementService.getAnnouncementDisplayList());
     }

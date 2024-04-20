@@ -144,7 +144,7 @@ public class UserController {
      * @return 用户信息
      */
     @GetMapping("/info")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public UserInfoResponse getUserInfo() {
         return new UserInfoResponse(userService.getUser());
     }
@@ -153,7 +153,7 @@ public class UserController {
      * 更新当前用户信息
      */
     @PutMapping("/info")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public void updateLoginUserInfo(@RequestBody @Validated UpdateUserInfoRequest userInfo) {
         userService.updateInfo(userInfo);
     }
@@ -189,7 +189,7 @@ public class UserController {
      * @param avatar 头像文件
      */
     @PostMapping("/avatar")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public void updateAvatar(@RequestParam("avatar") MultipartFile avatar) {
         avatarService.saveAvatar(avatar);
     }
@@ -200,7 +200,7 @@ public class UserController {
      * @return 头像
      */
     @GetMapping("/avatar")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public ResponseEntity<byte[]> getAvatar() {
         AvatarContent avatar = avatarService.getAvatar();
 
@@ -217,7 +217,7 @@ public class UserController {
      * 获取当前用户权限列表
      */
     @GetMapping("/permission")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public Set<String> getPermission() {
         return userService.getPermission();
     }
@@ -226,7 +226,7 @@ public class UserController {
      * 获取当前用户角色列表
      */
     @GetMapping("/role")
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public Set<String> getRole() {
         return userService.getRole();
     }

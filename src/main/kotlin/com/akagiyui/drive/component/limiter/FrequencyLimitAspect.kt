@@ -24,7 +24,6 @@ class FrequencyLimitAspect {
      * 限流器字典
      * map的key为 Limit.key
      */
-
     private val limitMap: MutableMap<String, RateLimiter> = Maps.newConcurrentMap()
 
     @Around("@annotation(Limit)")

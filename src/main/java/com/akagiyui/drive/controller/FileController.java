@@ -16,7 +16,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRange;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,7 +107,7 @@ public class FileController {
      * @return 文件列表
      */
     @GetMapping({"", "/"})
-    @PreAuthorize("isAuthenticated()")
+    @RequirePermission
     public FolderContentResponse getFileList(@RequestParam(name = "folder", required = false) String folderId) {
         List<UserFileResponse> files = UserFileResponse.fromUserFileList(userFileService.getFiles(folderId));
         List<FolderResponse> folders = FolderResponse.fromFolderList(folderService.getSubFolders(folderId));
