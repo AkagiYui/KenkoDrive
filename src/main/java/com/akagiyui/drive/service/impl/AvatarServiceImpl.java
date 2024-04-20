@@ -30,7 +30,7 @@ import static com.akagiyui.drive.component.StaticField.*;
 /**
  * 头像服务实现类
  *
- * @author kenko
+ * @author AkagiYui
  */
 @Service
 @Slf4j

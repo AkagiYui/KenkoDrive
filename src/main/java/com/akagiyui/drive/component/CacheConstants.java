@@ -3,7 +3,7 @@ package com.akagiyui.drive.component;
 /**
  * 缓存键名前缀
  *
- * @author kenko
+ * @author AkagiYui
  */
 public class CacheConstants {
     public static final String FILE_INFO = "file_info";

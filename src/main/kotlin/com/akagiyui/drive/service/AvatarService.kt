@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile
 /**
  * 头像服务接口
  *
- * @author kenko
+ * @author AkagiYui
  */
 interface AvatarService {
     /**
