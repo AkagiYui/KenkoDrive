@@ -17,15 +17,15 @@ class LoggerDelegate : ReadOnlyProperty<Any, Logger> {
     /**
      * 延迟创建的单例日志
      */
-    private var _logger: Logger? = null
+    private lateinit var _logger: Logger
 
     /**
      * 获取单例 logger
      */
     override operator fun getValue(thisRef: Any, property: KProperty<*>): Logger {
-        if (_logger != null) return _logger!!
+        if (::_logger.isInitialized) return _logger
         // 获取 logger 对象，由 LoggerFactory 底层保证线程安全
         _logger = LoggerFactory.getLogger(thisRef::class.java)
-        return _logger!!
+        return _logger
     }
 }
