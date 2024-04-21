@@ -28,7 +28,7 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
      * @param folderId 文件夹ID
      * @return 用户文件列表
      */
-    fun findByUserIdAndFolderId(userId: String, folderId: String): List<UserFile>
+    fun findByUserIdAndFolderId(userId: String, folderId: String?): List<UserFile>
 
     /**
      * 根据文件信息ID判断用户文件是否存在
