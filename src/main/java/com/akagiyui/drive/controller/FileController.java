@@ -134,8 +134,6 @@ public class FileController {
      */
     @GetMapping("/{id}/download/single")
     public ResponseEntity<InputStreamResource> downloadFile(@PathVariable String id) {
-        // todo 权限校验
-
         // 获取文件
         FileInfo fileInfo = userFileService.getFileInfo(id);
 
@@ -198,8 +196,8 @@ public class FileController {
                 while ((numberOfBytesToWrite = inputStream.read(data, 0, data.length)) != -1) {
                     outputStream.write(data, 0, numberOfBytesToWrite);
                 }
-                outputStream.flush(); // todo 必要性待验证
-                outputStream.close(); // todo 必要性待验证
+                outputStream.flush();
+                outputStream.close();
                 inputStream.close();
             };
         } catch (IOException e) {
@@ -220,7 +218,6 @@ public class FileController {
      */
     @DeleteMapping("/{id}")
     public void deleteFile(@PathVariable String id) {
-        // todo 权限校验
         fileInfoService.deleteFile(id);
     }
 }

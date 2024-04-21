@@ -3,7 +3,6 @@ package com.akagiyui.common.utils
 /**
  * 截断字符串
  *
- * @author AkagiYui
  * @param length 截断长度
  * @return 截断后的字符串
  */
