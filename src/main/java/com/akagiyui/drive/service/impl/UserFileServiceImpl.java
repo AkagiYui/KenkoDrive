@@ -43,7 +43,7 @@ public class UserFileServiceImpl implements UserFileService {
     }
 
     @Override
-    public @NotNull List<UserFile> getFiles(@NotNull String folderId) {
+    public @NotNull List<UserFile> getFiles(String folderId) {
         User user = userService.getUser();
         return userFileRepository.findByUserIdAndFolderId(user.getId(), folderId);
     }

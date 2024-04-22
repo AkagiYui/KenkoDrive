@@ -13,7 +13,7 @@ interface FileInfoService {
     /**
      * 获取文件
      */
-    fun getFileInfo(id: String?): FileInfo?
+    fun getFileInfo(id: String): FileInfo
 
     /**
      * 根据hash获取文件信息

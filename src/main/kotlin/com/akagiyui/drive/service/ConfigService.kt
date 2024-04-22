@@ -50,5 +50,5 @@ interface ConfigService {
     /**
      * 获取配置
      */
-    fun getConfig(): Map<String?, Any?>
+    fun getConfig(): Map<String, Any>
 }

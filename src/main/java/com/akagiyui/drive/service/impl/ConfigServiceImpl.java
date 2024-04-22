@@ -173,7 +173,7 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public @NotNull Map<String, Object> getConfig() {
+    public @NotNull Map<@NotNull String, @NotNull Object> getConfig() {
         return Map.of(
             REGISTER_ENABLED, isRegisterEnabled(),
             IS_INITIALIZED, isInitialized(),

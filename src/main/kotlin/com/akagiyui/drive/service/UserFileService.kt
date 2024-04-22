@@ -20,7 +20,7 @@ interface UserFileService {
      * 获取文件夹下的文件
      * @param folderId 文件夹ID
      */
-    fun getFiles(folderId: String): List<UserFile>
+    fun getFiles(folderId: String?): List<UserFile>
 
     /**
      * 判断文件是否有用户关联

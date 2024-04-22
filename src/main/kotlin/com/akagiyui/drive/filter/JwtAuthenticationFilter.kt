@@ -39,12 +39,10 @@ class JwtAuthenticationFilter @Autowired constructor(
                 val userId = jwtUtils.getUserId(token) // 获取用户 ID
                 if (userId != null) {
                     val userDetails = userService.getUserDetails(userId) // 从 redis 或数据库中获取用户信息
-                    if (userDetails != null) { // 放入 Spring Security 上下文
-                        val authentication =
-                            UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                        authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
-                        SecurityContextHolder.getContext().authentication = authentication
-                    }
+                    // 放入 Spring Security 上下文
+                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authentication
                 }
             }
         }

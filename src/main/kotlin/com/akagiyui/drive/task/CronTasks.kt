@@ -34,9 +34,9 @@ class CronTasks @Autowired constructor(
         log.info("Start remove unused file")
         // 遍历所有文件，如果没有被引用则删除
         fileInfoService.getAllFileInfo().forEach { fileInfo: FileInfo ->
-            if (!userFileService.existByFileId(fileInfo.id!!)) {
+            if (!userFileService.existByFileId(fileInfo.id)) {
                 log.info("Remove unused file: ${fileInfo.name}")
-                fileInfoService.deleteFile(fileInfo.id!!)
+                fileInfoService.deleteFile(fileInfo.id)
             }
         }
     }

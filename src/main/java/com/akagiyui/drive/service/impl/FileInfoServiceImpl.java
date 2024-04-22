@@ -46,7 +46,7 @@ public class FileInfoServiceImpl implements FileInfoService {
 
     @Override
     @Cacheable(value = CacheConstants.FILE_INFO, key = "#id")
-    public FileInfo getFileInfo(String id) {
+    public @NotNull FileInfo getFileInfo(@NotNull String id) {
         return fileInfoRepository.findById(id).orElseThrow(() -> new CustomException(ResponseEnum.NOT_FOUND));
     }
 
