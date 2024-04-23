@@ -138,7 +138,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [Spring官方文档: Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
 - [Kotlin官方文档: Lombok compiler plugin](https://kotlinlang.org/docs/lombok.html)
 - [柏码知识库](https://itbaima.net/document)
-- [在 Kotlin 中使用 SLF4J](https://flapypan.top/kotlin-slf4j)
+- [在 Kotlin 中使用 SLF4J](https://flapypan.top/notes/kotlin#%E5%9C%A8-kotlin-%E4%B8%AD%E4%BD%BF%E7%94%A8-slf4j)
 - [Spring Boot JPA 打印 SQL 语句及参数](https://www.zhangbj.com/p/1411.html)
 - [Spring 框架缓存故障自动切换](https://kyon.life/post/dynamic-switch-cache-in-spring/)
 - [Auto-accepting terms of service with Gradle build scans](https://www.yellowduck.be/posts/auto-accepting-terms-of-service-with-gradle-build-scans/)
