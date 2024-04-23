@@ -21,7 +21,7 @@ interface FileInfoService {
      * @param hash 文件hash
      * @return 文件信息
      */
-    fun getFileInfoListByHash(hash: String?): FileInfo?
+    fun getFileInfoByHash(hash: String): FileInfo
 
     /**
      * 根据hash判断文件是否存在
@@ -29,7 +29,7 @@ interface FileInfoService {
      * @param hash 文件hash
      * @return 文件是否存在
      */
-    fun existByHash(hash: String?): Boolean
+    fun existByHash(hash: String): Boolean
 
     /**
      * 保存文件
