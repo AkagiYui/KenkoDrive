@@ -1,32 +1,29 @@
-package com.akagiyui.drive.model;
+package com.akagiyui.drive.model
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.persistence.AttributeConverter
+import jakarta.persistence.Converter
 
 /**
  * 权限枚举
  *
  * @author AkagiYui
  */
-@Getter
-@AllArgsConstructor
-@Slf4j
-public enum Permission {
+enum class Permission(val description: String) {
     /**
      * 个人文件上传
      */
     PERSONAL_UPLOAD("个人文件上传"),
+
     /**
      * 个人文件下载
      */
     PERSONAL_DOWNLOAD("个人文件下载"),
+
     /**
      * 创建文件夹
      */
     FOLDER_CREATE("创建文件夹"),
+
     /**
      * 删除文件夹
      */
@@ -36,18 +33,22 @@ public enum Permission {
      * 获取角色信息
      */
     ROLE_VIEW("获取角色信息"),
+
     /**
      * 添加角色
      */
     ROLE_ADD("添加角色"),
+
     /**
      * 修改角色
      */
     ROLE_UPDATE("修改角色"),
+
     /**
      * 删除角色
      */
     ROLE_DELETE("删除角色"),
+
     /**
      * 分配角色
      */
@@ -57,14 +58,17 @@ public enum Permission {
      * 用户查看
      */
     USER_VIEW("用户查看"),
+
     /**
      * 用户添加
      */
     USER_ADD("用户添加"),
+
     /**
      * 用户修改
      */
     USER_UPDATE("用户修改"),
+
     /**
      * 用户删除
      */
@@ -74,14 +78,17 @@ public enum Permission {
      * 公告添加
      */
     ANNOUNCEMENT_ADD("公告添加"),
+
     /**
      * 公告修改
      */
     ANNOUNCEMENT_UPDATE("公告修改"),
+
     /**
      * 公告删除
      */
     ANNOUNCEMENT_DELETE("公告删除"),
+
     /**
      * 获取所有公告
      */
@@ -91,10 +98,12 @@ public enum Permission {
      * 获取设置
      */
     CONFIGURATION_GET("获取设置"),
+
     /**
      * 修改设置
      */
     CONFIGURATION_UPDATE("修改设置"),
+
     /**
      * 前端启用调试模式
      */
@@ -102,24 +111,18 @@ public enum Permission {
     ;
 
     /**
-     * 权限描述
-     */
-    private final String description;
-
-    /**
      * 从数据库值映射到枚举常量
      */
     @Converter
-    public static class PermissionConverter implements AttributeConverter<Permission, String> {
+    class PermissionConverter : AttributeConverter<Permission, String> {
         /**
          * 将枚举常量转换为数据库列值
          *
          * @param permission 枚举常量
          * @return 数据库列值
          */
-        @Override
-        public String convertToDatabaseColumn(Permission permission) {
-            return permission.name();
+        override fun convertToDatabaseColumn(permission: Permission): String {
+            return permission.name
         }
 
         /**
@@ -128,9 +131,8 @@ public enum Permission {
          * @param value 数据库列值
          * @return 枚举常量
          */
-        @Override
-        public Permission convertToEntityAttribute(String value) {
-            return Permission.valueOf(value);
+        override fun convertToEntityAttribute(value: String): Permission {
+            return valueOf(value)
         }
     }
 }
