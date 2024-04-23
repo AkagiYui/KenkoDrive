@@ -32,7 +32,7 @@ class UploadServiceImpl(
 
     private fun isInfoInRedis(userId: String, hash: String): Boolean {
         val redisKey = "upload:$userId:$hash"
-        return redisCache.hasKey(redisKey)
+        return redisKey in redisCache
     }
 
     private fun saveInfoToRedis(userId: String, hash: String, chunkedInfo: ChunkedUploadInfo) {
@@ -42,7 +42,7 @@ class UploadServiceImpl(
 
     private fun getInfoFromRedis(userId: String, hash: String): ChunkedUploadInfo {
         val redisKey = "upload:$userId:$hash"
-        return redisCache[redisKey]
+        return redisCache[redisKey] ?: throw CustomException(ResponseEnum.TASK_NOT_FOUND)
     }
 
     override fun requestUpload(preUploadRequest: PreUploadRequest) {

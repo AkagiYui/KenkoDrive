@@ -177,7 +177,7 @@ class UserServiceImpl(
 
         // 检查该邮箱是否在 redis 中等待验证
         val redisKey = "emailVerifyCode:$verifyRequest.email"
-        if (redisCache.hasKey(redisKey)) {
+        if (redisKey in redisCache) {
             throw CustomException(ResponseEnum.EMAIL_EXIST)
         }
         // 检查该邮箱是否已经注册

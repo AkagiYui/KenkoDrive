@@ -25,7 +25,7 @@ class RedisConfig {
      * @return RedisTemplate
      */
     @Bean
-    fun redisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<Any, Any> {
+    fun redisTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, Any?> {
         // 使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
         val om = ObjectMapper().apply {
             setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
@@ -34,7 +34,7 @@ class RedisConfig {
         val jackson2JsonRedisSerializer = Jackson2JsonRedisSerializer(om, Any::class.java)
 
         // 创建RedisTemplate
-        return RedisTemplate<Any, Any>().apply {
+        return RedisTemplate<String, Any?>().apply {
             setConnectionFactory(connectionFactory)
 
             // key采用String序列化方式
