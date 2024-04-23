@@ -52,11 +52,7 @@ class RequestLogAspect {
                 .map { (key, value) -> "$key=${value.joinToString(",")}".ellipsis(100) }
                 .joinToString(", ")
                 .ellipsis(1000)
-            requestLog.append("($paramsBuffer)")
-        }
-        // 请求体
-        request.reader.readText().also {
-            if (it.isNotBlank()) requestLog.append("{${it.ellipsis(1000)}}")
+            requestLog.append(if (paramsBuffer.isNotBlank()) "($paramsBuffer)" else "")
         }
 
         // 获取方法参数
