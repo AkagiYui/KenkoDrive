@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 /**
  * slf4j 日志对象获取委托类
  *
- * https://flapypan.top/kotlin-slf4j
+ * https://flapypan.top/notes/kotlin#在 Kotlin 中使用 SLF4J
  *
  * @author FlapyPan
  */
