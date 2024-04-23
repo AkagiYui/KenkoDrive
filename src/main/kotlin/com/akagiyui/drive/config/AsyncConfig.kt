@@ -4,12 +4,12 @@ import com.akagiyui.common.delegate.LoggerDelegate
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.task.TaskExecutor
 import org.springframework.scheduling.annotation.AsyncConfigurer
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
 /**
@@ -25,7 +25,7 @@ class AsyncConfig : AsyncConfigurer, WebMvcConfigurer {
      * 配置 Spring 异步任务执行器
      */
     @Bean(name = ["taskExecutor"])
-    fun taskExecutor(): Executor {
+    fun taskExecutor(): TaskExecutor {
         return ThreadPoolTaskExecutor().apply {
             // 常驻的线程数，即使没有任务要执行，线程池一直都会维持这些线程
             corePoolSize = 6

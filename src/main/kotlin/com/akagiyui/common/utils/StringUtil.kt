@@ -44,3 +44,12 @@ fun String.compressPackageName(allowedLength: Int? = null): String {
     val compressedPackage = parts.joinToString(".") // 重新拼接压缩后的包名
     return "$compressedPackage.$className" // 返回压缩后的包名加上类名
 }
+
+/**
+ * 判断字符串是否为空
+ *
+ * @return 是否为空
+ */
+fun String?.hasText(): Boolean {
+    return !this.isNullOrBlank()
+}

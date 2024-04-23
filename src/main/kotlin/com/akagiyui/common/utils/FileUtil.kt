@@ -1,5 +1,6 @@
 package com.akagiyui.common.utils
 
+import com.akagiyui.common.exception.CreateFolderException
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
@@ -75,5 +76,40 @@ object FileUtil {
     @Throws(IOException::class)
     fun readFileToString(file: File): String {
         return readFileToString(file, "utf-8")
+    }
+}
+
+
+/**
+ * 创建父目录
+ */
+fun File.createParentDir() {
+    val parent = this.parentFile
+    if (!parent.exists()) {
+        parent.mkdirs()
+    }
+}
+
+/**
+ * 创建目录，如果创建失败则抛出异常
+ */
+fun File.mkdirOrThrow(errorMessage: String = "Creating directory failed") {
+    if (this.exists() && this.isDirectory) {
+        return
+    }
+    if (!this.mkdirs()) {
+        throw CreateFolderException(errorMessage)
+    }
+}
+
+/**
+ * 删除文件
+ */
+fun File.deleteIfExists() {
+    if (this.exists()) {
+        val delete = this.delete()
+        if (!delete) {
+            throw IOException("Delete file failed")
+        }
     }
 }

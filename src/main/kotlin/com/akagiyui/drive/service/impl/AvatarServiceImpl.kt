@@ -4,7 +4,6 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.FileUtil
-import com.akagiyui.drive.component.StaticField.*
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.AvatarContent
 import com.akagiyui.drive.service.AvatarService
@@ -42,6 +41,26 @@ class AvatarServiceImpl(
             "image/pjpeg",
             "image/x-png",
         )
+
+        /**
+         * 头像文件大小的上限值(3MB)
+         */
+        const val AVATAR_MAX_SIZE: Int = 3 * 1024 * 1024
+
+        /**
+         * 高度限制
+         */
+        const val HEIGHT_LIMIT: Int = 200
+
+        /**
+         * 宽度限制
+         */
+        const val WIDTH_LIMIT: Int = 200
+
+        /**
+         * 头像图片格式
+         */
+        const val IMAGE_FORMAT: String = "jpg"
     }
 
     @Value("\${application.avatar.default}")
