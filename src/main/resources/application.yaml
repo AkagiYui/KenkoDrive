@@ -47,6 +47,9 @@ spring:
         smtp:
           ssl:
             enable: true
+    # 该配置项仅用于使 IDEA 不报错，实际配置在 application-prod.yaml 中
+    # https://youtrack.jetbrains.com/issue/IDEA-262744/Could-not-autowire.-No-beans-of-JavaMailSender-type-found.#focus=Comments-27-5165177.0-0
+    host: NO
   messages:
     basename: i18n/messages
 sentry:
