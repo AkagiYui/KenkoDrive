@@ -1,4 +1,4 @@
-package com.akagiyui.drive.component
+package com.akagiyui.drive.model
 
 /**
  * 缓存键名前缀
