@@ -2,10 +2,10 @@ package com.akagiyui.drive.config
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.ResponseResult
-import com.akagiyui.drive.component.JwtUtils
 import com.akagiyui.drive.component.RequestMatcherBuilder
+import com.akagiyui.drive.component.TokenUtils
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter
-import com.akagiyui.drive.filter.JwtAuthenticationFilter
+import com.akagiyui.drive.filter.TokenAuthenticationFilter
 import com.akagiyui.drive.model.LoginUserDetails
 import com.akagiyui.drive.model.response.LoginResponse
 import jakarta.servlet.http.HttpServletRequest
@@ -42,11 +42,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfig(
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val tokenAuthenticationFilter: TokenAuthenticationFilter,
     private val customPasswordHandleFilter: CustomPasswordHandleFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
-    private val jwtUtils: JwtUtils,
+    private val tokenUtils: TokenUtils,
 ) {
     companion object {
         const val LOGIN_URL: String = "/user/token"
@@ -84,7 +84,7 @@ class SecurityConfig(
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加 JWT 过滤器
+            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加 JWT 过滤器
 //            .addFilterBefore(customPasswordHandleFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加密码处理过滤器
             .formLogin {
                 it
@@ -145,7 +145,7 @@ class SecurityConfig(
         val loginUserDetails = authentication.principal as LoginUserDetails
 
         val user = loginUserDetails.user
-        val token = jwtUtils.createJwt(user)
+        val token = tokenUtils.createToken(user)
         val loginResponse = LoginResponse(token, null)
         ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse)
     }
