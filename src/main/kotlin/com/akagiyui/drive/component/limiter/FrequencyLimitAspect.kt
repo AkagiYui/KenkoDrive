@@ -28,7 +28,7 @@ class FrequencyLimitAspect {
 
     @Around("@annotation(Limit)")
     @Throws(Throwable::class)
-    fun around(joinPoint: ProceedingJoinPoint): Any {
+    fun around(joinPoint: ProceedingJoinPoint): Any? {
         // 获取方法签名
         val signature = joinPoint.signature as MethodSignature
         val method = signature.method
