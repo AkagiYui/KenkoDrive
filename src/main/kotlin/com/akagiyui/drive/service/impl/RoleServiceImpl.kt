@@ -117,9 +117,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
             oldRole.description = role.description
         }
         // 修改是否默认角色
-        if (oldRole.isDefault != role.isDefault) {
-            oldRole.isDefault = role.isDefault
-        }
+        role.isDefault?.let { oldRole.isDefault = it }
         // 修改权限
         role.permissions?.let {
             val permissionsSet = try {

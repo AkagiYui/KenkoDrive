@@ -27,5 +27,5 @@ class UpdateRoleRequest {
     /**
      * 是否是默认角色
      */
-    var isDefault = true
+    var isDefault: Boolean? = null
 }
