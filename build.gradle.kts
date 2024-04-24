@@ -14,15 +14,6 @@ plugins {
     kotlin("plugin.spring") version "1.9.23"
 
     id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
-
-    /**
-     * 该插件仅用于在 Java 与 Kotlin 混合编程时让编译器识别 Lombok 注解，
-     * 应当在过渡时期结束后移除
-     *
-     * https://youtrack.jetbrains.com/issue/KT-7112
-     */
-    kotlin("plugin.lombok") version "1.9.23"
-    id("io.freefair.lombok") version "8.6"
 }
 
 group = "com.akagiyui" // 项目组织
@@ -39,14 +30,6 @@ java {
 allOpen {
     // 为 JPA 实体类添加 open 修饰符
     annotation("jakarta.persistence.MappedSuperclass")
-}
-
-/**
- * 该插件仅用于在 Java 与 Kotlin 混合编程时让编译器识别 Lombok 注解，
- * 应当在过渡时期结束后移除
- */
-kotlinLombok {
-    lombokConfigurationFile(file("src/main/java/lombok.config"))
 }
 
 configurations {
@@ -120,14 +103,8 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin") // 对Kotlin类和数据类的序列化/反序列化的支持
     implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射库
 
-    // scope: provided
-    compileOnly("org.projectlombok:lombok")  // Lombok
-
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
-
-    // 注解处理器
-    annotationProcessor("org.projectlombok:lombok")
 
     // scope: test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
