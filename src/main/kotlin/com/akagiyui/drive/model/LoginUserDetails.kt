@@ -10,17 +10,24 @@ import org.springframework.security.core.userdetails.UserDetails
  * 登录用户详情
  * @author AkagiYui
  */
-class LoginUserDetails(
+class LoginUserDetails() : UserDetails {
+
     /**
      * 用户
      */
-    var user: User
-) : UserDetails {
+    lateinit var user: User
 
     /**
      * 权限字符串
      */
-    lateinit var permissions: Set<String>
+    val permissions by lazy {
+        // 获取权限，注意如果使用懒加载，需要在事务内获取
+        user.roles
+            .map { it.permissions }
+            .flatten()
+            .map { it.name }
+            .toSet()
+    }
 
     /**
      * 权限列表
@@ -31,17 +38,8 @@ class LoginUserDetails(
             .toMutableSet()
     }
 
-    /**
-     * 登录用户详情
-     */
-    init {
-        // 获取权限，注意如果使用懒加载，需要在事务内获取
-        val roles = user.roles
-        this.permissions = roles
-            .map { it.permissions }
-            .flatten()
-            .map { it.name }
-            .toSet()
+    constructor(user: User) : this() {
+        this.user = user
     }
 
     /**
