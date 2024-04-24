@@ -6,7 +6,7 @@ import com.akagiyui.common.exception.CustomException
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.filter.RoleFilter
+import com.akagiyui.drive.model.RoleFilter
 import com.akagiyui.drive.model.request.AddRoleRequest
 import com.akagiyui.drive.model.request.UpdateRoleRequest
 import com.akagiyui.drive.repository.RoleRepository

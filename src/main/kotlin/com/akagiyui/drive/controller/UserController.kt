@@ -5,7 +5,7 @@ import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.filter.UserFilter
+import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.request.*
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
