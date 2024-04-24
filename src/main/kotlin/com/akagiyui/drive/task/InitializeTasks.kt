@@ -45,12 +45,13 @@ class InitializeTasks(
         log.info("Start add role")
         // 添加角色
         // 添加超级管理员角色
-        val admin = Role()
-        admin.setName("超级管理员")
-        admin.setDescription("拥有所有权限")
-        admin.setDisabled(false)
-        admin.setIsDefault(false)
-        admin.setPermissions(HashSet(Permission.entries))
+        val admin = Role().apply {
+            name = "超级管理员"
+            description = "拥有所有权限"
+            disabled = false
+            isDefault = false
+            permissions = Permission.entries.toMutableSet()
+        }
         roleService.addRole(admin)
 
         // 添加管理员用户
@@ -62,21 +63,18 @@ class InitializeTasks(
         userService.addRoles(adminUser.id, HashSet(listOf(admin.id)))
 
         // 添加普通用户角色
-        val user = Role()
-        user.setName("普通用户")
-        user.setDescription("允许上传下载自己的文件")
-        user.setDisabled(false)
-        user.setIsDefault(true)
-        user.setPermissions(
-            HashSet(
-                listOf(
-                    Permission.PERSONAL_UPLOAD,
-                    Permission.PERSONAL_DOWNLOAD,
-                    Permission.FOLDER_CREATE,
-                    Permission.FOLDER_DELETE,
-                ),
-            ),
-        )
+        val user = Role().apply {
+            name = "普通用户"
+            description = "允许上传下载自己的文件"
+            disabled = false
+            isDefault = true
+            permissions = mutableSetOf(
+                Permission.PERSONAL_UPLOAD,
+                Permission.PERSONAL_DOWNLOAD,
+                Permission.FOLDER_CREATE,
+                Permission.FOLDER_DELETE,
+            )
+        }
         roleService.addRole(user)
     }
 }

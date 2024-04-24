@@ -26,7 +26,7 @@ class FolderResponse() {
     constructor(folder: Folder) : this() {
         this.id = folder.id
         this.name = folder.name
-        this.createTime = folder.createTime!!.time
+        this.createTime = folder.createTime.time
     }
 
     companion object {

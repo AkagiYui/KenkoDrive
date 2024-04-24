@@ -150,7 +150,7 @@ class FileController(
         val fileInfo = userFileService.getFileInfo(id!!)
         val fileStream = storageService.getFile(fileInfo.storageKey)
         fileInfoService.recordDownload(fileInfo)
-        val mediaLength = fileInfo.size
+        val mediaLength = fileInfo.size!!
 
         // 获取范围
         // todo 支持多范围  https://zhuanlan.zhihu.com/p/620113538?utm_id=0

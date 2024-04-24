@@ -23,7 +23,7 @@ interface RoleService {
     /**
      * 获取所有默认角色
      */
-    fun getAllDefaultRoles(): List<Role>
+    fun getAllDefaultRoles(): MutableSet<Role>
 
     /**
      * 分页查询角色

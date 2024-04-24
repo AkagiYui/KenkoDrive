@@ -1,32 +1,37 @@
-package com.akagiyui.common.entity
+package com.akagiyui.drive.entity
 
-import com.akagiyui.common.utils.SnowFlakeIdGenerator
 import jakarta.persistence.*
-import org.hibernate.annotations.GenericGenerator
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.io.Serializable
-import java.util.*
+import java.util.Date
 
 /**
- * 基础实体类
+ * 配置项 实体类
+ *
  * @author AkagiYui
  */
-// 启用自动填充
+@Entity
+@Table(name = "system_config")
 @EntityListeners(AuditingEntityListener::class)
-// 实体继承映射，标记该类为父类，为子类提供映射规则
-@MappedSuperclass
-abstract class BaseEntity : Serializable {
+class KeyValueConfig {
+    /**
+     * 配置项键
+     *
+     *
+     * 注意不要使用"key"等关键字
+     */
+    @Id
+    lateinit var configKey: String
 
     /**
-     * 记录ID
+     * 配置项值
+     *
+     *
+     * 注意不要使用"varue"等关键字
      */
-    // 主键生成策略
-    @Id
-    @GeneratedValue(generator = "snowflakeId")
-    @GenericGenerator(name = "snowflakeId", type = SnowFlakeIdGenerator::class)
-    lateinit var id: String
+    @Column(nullable = false)
+    lateinit var configValue: String
 
     /**
      * 更新时间

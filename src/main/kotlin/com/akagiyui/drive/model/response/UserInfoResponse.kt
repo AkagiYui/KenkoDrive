@@ -21,12 +21,12 @@ class UserInfoResponse(user: User) {
     /**
      * 昵称
      */
-    val nickname: String = user.nickname
+    val nickname = user.nickname
 
     /**
      * 邮箱
      */
-    val email: String = user.email
+    val email = user.email
 
     /**
      * 已禁用

@@ -47,7 +47,7 @@ class TokenUtils {
      * @return 密钥
      */
     fun createToken(user: LoginUserDetails): String {
-        return createToken(user.user!!)
+        return createToken(user.user)
     }
 
     /**

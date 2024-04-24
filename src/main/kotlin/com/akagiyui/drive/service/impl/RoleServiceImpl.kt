@@ -45,7 +45,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         return roleRepository.findAll()
     }
 
-    override fun getAllDefaultRoles(): List<Role> {
+    override fun getAllDefaultRoles(): MutableSet<Role> {
         return roleRepository.findAllByIsDefaultIsTrue()
     }
 
@@ -79,7 +79,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         }
         val permissions = try {
             // 检查权限是否存在
-            role.permissions.map { Permission.valueOf(it) }.toSet()
+            role.permissions.map { Permission.valueOf(it) }.toMutableSet()
         } catch (e: IllegalArgumentException) {
             throw CustomException(ResponseEnum.PERMISSION_NOT_EXIST)
         }
@@ -110,20 +110,20 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
             if (roleRepository.existsByName(role.name!!)) {
                 throw CustomException(ResponseEnum.ROLE_EXIST)
             }
-            oldRole.name = role.name
+            oldRole.name = role.name!!
         }
         // 修改角色描述
         if (StringUtils.hasText(role.description) && oldRole.description != role.description) {
             oldRole.description = role.description
         }
         // 修改是否默认角色
-        if (role.isDefault != null && oldRole.isDefault != role.isDefault) {
+        if (oldRole.isDefault != role.isDefault) {
             oldRole.isDefault = role.isDefault
         }
         // 修改权限
         role.permissions?.let {
             val permissionsSet = try {
-                it.map { perm -> Permission.valueOf(perm) }.toSet()
+                it.map { perm -> Permission.valueOf(perm) }.toMutableSet()
             } catch (e: IllegalArgumentException) {
                 log.warn("Permission not found: {}", it)
                 throw CustomException(ResponseEnum.PERMISSION_NOT_EXIST)

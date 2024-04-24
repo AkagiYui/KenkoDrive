@@ -21,7 +21,7 @@ class UserFileResponse(userFile: UserFile) {
     /**
      * 文件大小（字节Byte）
      */
-    val size: Long = userFile.fileInfo.size
+    val size = userFile.fileInfo.size
 
     /**
      * 文件类型
@@ -31,7 +31,7 @@ class UserFileResponse(userFile: UserFile) {
     /**
      * 创建时间
      */
-    val createTime = userFile.createTime!!.time
+    val createTime = userFile.createTime.time
 
     companion object {
         /**

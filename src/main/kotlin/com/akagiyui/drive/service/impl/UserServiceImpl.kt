@@ -160,7 +160,7 @@ class UserServiceImpl(
         // 从 SecurityContextHolder 中获取用户信息
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as LoginUserDetails
-        return userDetails.user!!
+        return userDetails.user
     }
 
     @Cacheable(cacheNames = [CacheConstants.USER_LOGIN_DETAILS], key = "#userId")
@@ -252,10 +252,10 @@ class UserServiceImpl(
     override fun updateInfo(userInfo: UpdateUserInfoRequest) {
         val user = getUser()
         if (StringUtils.hasText(userInfo.nickname)) {
-            user.setNickname(userInfo.nickname)
+            user.nickname = userInfo.nickname
         }
         if (StringUtils.hasText(userInfo.email)) {
-            user.setEmail(userInfo.email)
+            user.email = userInfo.email
         }
         repository.save(user)
     }
@@ -286,13 +286,13 @@ class UserServiceImpl(
     override fun disable(id: String, disabled: Boolean) {
         val user = findUserByIdWithCache(id)
         // todo 检查是否为超级管理员
-        user.setDisabled(disabled)
+        user.disabled = disabled
         repository.save(user)
     }
 
     override fun resetPassword(id: String, newPassword: String) {
         val user = findUserByIdWithCache(id)
-        user.setPassword(encryptPassword(user.username, newPassword))
+        user.password = encryptPassword(user.username, newPassword)
         repository.save(user)
     }
 
@@ -315,13 +315,13 @@ class UserServiceImpl(
     override fun updateInfo(id: String, userInfo: UpdateUserInfoRequest) {
         val user = findUserByIdWithCache(id)
         if (StringUtils.hasText(userInfo.nickname)) {
-            user.setNickname(userInfo.nickname)
+            user.nickname = userInfo.nickname
         }
         if (StringUtils.hasText(userInfo.email)) {
-            user.setEmail(userInfo.email)
+            user.email = userInfo.email
         }
         if (StringUtils.hasText(userInfo.password)) {
-            user.setPassword(encryptPassword(user.username, userInfo.password!!))
+            user.password = encryptPassword(user.username, userInfo.password!!)
         }
         repository.save(user)
     }
