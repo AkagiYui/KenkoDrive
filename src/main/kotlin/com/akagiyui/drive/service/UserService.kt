@@ -3,7 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.LoginUserDetails
-import com.akagiyui.drive.model.filter.UserFilter
+import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.request.AddUserRequest
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
 import com.akagiyui.drive.model.request.RegisterConfirmRequest

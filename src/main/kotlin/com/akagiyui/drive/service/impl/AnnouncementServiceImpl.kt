@@ -3,7 +3,7 @@ package com.akagiyui.drive.service.impl
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.drive.entity.Announcement
-import com.akagiyui.drive.model.filter.AnnouncementFilter
+import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
 import com.akagiyui.drive.repository.AnnouncementRepository
 import com.akagiyui.drive.service.AnnouncementService

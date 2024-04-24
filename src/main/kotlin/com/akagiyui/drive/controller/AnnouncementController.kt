@@ -1,8 +1,8 @@
 package com.akagiyui.drive.controller
 
 import com.akagiyui.drive.component.permission.RequirePermission
+import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.filter.AnnouncementFilter
 import com.akagiyui.drive.model.request.AddAnnouncementRequest
 import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
 import com.akagiyui.drive.model.response.AnnouncementDisplayResponse

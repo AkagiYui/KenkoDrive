@@ -3,7 +3,7 @@ package com.akagiyui.drive.controller
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.filter.RoleFilter
+import com.akagiyui.drive.model.RoleFilter
 import com.akagiyui.drive.model.request.AddRoleRequest
 import com.akagiyui.drive.model.request.UpdateRoleRequest
 import com.akagiyui.drive.model.response.PageResponse

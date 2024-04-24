@@ -3,7 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.filter.RoleFilter
+import com.akagiyui.drive.model.RoleFilter
 import com.akagiyui.drive.model.request.AddRoleRequest
 import com.akagiyui.drive.model.request.UpdateRoleRequest
 import org.springframework.data.domain.Page
