@@ -1,31 +1,29 @@
-package com.akagiyui.drive.model.request;
+package com.akagiyui.drive.model.request
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
-import lombok.Data;
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.Size
 
 /**
  * 修改用户信息 请求
  *
  * @author AkagiYui
  */
-@Data
-public class UpdateUserInfoRequest {
+class UpdateUserInfoRequest {
     /**
      * 昵称
      */
     @Size(max = 20, message = "{nickname length must be less than 20}")
-    private String nickname;
+    var nickname: String? = null
 
     /**
      * 邮箱
      */
     @Email(message = "{email format is incorrect}")
-    private String email;
+    val email: String? = null
 
     /**
      * 密码
      */
     @Size(min = 5, max = 64, message = "{password length must be more than 5}")
-    private String password;
+    var password: String? = null
 }

@@ -64,6 +64,6 @@ interface StorageService {
      *
      * @return
      */
-    fun mergeChunk(userId: String, fileHash: String, chunkCount: Int): StorageFile
+    fun mergeChunk(userId: String, fileHash: String, chunkCount: Long): StorageFile
 
 }

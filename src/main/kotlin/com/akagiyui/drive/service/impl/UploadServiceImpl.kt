@@ -77,7 +77,7 @@ class UploadServiceImpl(
         }
 
         val chunkedInfo = getInfoFromRedis(user.id, fileHash)
-        if (chunkedInfo.isUploadFinish) {
+        if (chunkedInfo.isUploadFinish()) {
             throw CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
 
@@ -93,15 +93,15 @@ class UploadServiceImpl(
         }
 
         // 保存分片信息
-        val chunksInfo = chunkedInfo.chunks
-        val chunkInfo = chunksInfo[chunkIndex].apply {
-            hash = chunkHash
-            isCheckSuccess = true
-        }
+//        val chunksInfo = chunkedInfo.chunks
+//        val chunkInfo = chunksInfo[chunkIndex].apply {
+//            hash = chunkHash
+//            isCheckSuccess = true
+//        }
         saveInfoToRedis(user.id, fileHash, chunkedInfo)
 
         storageService.saveChunk(user.id, fileHash, chunkIndex, chunkBytes)
-        if (chunkedInfo.isUploadFinish) {
+        if (chunkedInfo.isUploadFinish()) {
             taskExecutor.execute {
                 // 合并分片
                 val storageFile = storageService.mergeChunk(user.id, fileHash, chunkedInfo.chunkCount)

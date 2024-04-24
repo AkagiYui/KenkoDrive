@@ -107,7 +107,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         // 修改角色名
         if (StringUtils.hasText(role.name) && oldRole.name != role.name) {
             // 检查角色名是否重复
-            if (roleRepository.existsByName(role.name)) {
+            if (roleRepository.existsByName(role.name!!)) {
                 throw CustomException(ResponseEnum.ROLE_EXIST)
             }
             oldRole.name = role.name

@@ -112,7 +112,7 @@ class LocalStorageServiceImpl : StorageService {
         return File("$fileDir${File.separator}$chunkIndex")
     }
 
-    override fun mergeChunk(userId: String, fileHash: String, chunkCount: Int): StorageFile {
+    override fun mergeChunk(userId: String, fileHash: String, chunkCount: Long): StorageFile {
         // 分片目录
         val fileDir = File("$tempChunkDir${File.separator}$userId${File.separator}$fileHash")
         val file = File("$fileDir${File.separator}$fileHash")
@@ -133,10 +133,11 @@ class LocalStorageServiceImpl : StorageService {
         if (!file.renameTo(targetFile)) {
             throw RuntimeException("Move file failed")
         }
-        return StorageFile().apply {
-            hash = fileHash
-            key = fileHash
-            size = file.length()
-        }
+        return StorageFile(
+            key = fileHash,
+            size = targetFile.length(),
+            type = "",
+            hash = fileHash,
+        )
     }
 }

@@ -118,7 +118,7 @@ class UserServiceImpl(
 
         val realUser = user.toUser().apply {
             if (user.email.hasText()) {
-                if (repository.existsByEmail(user.email)) {
+                if (repository.existsByEmail(user.email!!)) {
                     throw CustomException(ResponseEnum.EMAIL_EXIST)
                 }
                 email = user.email
@@ -160,7 +160,7 @@ class UserServiceImpl(
         // 从 SecurityContextHolder 中获取用户信息
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as LoginUserDetails
-        return userDetails.user
+        return userDetails.user!!
     }
 
     @Cacheable(cacheNames = [CacheConstants.USER_LOGIN_DETAILS], key = "#userId")
@@ -321,7 +321,7 @@ class UserServiceImpl(
             user.setEmail(userInfo.email)
         }
         if (StringUtils.hasText(userInfo.password)) {
-            user.setPassword(encryptPassword(user.username, userInfo.password))
+            user.setPassword(encryptPassword(user.username, userInfo.password!!))
         }
         repository.save(user)
     }

@@ -45,7 +45,7 @@ class AnnouncementController @Autowired constructor(
     fun getAnnouncementList(
         @RequestParam(defaultValue = "0") index: Int,
         @RequestParam(defaultValue = "10") size: Int,
-        @ModelAttribute filter: AnnouncementFilter?,
+        @ModelAttribute filter: AnnouncementFilter,
     ): PageResponse<AnnouncementResponse> {
         val announcementPage = announcementService.find(index, size, filter)
         val announcementList = announcementPage.content
