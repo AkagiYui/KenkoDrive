@@ -25,29 +25,32 @@ class UserFileTests @Autowired constructor(
     @Transactional
     fun addUserFile() {
         // 新增用户
-        val user = User()
-            .setUsername("test")
-            .setPassword("test")
-            .setNickname("测试用户")
-            .setEmail("test@test.com")
+        val user = User().apply {
+            username = "test"
+            password = "test"
+            nickname = "测试用户"
+            email = "test@test.com"
+        }
         userRepository.save(user)
         println("新增用户id: ${user.id}")
 
         // 新增文件
-        val fileInfo = FileInfo()
-            .setSize(123L)
-            .setHash("test hash")
-            .setName("test name")
-            .setType("test type")
-            .setStorageKey("test storage key")
+        val fileInfo = FileInfo().apply {
+            size = 123L
+            hash = "test hash"
+            name = "test name"
+            type = "test type"
+            storageKey = "test storage key"
+        }
         fileInfoRepository.save(fileInfo)
         println("新增文件id: ${fileInfo.id}")
 
         // 新增用户文件关联
-        val userFile = UserFile()
-            .setUser(user)
-            .setFileInfo(fileInfo)
-            .setName("test name")
+        val userFile = UserFile().apply {
+            this.user = user
+            this.fileInfo = fileInfo
+            name = "test name"
+        }
         userFileRepository.save(userFile)
 
         // 查询所有用户文件关联
