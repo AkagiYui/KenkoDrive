@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java // Gradle 内置的 Java 插件，提供 Java 项目的构建支持
+    jacoco // 代码覆盖率
     id("org.springframework.boot") version "3.2.4" // Spring Boot
     id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
     kotlin("jvm") version "1.9.23" // Kotlin 支持
@@ -111,6 +112,20 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2") // H2 数据库，用于测试
 }
+
+// Jacoco 配置
+tasks.jacocoTestReport {
+    reports {
+        xml.apply { isEnabled = true }
+        csv.apply { isEnabled = false }
+        html.apply { isEnabled = true }
+    }
+}
+
+tasks.named("check") {
+    dependsOn("jacocoTestReport")
+}
+
 
 // gradle test 任务配置
 tasks.withType<Test> {
