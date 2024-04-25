@@ -4,7 +4,7 @@ services:
   application:
     build:
       context: .
-      dockerfile: Dockerfile-with-build
+      dockerfile: Dockerfile
     network_mode: service:redis
     volumes:
       - /srv/kenko-drive/data:/app/data
