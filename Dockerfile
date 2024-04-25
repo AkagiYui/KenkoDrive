@@ -1,7 +1,7 @@
-FROM gradle:8.7.0-jdk21-alpine as builder
+FROM bellsoft/liberica-runtime-container:jre-21-slim-musl AS builder
 COPY . /job
 WORKDIR /job
-RUN gradle bootJar
+RUN chmod +x gradlew && ./gradlew bootJar
 
 FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 LABEL maintainer="AkagiYui"
