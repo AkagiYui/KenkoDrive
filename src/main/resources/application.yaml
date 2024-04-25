@@ -8,23 +8,30 @@ server:
 spring:
   application:
     # 服务名称
-    name: kenko-drive
+    name: kenko-drive-application
   profiles:
     # 激活 生产环境 配置
     active: prod
+  config:
+    # 导入 .env 配置，该配置文件优先级最高，可存储敏感信息
+    import:
+      - optional:classpath:.env.yaml
+      - optional:classpath:.env.yml
+      - optional:file:.env.yaml
+      - optional:file:.env.yml
   threads:
     virtual:
       # 开启虚拟线程支持
       enabled: true
   jpa:
     hibernate:
-      # 自动修正数据表
+      # 自动修正数据表，此处待定，可能会导致数据丢失
       ddl-auto: update
     # 为每一个Http请求分配一个数据库连接
     open-in-view: false
   web:
     resources:
-      # 关闭静态资源映射
+      # 静态资源映射
       add-mappings: false
   datasource:
     # 数据库驱动
@@ -49,29 +56,41 @@ spring:
             enable: true
     # 该配置项仅用于使 IDEA 不报错，实际配置在 application-prod.yaml 中
     # https://youtrack.jetbrains.com/issue/IDEA-262744/Could-not-autowire.-No-beans-of-JavaMailSender-type-found.#focus=Comments-27-5165177.0-0
-    host: NO
+    host: ~
   messages:
     basename: i18n/messages
+logging:
+  # 日志包含应用名称
+  include-application-name: false
+  # 日志级别
+  level:
+    root: info
 sentry:
-  # Set traces-sample-rate to 1.0 to capture 100% of transactions for performance monitoring.
-  # We recommend adjusting this value in production.
+  # 监控并捕获100%的异常
   traces-sample-rate: 1.0
+# 完整的业务相关配置
 application:
-  # 应用版本号，自动从 build.gradle 中获取
+  name: Kenko Drive
+  # 应用版本号，构建时从 build.gradle 中替换
   version: ${version?:unknown}
   email:
+    # 邮件发送者地址
+    from: admin@localhost
     verify:
       # 邮箱验证码超时（分钟）
       timeout: 10
-    from: "Kenko Drive"
-  jwt:
-    # JWT 超时（小时）
-    timeout: 2
+  # Token 相关配置
+  token:
+    # 用户 Access Token 超时（小时）
+    timeout: 48
+    # Token 密钥
+    key: THIS_IS_A_SECRET_KEY
+  # 存储相关配置
   storage:
+    # 本地存储
     local:
-      # 本地存储路径
+      # 本地数据存储目录
       root: ./data
   avatar:
+    # 默认头像
     default: static/default-avatar.jpg
-logging:
-  include-application-name: false

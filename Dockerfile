@@ -2,8 +2,10 @@ FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 LABEL maintainer="AkagiYui"
 
 COPY build/libs/*.jar /app/app.jar
-COPY ./config/.env-prod.yaml /app/.env-prod.yaml
+COPY ./config/*.yaml /app/
+COPY ./config/*.yml /app/
 WORKDIR /app
+VOLUME /app/data
 EXPOSE 6677
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD code=$(wget --no-check-certificate --spider --server-response http://localhost:6677/system/version 2>&1 | awk '/^  HTTP/{print $2}'); if [ "$code" -ne "200" ]; then exit 1; fi

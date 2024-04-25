@@ -4,12 +4,15 @@ services:
   application:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-with-build
     ports:
-      - "16677:6677"
+      - "6677:6677"
     volumes:
       - /srv/kenko-drive/data:/app/data
     restart: always
+    networks:
+      - container:redis
+      - container:mysql
     depends_on:
       - redis
 
@@ -17,6 +20,17 @@ services:
     image: redis:7-alpine
     volumes:
       - redis-data:/data
+    restart: always
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drive
+      MYSQL_USER: drive
+      MYSQL_PASSWORD: drive
+    volumes:
+      - /srv/kenko-drive/mysql/data:/var/lib/mysql
     restart: always
 
 volumes:

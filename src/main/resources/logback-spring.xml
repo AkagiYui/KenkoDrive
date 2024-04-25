@@ -37,8 +37,10 @@
     通过定义的值会被插入到logger上下文中。定义后，可以用“${}”来使用变量。 -->
     <!-- 文件切割大小 -->
     <property name="maxFileSize" value="500MB"/>
+    <!-- 获取本地文件存储根目录 -->
+    <springProperty scope="context" name="local.root" source="application.storage.local.root"/>
     <!-- 日志文件输出路径 -->
-    <property name="log.path" value="data/logs"/>
+    <property name="log.path" value="${local.root}/logs"/>
 
     <!-- 输出到文件 -->
     <!-- INFO日志文件，时间滚动输出 -->

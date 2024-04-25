@@ -106,6 +106,8 @@ dependencies {
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
+    runtimeOnly("org.postgresql:postgresql")  // PostgreSQL 驱动
+    runtimeOnly("org.mariadb.jdbc:mariadb-java-client")  // MariaDB 驱动
 
     // scope: test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

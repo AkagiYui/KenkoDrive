@@ -21,14 +21,16 @@ class MailServiceImpl(
     private val templateEngine: TemplateEngine,
     @Value("\${application.email.from}")
     private val sendFrom: String,
+    @Value("\${application.name}")
+    private val appName: String,
 ) : MailService {
 
     override fun sendEmailVerifyCode(email: String, verifyCode: String, timeout: Long) {
-        val subject = "Kenko Drive 邮箱验证码"
+        val subject = "$appName 邮箱验证码"
         val mimeMessage: MimeMessage = javaMailSender.createMimeMessage()
         try {
             val mimeMessageHelper = MimeMessageHelper(mimeMessage, true).apply {
-                setFrom(sendFrom)
+                setFrom("$appName<$sendFrom>")
                 setTo(email)
                 setSubject(subject)
             }

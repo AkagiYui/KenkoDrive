@@ -1,17 +1,8 @@
+server:
+  shutdown: graceful
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
-  data:
-    redis:
-      host: redis
   mail:
     host: smtp.163.com
-  config:
-    import: optional:classpath:application-test.local.yaml
-application:
-  storage:
-    local:
-      root: ./data
-  jwt:
-    key: THIS_IS_A_TEST_KEY

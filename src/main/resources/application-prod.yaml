@@ -5,32 +5,31 @@ spring:
   lifecycle:
     # 等待请求结束超时时长
     timeout-per-shutdown-phase: 30s
-  config:
-    # 导入生产环境配置
-    import: optional:file:.env-prod.yaml
   # !!!在生产环境中，你至少需要正确配置以下内容，使系统能够正常运行!!!
   datasource:
     # 数据库驱动
-    url: DATABASE_URL
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库地址
+    url: jdbc:mysql://localhost/drive?user=drive&password=drive&useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
   data:
     redis:
       # redis 地址
-      host: REDIS_HOST
+      host: localhost
   mail:
     # 邮件服务器地址
     host: MAIL_SERVER
     # 邮箱
-    username: MAIL_USERNAME
+    username: &sender MAIL_USERNAME
     # 密码
     password: MAIL_PASSWORD
 application:
+  email:
+    # 邮件发送者地址，一般与 username 一致
+    from: *sender
   storage:
     local:
       # 本地文件存储目录
-      root: STORAGE_PATH
-  email:
-    # 邮件发送者名称
-    from: MAIL_SENDER_NAME
-  jwt:
-    # JWT 密钥
+      root: ./data
+  token:
+    # Token 密钥
     key: YOUR_JWT_KEY

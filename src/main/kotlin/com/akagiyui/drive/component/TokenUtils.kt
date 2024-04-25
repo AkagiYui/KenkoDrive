@@ -21,13 +21,13 @@ class TokenUtils {
     /**
      * 密钥
      */
-    @Value("\${application.jwt.key}")
+    @Value("\${application.token.key}")
     private val secretKey: ByteArray = "DEFAULT_KEY".toByteArray()
 
     /**
      * 过期时间
      */
-    @Value("\${application.jwt.timeout}")
+    @Value("\${application.token.timeout}")
     private val expireTime: Int = 0
 
     /**
