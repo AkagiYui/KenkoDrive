@@ -21,7 +21,7 @@ class RoleInfoResponse(role: Role) {
     /**
      * 角色描述
      */
-    val description: String = role.description
+    val description = role.description
 
     /**
      * 角色是否被禁用

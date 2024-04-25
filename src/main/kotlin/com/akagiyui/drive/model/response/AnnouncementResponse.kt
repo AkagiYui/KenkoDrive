@@ -56,8 +56,8 @@ class AnnouncementResponse() {
         this.userId = announcement.author.id
         this.username = announcement.author.username
         this.enabled = announcement.enabled
-        this.createTime = announcement.createTime!!.time
-        this.updateTime = announcement.updateTime!!.time
+        this.createTime = announcement.createTime.time
+        this.updateTime = announcement.updateTime.time
     }
 
     companion object {
@@ -71,4 +71,3 @@ class AnnouncementResponse() {
         }
     }
 }
-

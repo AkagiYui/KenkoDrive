@@ -145,7 +145,7 @@ class SecurityConfig(
         val loginUserDetails = authentication.principal as LoginUserDetails
 
         val user = loginUserDetails.user
-        val token = tokenUtils.createToken(user!!)
+        val token = tokenUtils.createToken(user)
         val loginResponse = LoginResponse(token, null)
         ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse)
     }

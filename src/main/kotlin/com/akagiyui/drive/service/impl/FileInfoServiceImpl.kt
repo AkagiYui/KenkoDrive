@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
+import java.util.*
 import java.util.stream.Stream
 
 /**
@@ -55,9 +56,9 @@ class FileInfoServiceImpl(
         val fileInfos = mutableListOf<FileInfo>()
         files.forEach { file ->
             // 读取文件信息
-            val filename = file.originalFilename
+            val filename = file.originalFilename ?: UUID.randomUUID().toString()
             val fileSize = file.size
-            val contentType = file.contentType
+            val contentType = file.contentType ?: ""
             val fileBytes = try {
                 file.inputStream.readAllBytes()
             } catch (e: IOException) {

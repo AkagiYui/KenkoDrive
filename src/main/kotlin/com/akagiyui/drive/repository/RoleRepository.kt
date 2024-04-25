@@ -17,7 +17,7 @@ interface RoleRepository : JpaRepository<Role, String>, JpaSpecificationExecutor
      *
      * @return 默认角色列表
      */
-    fun findAllByIsDefaultIsTrue(): List<Role>
+    fun findAllByIsDefaultIsTrue(): MutableSet<Role>
 
     /**
      * 角色名是否存在
