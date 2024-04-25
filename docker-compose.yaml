@@ -1,25 +1,24 @@
-version: '3.1'
+name: kenko-drive
 
 services:
   application:
     build:
       context: .
       dockerfile: Dockerfile-with-build
-    ports:
-      - "6677:6677"
+    network_mode: service:redis
     volumes:
       - /srv/kenko-drive/data:/app/data
     restart: always
-    networks:
-      - container:redis
-      - container:mysql
     depends_on:
       - redis
+      - mysql
 
   redis:
     image: redis:7-alpine
     volumes:
       - redis-data:/data
+    ports:
+      - "6677:6677"
     restart: always
 
   mysql:
@@ -29,6 +28,7 @@ services:
       MYSQL_DATABASE: drive
       MYSQL_USER: drive
       MYSQL_PASSWORD: drive
+    network_mode: service:redis
     volumes:
       - /srv/kenko-drive/mysql/data:/var/lib/mysql
     restart: always

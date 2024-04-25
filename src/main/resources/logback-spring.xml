@@ -128,8 +128,6 @@
     -->
     <!--减少SpringBoot自动配置的日志信息-->
     <logger name="org.springframework.boot.autoconfigure" level="WARN"/>
-    <!-- 自定义业务 -->
-    <logger name="com.akagiyui" level="DEBUG"/>
     <!-- Hibernate SQL语句 -->
     <logger name="org.hibernate.SQL" level="INFO"/>
     <!-- Hibernate SQL参数 -->

@@ -12,5 +12,3 @@ logging:
     # 默认日志级别
     root: warn
     com.akagiyui: trace
-    org.hibernate.SQL: info
-    org.hibernate.type.descriptor.sql.BasicBinder: info
