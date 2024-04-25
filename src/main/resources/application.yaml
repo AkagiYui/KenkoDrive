@@ -12,13 +12,7 @@ spring:
   profiles:
     # 激活 生产环境 配置
     active: prod
-  config:
-    # 导入 .env 配置，该配置文件优先级最高，可存储敏感信息
-    import:
-      - optional:classpath:.env.yaml
-      - optional:classpath:.env.yml
-      - optional:file:.env.yaml
-      - optional:file:.env.yml
+
   threads:
     virtual:
       # 开启虚拟线程支持
@@ -59,6 +53,11 @@ spring:
     host: ~
   messages:
     basename: i18n/messages
+  data:
+    redis:
+      repositories:
+        # 启用 Redis Repository 扫描
+        enabled: false
 logging:
   # 日志包含应用名称
   include-application-name: false

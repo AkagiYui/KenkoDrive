@@ -2,6 +2,13 @@ server:
   # 等待请求结束后再关闭
   shutdown: graceful
 spring:
+  config:
+    # 导入 .env 配置，该配置文件优先级最高
+    import:
+      - optional:classpath:.env.yaml
+      - optional:classpath:.env.yml
+      - optional:file:.env.yaml
+      - optional:file:.env.yml
   lifecycle:
     # 等待请求结束超时时长
     timeout-per-shutdown-phase: 30s

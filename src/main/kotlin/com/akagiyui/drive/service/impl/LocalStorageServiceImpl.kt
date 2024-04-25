@@ -31,7 +31,7 @@ class LocalStorageServiceImpl : StorageService {
     @PostConstruct
     fun init() {
         // 检查根目录是否存在，不存在则创建
-        log.debug("Local storage root dir: , {}", root)
+        log.debug("Local storage root dir: {}", root)
         val rootDir = File(root)
         try {
             rootDir.mkdirOrThrow()
