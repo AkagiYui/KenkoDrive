@@ -1,25 +1,27 @@
 # KenkoDrive 我的云盘
 
-[![GitHub License](https://img.shields.io/github/license/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive?tab=readme-ov-file#MIT-1-ov-file)
-![GitHub top language](https://img.shields.io/github/languages/top/AkagiYui/KenkoDrive)
-[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/commits/)
-[![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/commits/)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml)](https://github.com/AkagiYui/KenkoDrive/actions/workflows/test.yml)
-[![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive)](https://github.com/AkagiYui/KenkoDrive/stargazers)
+[![GitHub License](https://img.shields.io/github/license/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive?tab=readme-ov-file#MIT-1-ov-file)
+![GitHub top language](https://img.shields.io/github/languages/top/AkagiYui/KenkoDrive?style=flat-square)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/t/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/commits/)
+[![GitHub last commit](https://img.shields.io/github/last-commit/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/commits/)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive?style=flat-square)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/actions/workflows/test.yml)
+[![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/stargazers)
 
-一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` 的 Web 云盘应用单体后端。
+一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` ，使用 `Kotlin` 编写的 Web 云盘应用单体后端。
 项目整体结构清晰，职责明确，注释全面，开箱即用。
 
-GitHub仓库：[github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)
+> [!IMPORTANT]
+> 该项目仅为个人学习项目，不具备商业使用价值，仅供学习交流。
 
-GitLink中国大陆仓库：[gitlink.org.cn/AkagiYui/KenkoDrive](https://gitlink.org.cn/AkagiYui/KenkoDrive)
+|      相关       |                                                          链接                                                          |
+|:-------------:|:--------------------------------------------------------------------------------------------------------------------:|
+|   GitHub仓库    |                       [github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)                       |
+| GitLink中国大陆仓库 |                   [gitlink.org.cn/AkagiYui/KenkoDrive](https://gitlink.org.cn/AkagiYui/KenkoDrive)                   |
+|    在线演示地址     |                                   [drive.akagiyui.com](https://drive.akagiyui.com)                                   |
+|    API 文档     |                    [apifox.com/apidoc/project-2811497](https://apifox.com/apidoc/project-2811497)                    |
+|     前端仓库      | [KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue) |
 
-在线演示地址：[drive.akagiyui.com](https://drive.akagiyui.com)
-
-API 文档：https://apifox.com/apidoc/project-2811497
-
-前端仓库：[KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue)
 
 ## 用户功能一览
 
@@ -72,18 +74,18 @@ API 文档：https://apifox.com/apidoc/project-2811497
 - [ ] 请求频率限制（Redis + IP地址限流）
 - [x] [异步任务](src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [邮件发送](src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
-- [x] [参数校验](src/main/java/com/akagiyui/drive/model/request/AddUserRequest.java)
-- [x] [权限校验](src/main/java/com/akagiyui/drive/model/Permission.java)
-- [x] [统一 JSON 格式返回](src/main/java/com/akagiyui/common/ResponseResult.java)
+- [x] [参数校验](src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
+- [x] [权限校验](src/main/kotlin/com/akagiyui/drive/model/Permission.kt)
+- [x] [统一 JSON 格式返回](src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
 - [ ] 短信发送
 - [ ] 日志记录
 - [ ] 速度限制
 - [ ] 流量限制
-- [x] [邮箱验证码（Redis）](src/main/java/com/akagiyui/drive/service/impl/MailServiceImpl.java)
+- [x] [邮箱验证码（Redis）](src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
 - [ ] 图片验证码
-- [x] [断点续传](src/main/java/com/akagiyui/drive/controller/FileController.java)
+- [x] [断点续传](src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [x] [分片上传](src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
-- [x] [分片下载](src/main/java/com/akagiyui/drive/controller/FileController.java)
+- [x] [分片下载](src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 文件秒传
 - [x] 相同文件合并（在上传时会检测）
 - [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
@@ -93,21 +95,32 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## 技术栈
 
-- [x] [Gradle 包管理](build.gradle.kts)
+[![Kotlin](https://img.shields.io/badge/Kotlin-7f52ff?logo=kotlin&logoColor=white&style=flat-square)](https://kotlinlang.org/)
+[![Gradle](https://img.shields.io/badge/Gradle-blue?logo=gradle&logoColor=white&style=flat-square)](https://gradle.com/)
+[![SpringBoot](https://img.shields.io/badge/SpringBoot-6cb52d?logo=springboot&logoColor=white&style=flat-square)](https://spring.io/projects/spring-boot)
+[![SpringSecurity](https://img.shields.io/badge/SpringSecurity-6cb52d?logo=springsecurity&logoColor=white&style=flat-square)](https://spring.io/projects/spring-boot)
+[![JPA](https://img.shields.io/badge/JPA-6cb52d?logo=spring&logoColor=white&style=flat-square)](https://spring.io/projects/spring-data-jpa)
+[![MySQL](https://img.shields.io/badge/MySQL-4479a1?logo=mysql&logoColor=white&style=flat-square)](https://www.mysql.com/)
+[![Redis](https://img.shields.io/badge/Redis-ff4438?logo=redis&logoColor=white&style=flat-square)](https://redis.io/)
+[![Docker](https://img.shields.io/badge/Docker-2496ed?logo=docker&logoColor=white&style=flat-square)](https://www.docker.com/)
+[![Drone](https://img.shields.io/badge/Drone-212121?logo=drone&logoColor=white&style=flat-square)](https://www.drone.io/)
+[![Minio](https://img.shields.io/badge/Minio-c72e49?logo=minio&logoColor=white&style=flat-square)](https://min.io/)
+
+- [x] [Gradle 包管理](build.gradle.kts
 - [x] [Spring Boot 3.2](src/main/kotlin/com/akagiyui/drive/KenkoDriveApplication.kt)
 - [x] [Spring Security（跨域与认证授权）](src/main/kotlin/com/akagiyui/drive/config/SecurityConfig.kt)
 - [x] MySQL 数据库
 - [x] [Spring Cache 缓存](src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
 - [x] [Caffeine 本地缓存](src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
-- [x] [Redis 缓存](src/main/java/com/akagiyui/drive/component/RedisCache.java)
+- [x] [Redis 缓存](src/main/kotlin/com/akagiyui/drive/component/RedisCache.kt)
 - [ ] [多级缓存](https://github.com/pig-mesh/multilevel-cache-spring-boot-starter)
-- [x] [JWT 鉴权](src/main/java/com/akagiyui/drive/component/JwtUtils.java)
+- [x] [JWT 鉴权](src/main/kotlin/com/akagiyui/drive/component/TokenUtils.kt)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](src/main/kotlin/com/akagiyui/drive/repository)
 - [x] AOP 切面编程：[频率控制](src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
   [权限校验](src/main/kotlin/com/akagiyui/drive/component/permission/PermissionCheckAspect.kt)、
-  [请求日志](src/main/java/com/akagiyui/drive/component/RequestLogAspect.java)
+  [请求日志](src/main/kotlin/com/akagiyui/drive/component/RequestLogAspect.kt)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
 - [ ] 阿里云 OSS 对象存储
@@ -129,7 +142,7 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ## 活跃数据
 
-![Alt](https://repobeats.axiom.co/api/embed/0ed4941f9e91671fd7d675d4ee71c21c1c497a85.svg "Repobeats analytics image")
+![活跃数据](https://repobeats.axiom.co/api/embed/0ed4941f9e91671fd7d675d4ee71c21c1c497a85.svg "Repobeats analytics image")
 
 ## 鸣谢
 
@@ -188,208 +201,168 @@ API 文档：https://apifox.com/apidoc/project-2811497
 
 ### 2024年4月
 
-- 迁移了一大批代码到 Kotlin
-
-- 在构造函数上添加`@Autowired`注解而不是在参数上添加
-- 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
-
-- 新增了`日志数据库记录器`，将日志记录到数据库中
-
-- 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
-- 更新了 Docker 镜像构建脚本、 Drone 流水线脚本
-- 新增了 slf4j 日志对象获取委托类
-- 修复了默认语言中`TEST`词条的错误
-- 添加了 GitHub Actions 流水线脚本，使用 Gradle 运行测试，并上传测试报告
-- 迁移了部分测试样例到 Kotlin
-- 迁移了部分工具类到 Kotlin
-- 在用户信息中添加了`权限`字段
-
-- 在公告信息中包含发布者的用户名
-- 优化了 gradle 构建脚本，并添加了必要的注释
-- 升级到 Java 21 、Gradle 8.7
-- 升级到 SpringBoot 3.2.4
-
 - 修复了 `UserController` 中的方法参数校验无效的问题
-- 修改了公告相应类，使时刻
-- 新增了`条件分页获取公告`接口、`设置公告状态`接口、`删除公告`接口、`修改公告`接口
-
+- 修复了 `i18n` 测试样例中的错误
+- 修复了默认语言中 `TEST` 词条的错误
+- 优化了 gradle 构建脚本，并添加了必要的注释
+- **升级到 Java 21 、Gradle 8.7**
+- **升级到 SpringBoot 3.2.4**
+- **迁移了整个项目至 Kotlin**
+- 在构造函数上添加 `@Autowired` 注解而不是在参数上添加
+- 更新了 Docker 镜像构建脚本、 Drone 流水线脚本
 - 删除了 `MetaInfoController` 与 `ServerController` ，并将其功能整合到 `SystemController` 中
 - 修改了默认头像
+- 在用户信息中添加了`权限`字段
+- 在公告信息中包含发布者的用户名
 - 在可用时使用构造函数注入
-- 新增了更多的权限
-- 新增了获取所有配置项的服务
-
-- 在 gradle 测试中自动使用 test 配置文件
-- 修复了`i18n`测试样例中的错误
-
 - 统一返回时间戳而不是时间字符串
-- 新增了`初始化数据库`任务，在首次启动时自动添加默认角色与管理员用户
 - 在测试中使用 H2 内存数据库，不必依赖外部数据库
+- 在 gradle 测试中自动使用 test 配置文件
 - 在 gradle 脚本中添加了插件的阿里云镜像源
 - 修改了`用户`实体的表名为`user_info`，避免关键字冲突
-
+- 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
+- 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
+- 添加了 GitHub Actions 流水线脚本，使用 Gradle 运行测试，并上传测试报告
+- 新增了`日志数据库记录器`，将日志记录到数据库中
+- 新增了 slf4j 日志对象获取委托类
+- 新增了`条件分页获取公告`接口、`设置公告状态`接口、`删除公告`接口、`修改公告`接口
+- 新增了更多的权限
+- 新增了获取所有配置项的服务
+- 新增了`初始化数据库`任务，在首次启动时自动添加默认角色与管理员用户
 - 新增了`查询文件夹路径`接口
 
 ### 2024年3月
 
-- 新增了`获取某一用户的角色`接口
 - 修改了`用户`实体类，使邮箱字段可空
 - 删除了新增角色请求中对邮件的非空校验
+- 删除了`Permission`枚举类中冗余的字段
+- 删除了不必要的返回值
 - 支持了在更新角色信息中修改密码
-
 - 在自定义权限校验注解检查无权限时返回403状态码
-
+- 关闭了 GitHub Actions 流水线的 Qodana 代码检查
+- 添加了`.editorconfig`文件，用于辅助统一代码风格
+- 新增了`获取某一用户的角色`接口
 - 新增了`分配角色`接口、`移除角色`接口
-
 - 新增了`获取某一角色的用户`接口
 - 新增了 Gitea 代码仓库的 CI/CD 流水线配置
-
 - 新增了`更新角色信息`接口
-- 关闭了 GitHub Actions 流水线的 Qodana 代码检查
-
-- 删除了`Permission`枚举类中冗余的字段
 - 新增了`分页获取角色`接口、`新增角色`接口、`删除角色`接口、`重置密码`接口
-- 删除了不必要的返回值
-
-- 添加了`.editorconfig`文件，用于辅助统一代码风格
 
 ### 2024年2月
 
 - 截断请求日志中的过长的参数与返回值
-
 - 为构建脚本添加阿里云镜像源
-
 - 升级到 SpringBoot 3.1.8
 - 升级到 Kotlin 1.9.20
 
 ### 2023年9月
 
+- 发送邮箱验证码前检查是否开放注册
+- 在角色实体类中添加了`是否为默认角色`字段
 - 新增了`分片上传`接口
-
 - 新增了`删除冗余文件`任务
 - 新增了请求日志切面
-
 - 新增了`判断文件是否已存在`接口
-- 发送邮箱验证码前检查是否开放注册
 - 新增了`文件上传大小限制`配置项
-- 在角色实体类中添加了`是否为默认角色`字段
 
 ### 2023年8月
 
-- 在响应类中不使用包装类
+- 修复了用户信息缓存未清除的问题
+- 优化了文件目录结构
+- 优化了响应类的代码结构，在构造函数中设置字段值
 - 修改了用户实体类，使其用户名与邮箱不可重复
+- 删除了 hikari 连接池配置
+- 删除了 `BaseEntity` 中的继承策略
 - 修改了`获取首页公告`接口，使其只有在登录时才有权限
+- 修改了下载接口的 URL ，使其默认使用断点续传
+- 使用 SQL 语句进行下载次数记录
+- 为所有接口添加了权限校验
+- 在响应类中不使用包装类
+- 在业务异常中返回200状态码
+- 在用户信息响应中添加注册时间字段
+- 将`tomcat`容器替换为`undertow`容器
+- 启用了 HTTP2 支持
+- 在进行JWT解析前检查token长度
+- 支持了使用邮箱登录
+- 对`用户信息操作`与`文件信息操作`进行缓存操作
+- 将 `ServerController` 重构为 Kotlin 实现
+- ~~添加了`MetaInfoController`~~（已弃用）
+- 添加了 Spring Cache 缓存依赖与配置
+- 添加了异步任务执行器配置
+- 添加了异步任务异常日志输出
+- 添加了 undertow 配置类
+- 添加了国际化支持(Accept-Language)
+- 添加了Gotify消息推送支持
+- 添加了权限检查注解
+- 添加了对 **Kotlin** 的支持
 - 新增了`创建文件夹`接口、`获取文件夹列表`接口
 - 新增了 用户-文件关联 实体类，并添加了对应的测试样例
 - 新增了通过哈希值获取文件信息的服务
 - 新增了`文件分片大小`配置项
 - 新增了`角色实体操作`测试样例
-
-- 修改了下载接口的 URL ，使其默认使用断点续传
-- 优化了响应类的代码结构，在构造函数中设置字段值
 - 新增了键值对配置实体类
 - 新增了对配置的增删改查服务
 - 新增了`获取是否开放注册`接口、`设置是否开放注册`接口
 - 新增了`获取文件夹内容`接口
-
-- 使用 SQL 语句进行下载次数记录
-
-- 为所有接口添加了权限校验
-
-- 在业务异常中返回200状态码
 - 新增了`获取全部角色`接口
-- 修复了用户信息缓存未清除的问题
-- 在用户信息响应中添加注册时间字段
 - 新增了`设置用户状态`接口
 - 新增了`新增公告`接口、`获取公告`接口、`获取首页公告`接口
-
-- 添加了异步任务执行器配置
-- 添加了异步任务异常日志输出
 - 新增了`断点续传下载`接口
 - 新增了 redis 在线判断检测，如果redis不可用，则使用无操作缓存
-
-- 将`tomcat`容器替换为`undertow`容器
-- 添加了 undertow 配置类
-- 启用了 HTTP2 支持
-- 删除了 hikari 连接池配置
-- 删除了 `BaseEntity` 中的继承策略
-
-- 在进行JWT解析前检查token长度
-- 添加了国际化支持(Accept-Language)
-- 添加了Gotify消息推送支持
 - 新增了`获取当前用户角色`接口、`获取当前用户权限`接口
-- ~~添加了`MetaInfoController`~~（已弃用）
-
-- 优化了文件目录结构
-- 支持了使用邮箱登录
-- 添加了权限检查注解
-
-- 添加了 Spring Cache 缓存依赖与配置
-- 对`用户信息操作`与`文件信息操作`进行缓存操作
-
-- 添加了对 **Kotlin** 的支持
-- 将`ServerController`重构为 Kotlin 实现
 
 ### 2023年7月
 
-- 使用logger输出位置而不是print
-- 修改gradle本体下载源为腾讯云
-- 添加了Qodana代码检查配置
+- 修复了 CI/CD 流水线脚本中的错误
+- 修复了冗余的接口数据包装
+- 修复了接口中返回`String`类型发生异常的问题
+- 升级到 Gradle 8.2.1
+- 升级到 SpringBoot 3.1.2
+- 将 gradle 脚本从 groovy 迁移到 kotlin
+- 使用 logger 输出位置而不是print
+- 修改 gradle 本体下载源为腾讯云
+- 添加了 Qodana 代码检查配置
+- 修改了`分页获取用户`接口，使其拥有默认参数
+- 修改了 gradle 脚本，使其在构建时自动替换配置文件中的版本号占位符
+- 修改了`用户`实体类，使一些字段不可为空
+- 修改了`用户信息`类，新增了`用户ID`字段
+- 修改了 hikari 连接池配置，避免了一些连接错误
 - 添加了开源协议
 - 添加了 JetBrains 注解依赖
-
+- 添加了 Spring Security 异常的捕获
+- 添加了`注册`接口白名单
+- 添加了更多异常的捕获
 - 新增了异步线程池配置类
 - 新增了`上传头像`接口、`获取头像`接口，并且对头像图片进行压缩
 - 新增了`文件处理`工具类
-
-- 添加了 Spring Security 异常的捕获
 - 新增了`获取当前用户信息`接口
 - 新增了`获取用户token`接口，使用JWT作为token
 - 新增了`修改当前用户信息`接口
-- 添加了`注册`接口白名单
-
-- 修复了 CI/CD 流水线脚本中的错误
-- 新增了对 docker 容器的健康检查
-- 升级到 Gradle 8.2.1
-- 将gradle脚本从groovy迁移到kotlin
-
-- 修复了冗余的接口数据包装
-- 添加了更多异常的捕获
+- 新增了对 Docker 容器的健康检查
 - 新增了`文件上传`接口、`文件下载`接口、`获取文件信息`接口、`删除文件`接口
 - 新增了限流注解
-- 新增了redis操作类
-- 新增了redis配置类
+- 新增了 redis 操作类
+- 新增了 redis 配置类
 - 新增了`邮件验证码获取`接口
-
-- 升级到 SpringBoot 3.1.2
-
 - 新增了`服务器版本`接口
-- 修改了`分页获取用户`接口，使其拥有默认参数
-- 修改了gradle脚本，使其在构建时自动替换配置文件中的版本号占位符
-
-- 修复了接口中返回`String`类型发生异常的问题
 - 新增了`删除用户`接口
-- 修改了`用户`实体类，使一些字段不可为空
-- 修改了`用户信息`类，新增了`用户ID`字段
-- 修改了hikari连接池配置，避免了一些连接错误
 
 ### 2023年6月
 
+- 删除了`获取所有用户`接口
 - 添加了更多异常的捕获
 - 新增了 Spring Security 配置类
 - 新增了`分页获取用户`接口
 - 新增了`用户信息`类，避免返回不必要的信息
-- 新增了 docker compose 配置文件
-- 删除了`获取所有用户`接口
-
+- 新增了 Docker Compose 配置文件
 - 新增了 Drone CI/CD 流水线脚本
 - 新增了 Docker 镜像构建配置脚本
 
 ### 2023年5月
 
-- 创建空SpringBoot项目
+- 创建初始SpringBoot项目
 - 修改gradle本体下载源为华为云
-- 添加了redis、hutool依赖
+- 添加了 redis 、 hutool 依赖
 - 添加了必要的配置项
 - 新增了 JPA 配置类
 - 新增了雪花算法生成器类
