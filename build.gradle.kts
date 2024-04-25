@@ -116,22 +116,18 @@ dependencies {
 // Jacoco 配置
 tasks.jacocoTestReport {
     reports {
-        xml.apply { isEnabled = true }
-        csv.apply { isEnabled = false }
-        html.apply { isEnabled = true }
+        xml.required.set(true)
+        csv.required.set(true)
+        html.required.set(true)
     }
 }
-
-tasks.named("check") {
-    dependsOn("jacocoTestReport")
-}
-
 
 // gradle test 任务配置
 tasks.withType<Test> {
     // 设置 Spring Boot 的测试配置文件
     systemProperty("spring.profiles.active", "test")
     useJUnitPlatform()
+    finalizedBy("jacocoTestReport")
 }
 
 tasks.withType<KotlinCompile> {

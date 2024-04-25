@@ -42,9 +42,6 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test --no-daemon --warning-mode all --scan
 
-      - name: Test with Gradle
-        run: ./gradlew jacocoTestReport --no-daemon --warning-mode all --scan
-
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
