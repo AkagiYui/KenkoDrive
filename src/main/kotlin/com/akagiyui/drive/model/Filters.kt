@@ -5,6 +5,13 @@ sealed class ModelFilter {
      * 表达式
      */
     var expression: String? = null
+
+    /**
+     * 用于序列化到缓存
+     */
+    override fun toString(): String {
+        return expression ?: ""
+    }
 }
 
 /**
