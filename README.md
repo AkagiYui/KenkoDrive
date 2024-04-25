@@ -7,6 +7,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/AkagiYui/KenkoDrive?style=flat-square)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/actions/workflows/test.yml)
 [![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/stargazers)
+[![Codecov](https://img.shields.io/codecov/c/github/AkagiYui/KenkoDrive?style=flat-square)](https://codecov.io/gh/AkagiYui/KenkoDrive)
 
 一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` ，使用 `Kotlin` 编写的 Web 云盘应用单体后端。
 项目整体结构清晰，职责明确，注释全面，开箱即用。
@@ -14,14 +15,13 @@
 > [!IMPORTANT]
 > 该项目仅为个人学习项目，不具备商业使用价值，仅供学习交流。
 
-|      相关       |                                                          链接                                                          |
-|:-------------:|:--------------------------------------------------------------------------------------------------------------------:|
-|   GitHub仓库    |                       [github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)                       |
-| GitLink中国大陆仓库 |                   [gitlink.org.cn/AkagiYui/KenkoDrive](https://gitlink.org.cn/AkagiYui/KenkoDrive)                   |
-|    在线演示地址     |                                   [drive.akagiyui.com](https://drive.akagiyui.com)                                   |
-|    API 文档     |                    [apifox.com/apidoc/project-2811497](https://apifox.com/apidoc/project-2811497)                    |
-|     前端仓库      | [KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue) |
-
+|      相关       |                                                                          链接                                                                          |
+|:-------------:|:----------------------------------------------------------------------------------------------------------------------------------------------------:|
+|   GitHub仓库    |                                       [github.com/AkagiYui/KenkoDrive](https://github.com/AkagiYui/KenkoDrive)                                       |
+| GitLink中国大陆仓库 |                                   [gitlink.org.cn/AkagiYui/KenkoDrive](https://gitlink.org.cn/AkagiYui/KenkoDrive)                                   |
+|    在线演示地址     | [![Website](https://img.shields.io/website?url=https%3A%2F%2Fdrive.akagiyui.com%2F&style=flat-square)drive.akagiyui.com](https://drive.akagiyui.com) |
+|    API 文档     |                                    [apifox.com/apidoc/project-2811497](https://apifox.com/apidoc/project-2811497)                                    |
+|     前端仓库      |                [KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) / [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue)                |
 
 ## 用户功能一览
 
