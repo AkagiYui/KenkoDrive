@@ -7,6 +7,28 @@ package com.akagiyui.drive.service
  */
 interface SettingService {
 
+    companion object {
+        /**
+         * 是否开放注册 键名
+         */
+        const val REGISTER_ENABLED = "registerEnabled"
+
+        /**
+         * 是否初始化 键名
+         */
+        const val IS_INITIALIZED = "isInitialized"
+
+        /**
+         * 文件分片大小 键名
+         */
+        const val FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize"
+
+        /**
+         * 全局文件上传大小限制 键名
+         */
+        const val FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize"
+    }
+
     /**
      * 是否初始化
      */
