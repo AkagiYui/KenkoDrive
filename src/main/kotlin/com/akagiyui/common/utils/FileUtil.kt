@@ -106,10 +106,7 @@ fun File.mkdirOrThrow(errorMessage: String = "Creating directory failed") {
  * 删除文件
  */
 fun File.deleteIfExists() {
-    if (this.exists()) {
-        val delete = this.delete()
-        if (!delete) {
-            throw IOException("Delete file failed")
-        }
+    if (this.exists() && !this.delete()) {
+        throw IOException("Delete file failed")
     }
 }
