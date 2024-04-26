@@ -2,6 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Announcement
 import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
@@ -11,7 +12,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
 
 
 /**
@@ -52,7 +52,7 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
 
         // 条件查询
         val specification = Specification<Announcement> { root, _, cb ->
-            filter?.expression?.takeIf(StringUtils::hasText)?.let { queryString ->
+            filter?.expression?.takeIf { it.hasText() }?.let { queryString ->
                 val likePattern = "%$queryString%"
                 val titlePredicate = cb.like(root.get("title"), likePattern)
                 val contentPredicate = cb.like(root.get("content"), likePattern)

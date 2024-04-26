@@ -37,7 +37,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.StringUtils
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
@@ -251,10 +250,10 @@ class UserServiceImpl(
     )
     override fun updateInfo(userInfo: UpdateUserInfoRequest) {
         val user = getUser()
-        if (StringUtils.hasText(userInfo.nickname)) {
+        if (userInfo.nickname.hasText()) {
             user.nickname = userInfo.nickname
         }
-        if (StringUtils.hasText(userInfo.email)) {
+        if (userInfo.email.hasText()) {
             user.email = userInfo.email
         }
         repository.save(user)
@@ -314,13 +313,13 @@ class UserServiceImpl(
 
     override fun updateInfo(id: String, userInfo: UpdateUserInfoRequest) {
         val user = findUserByIdWithCache(id)
-        if (StringUtils.hasText(userInfo.nickname)) {
+        if (userInfo.nickname.hasText()) {
             user.nickname = userInfo.nickname
         }
-        if (StringUtils.hasText(userInfo.email)) {
+        if (userInfo.email.hasText()) {
             user.email = userInfo.email
         }
-        if (StringUtils.hasText(userInfo.password)) {
+        if (userInfo.password.hasText()) {
             user.password = encryptPassword(user.username, userInfo.password!!)
         }
         repository.save(user)

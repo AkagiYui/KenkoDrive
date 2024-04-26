@@ -3,6 +3,7 @@ package com.akagiyui.drive.service.impl
 import cn.hutool.crypto.digest.DigestAlgorithm
 import cn.hutool.crypto.digest.Digester
 import com.akagiyui.common.ResponseEnum
+import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.model.CacheConstants
@@ -11,7 +12,6 @@ import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.StorageService
 import com.akagiyui.drive.service.UserFileService
 import com.akagiyui.drive.service.UserService
-import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -33,7 +33,7 @@ class FileInfoServiceImpl(
     private val userService: UserService,
 ) : FileInfoService {
 
-    private val log = LoggerFactory.getLogger(FileInfoServiceImpl::class.java)
+    private val log by LoggerDelegate()
 
     @Cacheable(value = [CacheConstants.FILE_INFO], key = "#id")
     override fun getFileInfo(id: String): FileInfo {

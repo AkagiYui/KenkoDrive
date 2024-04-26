@@ -2,6 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.repository.FolderRepository
@@ -9,7 +10,6 @@ import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
 
 /**
  * 文件夹服务实现类
@@ -27,7 +27,7 @@ class FolderServiceImpl @Autowired constructor(
     override fun createFolder(name: String, parentId: String?): Folder {
         val user = userService.getUser()
 
-        val resolvedParentId = if (StringUtils.hasText(parentId)) parentId else null
+        val resolvedParentId = if (parentId.hasText()) parentId else null
         val parentFolder = resolvedParentId?.let {
             folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         }
@@ -51,14 +51,14 @@ class FolderServiceImpl @Autowired constructor(
 
     override fun getSubFolders(parentId: String?): List<Folder> {
         val user = userService.getUser()
-        val resolvedParentId = if (StringUtils.hasText(parentId)) parentId else null
+        val resolvedParentId = if (parentId.hasText()) parentId else null
 
         return folderRepository.findByUserIdAndParentId(user.id, resolvedParentId)
     }
 
     override fun getFolderChain(folderId: String): List<FolderResponse> {
         val user = userService.getUser()
-        if (!StringUtils.hasText(folderId)) {
+        if (!folderId.hasText()) {
             return listOf()
         }
 

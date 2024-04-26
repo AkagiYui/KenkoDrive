@@ -1,6 +1,7 @@
 package com.akagiyui.drive.filter
 
 import com.akagiyui.common.utils.RequestWrapper
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.config.SecurityConfig
 import com.akagiyui.drive.service.UserService
 import jakarta.servlet.FilterChain
@@ -9,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import org.springframework.util.StringUtils
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
@@ -37,7 +37,7 @@ class CustomPasswordHandleFilter @Autowired constructor(
 
             // 把明文密码加密后放入请求参数中
             // todo RSA 加解密
-            if (StringUtils.hasText(rawUsername) && StringUtils.hasText(rawPassword)) {
+            if (rawUsername.hasText() && rawPassword.hasText()) {
                 val encryptedPassword = userService.encryptPassword(rawUsername, rawPassword, true)
                 val requestWrapper = RequestWrapper(request)
                 requestWrapper.setParameter("password", encryptedPassword)

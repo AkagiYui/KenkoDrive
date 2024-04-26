@@ -3,6 +3,7 @@ package com.akagiyui.drive.service.impl
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
@@ -17,7 +18,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.util.StringUtils
 
 /**
  * 角色服务实现类
@@ -54,7 +54,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
 
         // 条件查询
         val specification = Specification<Role> { root, _, cb ->
-            if (filter != null && StringUtils.hasText(filter.expression)) {
+            if (filter != null && filter.expression.hasText()) {
                 val namePredicate = cb.like(root.get("name"), "%${filter.expression}%")
                 val descriptionPredicate = cb.like(root.get("description"), "%${filter.expression}%")
                 cb.or(namePredicate, descriptionPredicate)
@@ -105,7 +105,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
     override fun updateRole(id: String, role: UpdateRoleRequest) {
         val oldRole = getRoleById(id)
         // 修改角色名
-        if (StringUtils.hasText(role.name) && oldRole.name != role.name) {
+        if (role.name.hasText() && oldRole.name != role.name) {
             // 检查角色名是否重复
             if (roleRepository.existsByName(role.name!!)) {
                 throw CustomException(ResponseEnum.ROLE_EXIST)
@@ -113,7 +113,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
             oldRole.name = role.name!!
         }
         // 修改角色描述
-        if (StringUtils.hasText(role.description) && oldRole.description != role.description) {
+        if (role.description.hasText() && oldRole.description != role.description) {
             oldRole.description = role.description
         }
         // 修改是否默认角色

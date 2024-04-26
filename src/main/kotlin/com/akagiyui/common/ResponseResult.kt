@@ -1,8 +1,8 @@
 package com.akagiyui.common
 
+import com.akagiyui.common.delegate.LoggerDelegate
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 
 /**
@@ -19,7 +19,7 @@ data class ResponseResult<T>(
     val data: T? = null,
 ) {
     companion object {
-        private val log = LoggerFactory.getLogger(ResponseResult::class.java)
+        private val log by LoggerDelegate()
 
         /**
          * 通用响应
