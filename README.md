@@ -23,17 +23,13 @@
 |    API 文档     |                                    [apifox.com/apidoc/project-2811497](https://apifox.com/apidoc/project-2811497)                                    |
 |     前端仓库      |                [KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) / [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue)                |
 
-## 用户功能一览
+## 业务功能一览
 
-- [x] 用户注册
-- [x] 用户名登录/邮箱登录
-- [x] 重置密码
-- [x] 用户信息获取/修改
-- [x] 用户头像获取/修改
-- [ ] 用户文件上传/删除/下载
-- [ ] 文件分享/分享文件下载
-- [x] 文件夹
-- [ ] 文件夹分享
+- [ ] 用户注册
+- [x] 用户名/邮箱登录
+- [x] 个人信息设置、头像上传、密码重置
+- [ ] 文件(夹)上传/下载/删除
+- [ ] 文件分享
 - [ ] 游客广场
 - [x] 管理员用户管理
 - [ ] 管理员文件管理
@@ -68,7 +64,7 @@
 - [ ] 随机取件码生成
 - [ ] 自定义次数、有效期
 
-## 技术功能一览
+## 使用技术一览
 
 - [x] [请求频率限制（注解 + 令牌桶）](src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
 - [ ] 请求频率限制（Redis + IP地址限流）
@@ -144,6 +140,32 @@
 
 ![活跃数据](https://repobeats.axiom.co/api/embed/0ed4941f9e91671fd7d675d4ee71c21c1c497a85.svg "Repobeats analytics image")
 
+## 部署运行
+
+后端暴露端口默认为 `6677` 。
+
+### 使用 Docker Compose 部署
+
+注意：该方法会使用 Dockerfile 进行容器的本地构建。
+
+```shell
+git clone https://github.com/AkagiYui/KenkoDrive
+cd KenkoDrive
+docker compose -p kenko-drive -f docker-compose.yaml up -d
+```
+
+### 从源码运行
+
+你需要拥有 JDK 21 环境，并且安装了 MySQL 与 Redis 数据库。
+并在 .env.yaml 或其他配置文件中配置数据库连接信息。
+
+```shell
+git clone https://github.com/AkagiYui/KenkoDrive
+cd KenkoDrive
+export spring.profiles.active=dev
+./gradlew bootRun
+```
+
 ## 鸣谢
 
 - [Drone官方文档](https://docs.drone.io/)
@@ -175,6 +197,7 @@
 - [哔哩哔哩: 【java工程师必知】SpringBoot Validation入参校验国际化](https://www.bilibili.com/video/av742302746/)
 - [哔哩哔哩: 嘿嘿，我发现了百度网盘秒传的秘密！](https://www.bilibili.com/video/av1751974636)
 - [哔哩哔哩: 【IT老齐508】二十分钟快速上手Gradle](https://www.bilibili.com/video/av1602972088)
+- [哔哩哔哩: 【IT老齐509】巧用Docker Container网络模式让应用更易维护](https://www.bilibili.com/video/av1302980032)
 - [CSDN: 有关HikariPool-1 – Failed to validate connection com.mysql.cj.jdbc.ConnectionImp 错误的产生原因与解决方法](https://blog.csdn.net/qq_45886144/article/details/128984915)
 - [CSDN: 数据库连接池选型 Druid vs HikariCP性能对比](https://blog.csdn.net/weixin_39098944/article/details/109228618)
 - [CSDN: SpringBoot 使用 beforeBodyWrite 实现统一的接口返回类型](https://blog.csdn.net/qq_37170583/article/details/107470337)
