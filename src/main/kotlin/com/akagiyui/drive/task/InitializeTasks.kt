@@ -3,8 +3,8 @@ package com.akagiyui.drive.task
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.AddUserRequest
-import com.akagiyui.drive.service.ConfigService
 import com.akagiyui.drive.service.RoleService
+import com.akagiyui.drive.service.SettingService
 import com.akagiyui.drive.service.UserService
 import org.hibernate.query.sqm.tree.SqmNode.log
 import org.springframework.stereotype.Component
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class InitializeTasks(
-    private val configService: ConfigService,
+    private val settingService: SettingService,
     private val roleService: RoleService,
     private val userService: UserService,
 ) {
@@ -25,7 +25,7 @@ class InitializeTasks(
     fun preCheck() {
         log.info("Start pre check")
         // 检查是否已经初始化
-        if (configService.isInitialized()) {
+        if (settingService.initialized) {
             log.warn("Already initialized")
         }
     }
@@ -34,11 +34,11 @@ class InitializeTasks(
         log.info("Start init config")
         // 初始化配置
         // 设置注册功能关闭
-        configService.setRegisterEnabled(false)
+        settingService.registerEnabled = false
         // 设置文件上传大小限制为100MB
-        configService.setFileUploadMaxSize(1024L * 1024 * 100)
+        settingService.fileUploadMaxSize = 1024L * 1024 * 100
         // 设置文件上传分块大小为5MB
-        configService.setFileUploadChunkSize(1024 * 1024 * 5)
+        settingService.fileUploadChunkSize = 1024 * 1024 * 5
     }
 
     fun addRoleAndUser() {

@@ -3,9 +3,8 @@ package com.akagiyui.drive.controller
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.EnableConfigRequest
-import com.akagiyui.drive.service.ConfigService
+import com.akagiyui.drive.service.SettingService
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/system")
-class SystemController(private val configService: ConfigService) {
+class SystemController(private val settingService: SettingService) {
 
     @Value("\${application.version:unknown}")
     lateinit var version: String
@@ -32,26 +31,26 @@ class SystemController(private val configService: ConfigService) {
     /**
      * 获取服务器设置
      */
-    @RequestMapping("/config")
-    fun getConfig(): Map<String, Any> {
-        return configService.getConfig()
+    @RequestMapping("/setting")
+    @RequirePermission(Permission.CONFIGURATION_GET)
+    fun getSetting(): Map<String, Any> {
+        return settingService.getSettings()
     }
 
     /**
      * 是否开放注册
      */
-    @GetMapping("/config/register")
-    @PreAuthorize("permitAll()")
+    @GetMapping("/setting/register")
     fun isRegisterEnabled(): Boolean {
-        return configService.isRegisterEnabled()
+        return settingService.registerEnabled
     }
 
     /**
      * 更新 是否开放注册
      */
-    @PutMapping("/config/register")
+    @PutMapping("/setting/register")
     @RequirePermission(Permission.CONFIGURATION_UPDATE)
     fun setRegisterEnabled(@Validated @RequestBody request: EnableConfigRequest) {
-        configService.setRegisterEnabled(request.enabled)
+        settingService.registerEnabled = request.enabled
     }
 }

@@ -16,9 +16,9 @@ import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
 import com.akagiyui.drive.model.request.RegisterConfirmRequest
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import com.akagiyui.drive.repository.UserRepository
-import com.akagiyui.drive.service.ConfigService
 import com.akagiyui.drive.service.MailService
 import com.akagiyui.drive.service.RoleService
+import com.akagiyui.drive.service.SettingService
 import com.akagiyui.drive.service.UserService
 import jakarta.annotation.Resource
 import jakarta.persistence.criteria.Predicate
@@ -50,7 +50,7 @@ class UserServiceImpl(
     private val repository: UserRepository,
     private val redisCache: RedisCache,
     private val mailService: MailService,
-    private val configService: ConfigService,
+    private val settingService: SettingService,
     private val roleService: RoleService,
 ) : UserService {
     private val log by LoggerDelegate()
@@ -170,7 +170,7 @@ class UserServiceImpl(
     }
 
     override fun sendEmailVerifyCode(verifyRequest: EmailVerifyCodeRequest) {
-        if (!configService.isRegisterEnabled()) {
+        if (!settingService.registerEnabled) {
             throw CustomException(ResponseEnum.REGISTER_DISABLED)
         }
 

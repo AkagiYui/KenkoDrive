@@ -23,7 +23,7 @@ import java.io.IOException
 class UploadServiceImpl(
     private val redisCache: RedisCache,
     private val userService: UserService,
-    private val configService: ConfigService,
+    private val settingService: SettingService,
     private val storageService: StorageService,
     private val fileInfoService: FileInfoService,
     private val userFileService: UserFileService,
@@ -47,7 +47,7 @@ class UploadServiceImpl(
 
     override fun requestUpload(preUploadRequest: PreUploadRequest) {
         // 上传文件大小限制
-        val uploadFileSizeLimit = configService.getFileUploadMaxSize()
+        val uploadFileSizeLimit = settingService.fileUploadMaxSize
         if (preUploadRequest.filesize > uploadFileSizeLimit) {
             throw CustomException(ResponseEnum.FILE_TOO_LARGE)
         }

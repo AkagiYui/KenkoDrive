@@ -1,7 +1,7 @@
 package com.akagiyui.drive.component
 
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.drive.service.ConfigService
+import com.akagiyui.drive.service.SettingService
 import com.akagiyui.drive.task.InitializeTasks
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 class AfterInitRunner @Autowired constructor(
-    private val configService: ConfigService,
+    private val settingService: SettingService,
     private val initializeTasks: InitializeTasks,
 ) : ApplicationRunner {
     private val log by LoggerDelegate()
@@ -23,11 +23,11 @@ class AfterInitRunner @Autowired constructor(
     override fun run(args: ApplicationArguments?) {
         log.debug("====================== ApplicationStarted ======================")
         // 初始化检查
-        if (!configService.isInitialized()) {
+        if (!settingService.initialized) {
             initializeTasks.preCheck()
             initializeTasks.initConfig()
             initializeTasks.addRoleAndUser()
-            configService.setInitialized(true)
+            settingService.initialized = true
             log.info("Initialize success")
         }
         log.debug("==================== ApplicationInitialized ====================")

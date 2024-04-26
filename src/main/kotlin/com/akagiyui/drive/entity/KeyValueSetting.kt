@@ -4,34 +4,35 @@ import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
-import java.util.Date
+import java.util.*
 
 /**
- * 配置项 实体类
+ * 设置项 实体类
  *
  * @author AkagiYui
  */
 @Entity
-@Table(name = "system_config")
+@Table(name = "system_setting")
+// 自动填充创建时间和更新时间
 @EntityListeners(AuditingEntityListener::class)
-class KeyValueConfig {
+class KeyValueSetting {
     /**
-     * 配置项键
+     * 设置项键
      *
      *
      * 注意不要使用"key"等关键字
      */
     @Id
-    lateinit var configKey: String
+    lateinit var settingKey: String
 
     /**
-     * 配置项值
+     * 设置项值
      *
      *
-     * 注意不要使用"varue"等关键字
+     * 注意不要使用"value"等关键字
      */
     @Column(nullable = false)
-    lateinit var configValue: String
+    lateinit var settingValue: String
 
     /**
      * 更新时间
