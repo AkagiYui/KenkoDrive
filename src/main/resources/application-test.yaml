@@ -6,10 +6,3 @@ spring:
     driver-class-name: org.h2.Driver
   mail:
     host: smtp.163.com
-  config:
-    # 导入 .env 配置，该配置文件优先级最高
-    import:
-      - optional:classpath:.env.yaml
-      - optional:classpath:.env.yml
-      - optional:file:.env.yaml
-      - optional:file:.env.yml
