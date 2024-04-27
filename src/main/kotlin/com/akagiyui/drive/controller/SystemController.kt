@@ -1,11 +1,13 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.common.ResponseEnum
+import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.toUnderscoreCase
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.request.EnableConfigRequest
+import com.akagiyui.drive.service.SettingKey
 import com.akagiyui.drive.service.SettingService
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -46,11 +48,15 @@ class SystemController(private val settingService: SettingService) {
     }
 
     /**
-     * 更新 是否开放注册
+     * 更新设置
      */
-    @PutMapping("/setting/register")
+    @PutMapping("/setting/{key}")
     @RequirePermission(Permission.CONFIGURATION_UPDATE)
-    fun setRegisterEnabled(@Validated @RequestBody request: EnableConfigRequest) {
-        settingService.registerEnabled = request.enabled
+    fun updateSetting(@PathVariable key: String, @RequestParam value: String) {
+        try {
+            settingService.updateSetting(SettingKey.valueOf(key.toUnderscoreCase(true)), value)
+        } catch (e: IllegalArgumentException) {
+            throw CustomException(ResponseEnum.BAD_REQUEST)
+        }
     }
 }
