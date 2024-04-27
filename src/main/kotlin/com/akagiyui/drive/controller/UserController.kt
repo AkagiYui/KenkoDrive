@@ -110,8 +110,8 @@ class UserController(private val userService: UserService, private val avatarSer
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")
     @Limit(key = "getVerifyCode", permitsPerSecond = 1.0, timeout = 1)
-    fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest?) {
-        userService.sendEmailVerifyCode(verifyRequest!!)
+    fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest) {
+        userService.sendEmailVerifyCode(verifyRequest)
     }
 
     /**

@@ -9,7 +9,6 @@ spring:
   profiles:
     # 激活 生产环境 配置
     active: prod
-
   threads:
     virtual:
       # 开启虚拟线程支持

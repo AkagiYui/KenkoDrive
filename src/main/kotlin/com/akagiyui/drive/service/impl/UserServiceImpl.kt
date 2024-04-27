@@ -174,10 +174,14 @@ class UserServiceImpl(
             throw CustomException(ResponseEnum.REGISTER_DISABLED)
         }
 
-        // 检查该邮箱是否在 redis 中等待验证
-        val redisKey = "emailVerifyCode:$verifyRequest.email"
-        if (redisKey in redisCache) {
+        // 检查该邮箱/用户名是否在 redis 中等待验证
+        val redisKeyEmail = "emailVerifyCode:email:${verifyRequest.email}"
+        if (redisKeyEmail in redisCache) {
             throw CustomException(ResponseEnum.EMAIL_EXIST)
+        }
+        val redisKeyUsername = "emailVerifyCode:username:${verifyRequest.username}"
+        if (redisKeyUsername in redisCache) {
+            throw CustomException(ResponseEnum.USER_EXIST)
         }
         // 检查该邮箱是否已经注册
         if (repository.existsByEmail(verifyRequest.email)) {
@@ -185,29 +189,29 @@ class UserServiceImpl(
         }
         // 检查用户名是否已经注册
         if (repository.existsByUsername(verifyRequest.username)) {
-            throw CustomException(ResponseEnum.EMAIL_EXIST)
+            throw CustomException(ResponseEnum.USER_EXIST)
         }
         // 生成验证码
         val verifyCode = RandomUtil.randomNumbers(6)
-        redisCache[redisKey] = verifyCode
-        redisCache.expire(redisKey, emailVerifyTimeout, TimeUnit.MINUTES)
+        redisCache[redisKeyEmail, emailVerifyTimeout, TimeUnit.MINUTES] = verifyCode
+        redisCache[redisKeyUsername, emailVerifyTimeout, TimeUnit.MINUTES] = verifyCode
         mailService.sendEmailVerifyCode(verifyRequest.email, verifyCode, emailVerifyTimeout)
         // 将注册信息存入 redis
         val registerInfoKey = "registerInfo:${verifyRequest.email}"
-        redisCache[registerInfoKey] = verifyRequest
-        redisCache.expire(registerInfoKey, emailVerifyTimeout + 1, TimeUnit.MINUTES)
+        redisCache[registerInfoKey, emailVerifyTimeout + 1, TimeUnit.MINUTES] = verifyRequest
     }
 
     override fun confirmRegister(registerConfirmRequest: RegisterConfirmRequest) {
         // 从 redis 取回验证码
-        val redisKey = "emailVerifyCode:" + registerConfirmRequest.email
-        val verifyCode = redisCache.get<String>(redisKey) ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+        val redisKeyEmail = "emailVerifyCode:email:${registerConfirmRequest.email}"
+        val verifyCode =
+            redisCache.get<String>(redisKeyEmail) ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         // 检查验证码是否正确
         if (registerConfirmRequest.verifyCode != verifyCode) {
             throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
         // 从 redis 取回用户注册信息
-        val verifyRequest = redisCache.get<EmailVerifyCodeRequest>("registerInfo:" + registerConfirmRequest.email)
+        val verifyRequest: EmailVerifyCodeRequest? = redisCache["registerInfo:${registerConfirmRequest.email}"]
         if (verifyRequest == null) {
             log.error("Register info not found: {}", registerConfirmRequest.email)
             throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
@@ -221,7 +225,8 @@ class UserServiceImpl(
         }
         repository.save(user)
         // 删除 redis 中的验证码和注册信息
-        redisCache.delete(redisKey)
+        redisCache.delete(redisKeyEmail)
+        redisCache.delete("emailVerifyCode:username:${verifyRequest.username}")
         redisCache.delete("registerInfo:${registerConfirmRequest.email}")
     }
 
@@ -311,6 +316,15 @@ class UserServiceImpl(
         repository.save(user)
     }
 
+    @CacheEvict(
+        cacheNames = [
+            CacheConstants.USER_DETAILS,
+            CacheConstants.USER_LOGIN_DETAILS,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+        ],
+        allEntries = true,
+    )
     override fun updateInfo(id: String, userInfo: UpdateUserInfoRequest) {
         val user = findUserByIdWithCache(id)
         if (userInfo.nickname.hasText()) {

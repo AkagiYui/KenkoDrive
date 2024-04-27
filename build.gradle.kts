@@ -97,7 +97,7 @@ dependencies {
     implementation("net.coobird:thumbnailator:$thumbnailatorVersion")  // 缩略图生成
     implementation("io.minio:minio:$minioVersion")  // MinIO 客户端
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")  // Caffeine 内存缓存
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin") // 对Kotlin类和数据类的序列化/反序列化的支持
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+") // 对Kotlin类和数据类的序列化/反序列化的支持
     implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射库
 
     // scope: runtime

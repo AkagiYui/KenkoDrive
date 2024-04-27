@@ -6,6 +6,7 @@ import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.exception.TooManyRequestsException
 import com.fasterxml.jackson.core.JsonParseException
+import com.fasterxml.jackson.databind.JsonMappingException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
@@ -128,7 +129,10 @@ class CustomExceptionHandler {
      * 500 其他异常
      */
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception::class)
+    @ExceptionHandler(
+        Exception::class,
+        JsonMappingException::class, // ObjectMapper 解析错误，可能由 lateinit 属性导致
+    )
     fun unknownException(e: Exception): ResponseResult<Any> {
         log.error("Unknown exception", e)
         return ResponseResult.response(ResponseEnum.INTERNAL_ERROR)
