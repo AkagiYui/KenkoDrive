@@ -113,7 +113,7 @@ class CustomExceptionHandler {
     }
 
     /**
-     * 200/403 自定义异常
+     * 400/403 业务异常
      */
     @ExceptionHandler(CustomException::class)
     fun customException(e: CustomException): ResponseEntity<Any> {
@@ -121,7 +121,7 @@ class CustomExceptionHandler {
         return if (e.getStatus() == ResponseEnum.UNAUTHORIZED) {
             ResponseEntity(responseBody, HttpStatus.FORBIDDEN) // 403 Forbidden
         } else {
-            ResponseEntity(responseBody, HttpStatus.OK) // 200 OK
+            ResponseEntity(responseBody, HttpStatus.BAD_REQUEST) // 200 OK
         }
     }
 

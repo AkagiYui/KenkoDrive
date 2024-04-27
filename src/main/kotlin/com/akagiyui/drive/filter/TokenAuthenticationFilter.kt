@@ -1,5 +1,6 @@
 package com.akagiyui.drive.filter
 
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.component.TokenUtils
 import com.akagiyui.drive.service.UserService
 import jakarta.servlet.FilterChain
@@ -32,7 +33,7 @@ class TokenAuthenticationFilter @Autowired constructor(
         filterChain: FilterChain,
     ) {
         val rawToken = request.getHeader("Authorization") // 获取 Token
-        if (rawToken?.isNotBlank() == true && rawToken.startsWith("Bearer ")) {
+        if (rawToken.hasText() && rawToken.startsWith("Bearer ")) {
             val token = rawToken.substring(7)
             if (tokenUtils.verifyToken(token)) { // 验证 Token
                 val userId = tokenUtils.getUserId(token) // 获取用户 ID

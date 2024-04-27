@@ -32,7 +32,7 @@ class AddUserRequest {
      * 昵称
      */
     @Size(max = 20, message = "{nickname length must be less than 20}")
-    lateinit var nickname: String
+    var nickname: String? = null
 
     /**
      * 邮箱

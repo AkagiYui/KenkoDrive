@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -30,6 +31,7 @@ class RequestLogAspect {
     private val objectMapper = ObjectMapper().apply {
         setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY) // 可以序列化私有字段
         configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false) // 序列化空对象时不抛异常
+        registerKotlinModule() // 添加 Kotlin 支持
     }
 
     @Around("execution(* com.akagiyui.drive.controller.*.*(..))")
@@ -72,7 +74,7 @@ class RequestLogAspect {
             val startTime = System.currentTimeMillis()
             joinPoint.proceed().also { returnObj ->
                 val duration = System.currentTimeMillis() - startTime
-                val resultLog = returnObj?.let { objectMapper.writeValueAsString(it) } ?: "null"
+                val resultLog = returnObj?.let { objectMapper.writeValueAsString(it).ellipsis(500) } ?: "null"
                 requestLog.append("\n result[${duration}ms] <- $resultLog")
             }
         } catch (throwable: Throwable) {

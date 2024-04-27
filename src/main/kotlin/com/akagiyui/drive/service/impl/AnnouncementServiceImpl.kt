@@ -76,10 +76,10 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
 
     override fun update(id: String, request: UpdateAnnouncementRequest) {
         val announcement = getAnnouncement(id)
-        if (request.title?.isNotBlank() == true) {
+        if (request.title.hasText()) {
             announcement.title = request.title!!
         }
-        if (request.content?.isNotBlank() == true) {
+        if (request.content.hasText()) {
             announcement.content = request.content
         }
         announcementRepository.save(announcement)

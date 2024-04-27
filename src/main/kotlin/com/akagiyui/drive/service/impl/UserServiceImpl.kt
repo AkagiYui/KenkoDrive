@@ -122,7 +122,7 @@ class UserServiceImpl(
                 }
                 email = user.email
             }
-            if (user.nickname.hasText()) nickname = user.nickname
+            nickname = user.nickname.takeIf { it.hasText() } ?: user.username
             password = encryptPassword(user.username, user.password)
             disabled = false
             roles = roleService.getAllDefaultRoles()
@@ -201,6 +201,13 @@ class UserServiceImpl(
         redisCache[registerInfoKey, emailVerifyTimeout + 1, TimeUnit.MINUTES] = verifyRequest
     }
 
+    /**
+     * 用户服务，自我注入，以触发 AOP 代理
+     */
+    @Resource
+    @Lazy
+    lateinit var userService: UserService
+
     override fun confirmRegister(registerConfirmRequest: RegisterConfirmRequest) {
         // 从 redis 取回验证码
         val redisKeyEmail = "emailVerifyCode:email:${registerConfirmRequest.email}"
@@ -216,14 +223,13 @@ class UserServiceImpl(
             log.error("Register info not found: {}", registerConfirmRequest.email)
             throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
-        // 转换为用户对象
-        val user = User().apply {
+        // 添加用户
+        userService.addUser(AddUserRequest().apply {
             username = verifyRequest.username
-            password = encryptPassword(verifyRequest.username, verifyRequest.password)
+            password = verifyRequest.password
             email = verifyRequest.email
-            disabled = false
-        }
-        repository.save(user)
+        })
+
         // 删除 redis 中的验证码和注册信息
         redisCache.delete(redisKeyEmail)
         redisCache.delete("emailVerifyCode:username:${verifyRequest.username}")

@@ -44,7 +44,7 @@ class CacheConfig {
     @Bean
     fun redisCacheManager(redisConnectionFactory: RedisConnectionFactory): RedisCacheManager {
         val redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-            .entryTtl(Duration.ofMinutes(30))
+            .entryTtl(Duration.ofMinutes(60 * 24))
         return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(redisCacheConfiguration)
             .build()

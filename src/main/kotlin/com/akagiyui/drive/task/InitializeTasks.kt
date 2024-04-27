@@ -55,10 +55,11 @@ class InitializeTasks(
         roleService.addRole(admin)
 
         // 添加管理员用户
-        val adminUserRequest = AddUserRequest()
-        adminUserRequest.username = "admin"
-        adminUserRequest.password = "admin"
-        adminUserRequest.nickname = "管理员"
+        val adminUserRequest = AddUserRequest().apply {
+            username = "admin"
+            password = "admin"
+            nickname = "管理员"
+        }
         val adminUser = userService.addUser(adminUserRequest)
         userService.addRoles(adminUser.id, HashSet(listOf(admin.id)))
 
