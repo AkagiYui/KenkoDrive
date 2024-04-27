@@ -23,7 +23,6 @@ import com.akagiyui.drive.service.UserService
 import jakarta.annotation.Resource
 import jakarta.persistence.criteria.Predicate
 import org.jetbrains.annotations.NotNull
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Lazy
@@ -55,8 +54,7 @@ class UserServiceImpl(
 ) : UserService {
     private val log by LoggerDelegate()
 
-    @Value("\${application.email.verify.timeout}")
-    private var emailVerifyTimeout: Long = 0
+    private var emailVerifyTimeout: Long = settingService.mailVerifyCodeTimeout.toLong()
 
     @Resource
     @Lazy

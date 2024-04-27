@@ -239,6 +239,8 @@ export spring.profiles.active=dev
 - 在构造函数上添加 `@Autowired` 注解而不是在参数上添加
 - 更新了 Docker 镜像构建脚本、 Drone 流水线脚本
 - 删除了 `MetaInfoController` 与 `ServerController` ，并将其功能整合到 `SystemController` 中
+- 删除了无效的 HTTP2 配置
+- 将部分配置项作为系统设置存储于数据库中
 - 修改了默认头像
 - 在用户信息中添加了`权限`字段
 - 在公告信息中包含发布者的用户名
@@ -258,7 +260,6 @@ export spring.profiles.active=dev
 - 新增了获取所有配置项的服务
 - 新增了`初始化数据库`任务，在首次启动时自动添加默认角色与管理员用户
 - 新增了`查询文件夹路径`接口
-- 取消了无效的 HTTP2 配置
 
 ### 2024年3月
 

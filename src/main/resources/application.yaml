@@ -37,13 +37,6 @@ spring:
     servlet:
       content-type: text/html
   mail:
-    port: 465
-    default-encoding: utf-8
-    properties:
-      mail:
-        smtp:
-          ssl:
-            enable: true
     # 该配置项仅用于使 IDEA 不报错，实际配置在 application-prod.yaml 中
     # https://youtrack.jetbrains.com/issue/IDEA-262744/Could-not-autowire.-No-beans-of-JavaMailSender-type-found.#focus=Comments-27-5165177.0-0
     host: ~
@@ -68,12 +61,6 @@ application:
   name: Kenko Drive
   # 应用版本号，构建时从 build.gradle 中替换
   version: ${version?:unknown}
-  email:
-    # 邮件发送者地址
-    from: admin@localhost
-    verify:
-      # 邮箱验证码超时（分钟）
-      timeout: 10
   # Token 相关配置
   token:
     # 用户 Access Token 超时（小时）
