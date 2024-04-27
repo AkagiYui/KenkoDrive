@@ -7,27 +7,17 @@ package com.akagiyui.drive.service
  */
 interface SettingService {
 
-    companion object {
-        /**
-         * 是否开放注册 键名
-         */
-        const val REGISTER_ENABLED = "registerEnabled"
+    /**
+     * 获取设置
+     */
+    fun getSettings(): Map<String, Any>
 
-        /**
-         * 是否初始化 键名
-         */
-        const val IS_INITIALIZED = "isInitialized"
-
-        /**
-         * 文件分片大小 键名
-         */
-        const val FILE_UPLOAD_CHUNK_SIZE = "fileUploadChunkSize"
-
-        /**
-         * 全局文件上传大小限制 键名
-         */
-        const val FILE_UPLOAD_MAX_SIZE = "fileUploadMaxSize"
-    }
+    /**
+     * 更新设置
+     * @param key 设置键
+     * @param value 设置值
+     */
+    fun updateSetting(key: SettingKey, value: String)
 
     /**
      * 是否初始化
@@ -50,7 +40,37 @@ interface SettingService {
     var fileUploadMaxSize: Long
 
     /**
-     * 获取设置
+     * SMTP 服务器地址
      */
-    fun getSettings(): Map<String, Any>
+    var smtpHost: String
+
+    /**
+     * SMTP 服务器端口
+     */
+    var smtpPort: Int
+
+    /**
+     * SMTP 服务器用户名
+     */
+    var smtpUsername: String
+
+    /**
+     * SMTP 服务器密码
+     */
+    var smtpPassword: String
+
+    /**
+     * SMTP 服务器是否启用 SSL
+     */
+    var smtpSsl: Boolean
+
+    /**
+     * 邮件发送者
+     */
+    var mailFrom: String
+
+    /**
+     * 邮件验证码有效时间，单位：分钟，默认：10分钟
+     */
+    var mailVerifyCodeTimeout: Int
 }

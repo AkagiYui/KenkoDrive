@@ -1,13 +1,11 @@
 package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.delegate.LoggerDelegate
+import com.akagiyui.common.utils.toCamelCase
 import com.akagiyui.drive.entity.KeyValueSetting
 import com.akagiyui.drive.repository.SettingRepository
+import com.akagiyui.drive.service.SettingKey
 import com.akagiyui.drive.service.SettingService
-import com.akagiyui.drive.service.SettingService.Companion.FILE_UPLOAD_CHUNK_SIZE
-import com.akagiyui.drive.service.SettingService.Companion.FILE_UPLOAD_MAX_SIZE
-import com.akagiyui.drive.service.SettingService.Companion.IS_INITIALIZED
-import com.akagiyui.drive.service.SettingService.Companion.REGISTER_ENABLED
 import org.springframework.cache.CacheManager
 import org.springframework.stereotype.Service
 
@@ -24,56 +22,120 @@ class SettingServiceImpl(
     private val log by LoggerDelegate()
     private val cache = cacheManager.getCache("settings")
 
-    fun <T> getSetting(key: String, defaultValue: T, transform: (String) -> T): T {
+    fun <T> getSetting(key: SettingKey, defaultValue: T): T {
         cache?.get(key)?.get()?.let {
             @Suppress("UNCHECKED_CAST")
             return it as T
         }
-        val settingValue = settingRepository.findBySettingKey(key)?.settingValue?.let(transform) ?: run {
+        val settingValue = settingRepository.findBySettingKey(key.toString())?.settingValue?.let(key.transform) ?: run {
             log.warn("Setting $key not found, use default value: $defaultValue")
             saveSetting(key, defaultValue)
             defaultValue
         }
+        settingValue as T
         cache?.put(key, settingValue)
         return settingValue
     }
 
-    fun <T> saveSetting(key: String, value: T): T {
+    fun <T> saveSetting(key: SettingKey, value: T): T {
         cache?.put(key, value)
         settingRepository.save(KeyValueSetting().apply {
-            settingKey = key
+            settingKey = key.toString()
             settingValue = value.toString()
         })
         return value
     }
 
+    override fun updateSetting(key: SettingKey, value: String) {
+        saveSetting(key, key.transform(value))
+    }
+
     override var registerEnabled: Boolean
-        get() = getSetting(REGISTER_ENABLED, true) { it.toBoolean() }
+        get() = getSetting(SettingKey.REGISTER_ENABLED, true)
         set(value) {
-            saveSetting(REGISTER_ENABLED, value)
+            saveSetting(SettingKey.REGISTER_ENABLED, value)
         }
 
     override var initialized: Boolean
-        get() = getSetting(IS_INITIALIZED, false) { it.toBoolean() }
+        get() = getSetting(SettingKey.IS_INITIALIZED, false)
         set(value) {
-            saveSetting(IS_INITIALIZED, value)
+            saveSetting(SettingKey.IS_INITIALIZED, value)
         }
 
     override var fileUploadChunkSize: Int
-        get() = getSetting(FILE_UPLOAD_CHUNK_SIZE, 5 * 1024 * 1024) { it.toInt() }
+        get() = getSetting(SettingKey.FILE_UPLOAD_CHUNK_SIZE, 5 * 1024 * 1024)
         set(value) {
-            saveSetting(FILE_UPLOAD_CHUNK_SIZE, value)
+            saveSetting(SettingKey.FILE_UPLOAD_CHUNK_SIZE, value)
         }
 
     override var fileUploadMaxSize: Long
-        get() = getSetting(FILE_UPLOAD_MAX_SIZE, 100L * 1024 * 1024) { it.toLong() }
+        get() = getSetting(SettingKey.FILE_UPLOAD_MAX_SIZE, 100L * 1024 * 1024)
         set(value) {
-            saveSetting(FILE_UPLOAD_MAX_SIZE, value)
+            saveSetting(SettingKey.FILE_UPLOAD_MAX_SIZE, value)
         }
 
-    override fun getSettings(): Map<String, Any> = mapOf(
-        REGISTER_ENABLED to registerEnabled,
-        FILE_UPLOAD_CHUNK_SIZE to fileUploadChunkSize,
-        FILE_UPLOAD_MAX_SIZE to fileUploadMaxSize,
-    )
+    override var smtpHost: String
+        get() = getSetting(SettingKey.SMTP_HOST, "smtp.example.com")
+        set(value) {
+            saveSetting(SettingKey.SMTP_HOST, value)
+        }
+
+    override var smtpPort: Int
+        get() = getSetting(SettingKey.SMTP_PORT, 465)
+        set(value) {
+            saveSetting(SettingKey.SMTP_PORT, value)
+        }
+
+    override var smtpUsername: String
+        get() = getSetting(SettingKey.SMTP_USERNAME, "username")
+        set(value) {
+            saveSetting(SettingKey.SMTP_USERNAME, value)
+        }
+
+    override var smtpPassword: String
+        get() = getSetting(SettingKey.SMTP_PASSWORD, "password")
+        set(value) {
+            saveSetting(SettingKey.SMTP_PASSWORD, value)
+        }
+
+    override var smtpSsl: Boolean
+        get() = getSetting(SettingKey.SMTP_SSL, true)
+        set(value) {
+            saveSetting(SettingKey.SMTP_SSL, value)
+        }
+
+    override var mailFrom: String
+        get() = getSetting(SettingKey.MAIL_FROM, "address")
+        set(value) {
+            saveSetting(SettingKey.MAIL_FROM, value)
+        }
+
+    override var mailVerifyCodeTimeout: Int
+        get() = getSetting(SettingKey.MAIL_VERIFY_CODE_TIMEOUT, 10)
+        set(value) {
+            saveSetting(SettingKey.MAIL_VERIFY_CODE_TIMEOUT, value)
+        }
+
+    override fun getSettings(): Map<String, Any> {
+        val rawMap = mutableMapOf(
+            SettingKey.REGISTER_ENABLED to registerEnabled,
+            SettingKey.FILE_UPLOAD_CHUNK_SIZE to fileUploadChunkSize,
+            SettingKey.FILE_UPLOAD_MAX_SIZE to fileUploadMaxSize,
+            SettingKey.SMTP_HOST to smtpHost,
+            SettingKey.SMTP_PORT to smtpPort,
+            SettingKey.SMTP_USERNAME to smtpUsername,
+            SettingKey.SMTP_PASSWORD to smtpPassword.let {
+                val showLength = 1 // 只保留前后 1 位
+                it.take(showLength) + "*".repeat(10) + it.takeLast(showLength)
+            },
+            SettingKey.SMTP_SSL to smtpSsl,
+            SettingKey.MAIL_FROM to mailFrom,
+            SettingKey.MAIL_VERIFY_CODE_TIMEOUT to mailVerifyCodeTimeout,
+        )
+        return mutableMapOf<String, Any>().apply {
+            rawMap.forEach { (key, value) ->
+                this[key.toString().toCamelCase()] = value
+            }
+        }
+    }
 }

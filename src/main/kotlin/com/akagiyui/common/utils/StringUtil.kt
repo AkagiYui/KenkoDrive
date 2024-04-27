@@ -53,3 +53,42 @@ fun String.compressPackageName(allowedLength: Int? = null): String {
 fun String?.hasText(): Boolean {
     return !this.isNullOrBlank()
 }
+
+/**
+ * 转换为驼峰命名
+ * 例如：user_name -> userName
+ *
+ * @return 驼峰命名
+ */
+fun String.toCamelCase(): String {
+    val list = this.split("_").toMutableList()
+    list[0] = list[0].lowercase()
+    for (i in 1 until list.size) {
+        list[i] = list[i].lowercase().replaceFirstChar { it.uppercase() }
+    }
+    return list.joinToString("")
+}
+
+/**
+ * 转换为下划线命名
+ * 例如：userName -> user_name
+ *
+ * @param upperCase 是否大写
+ * @return 下划线命名
+ */
+fun String.toUnderscoreCase(upperCase: Boolean = false): String {
+    var list = this.split("(?=[A-Z])".toRegex()).toMutableList()
+    if (list[0].isBlank()) {
+        list = list.drop(1).toMutableList()
+    }
+    // 遍历除了第一个元素之外的所有元素，将其转换为小写
+    for (i in list.indices) {
+        list[i] = list[i].lowercase()
+    }
+    val lowerSnakeString = list.joinToString("_")
+    return if (upperCase) {
+        lowerSnakeString.uppercase()
+    } else {
+        lowerSnakeString
+    }
+}
