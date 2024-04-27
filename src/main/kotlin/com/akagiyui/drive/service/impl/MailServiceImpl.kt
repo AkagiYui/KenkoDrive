@@ -53,6 +53,7 @@ class MailServiceImpl(
 
             // 构建邮件内容
             val context = Context().apply {
+                setVariable("appName", appName)
                 setVariable("code", verifyCode)
                 setVariable("timeout", timeout)
             }
