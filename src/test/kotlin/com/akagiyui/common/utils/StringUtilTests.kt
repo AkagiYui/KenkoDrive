@@ -11,12 +11,14 @@ class StringUtilTests {
 
     @Test
     fun ellipsis() {
+        Assertions.assertEquals("ab", "abc".ellipsis(2))
         Assertions.assertEquals("abc", "abc".ellipsis(5))
         Assertions.assertEquals("ab...", "abcdef".ellipsis(5))
     }
 
     @Test
     fun compressPackageName() {
+        Assertions.assertEquals("abc", "abc".compressPackageName())
         Assertions.assertEquals("a.d.ghi", "abc.def.ghi".compressPackageName())
     }
 

@@ -51,34 +51,21 @@ object FileUtil {
         return cleanPath.substring(0, cleanPath.indexOf("/WEB-INF")) + path
     }
 
-    /**
-     * 读取文件内容为字符串
-     *
-     * @param file    文件
-     * @param charset 字符集
-     * @return 文件内容
-     * @throws IOException 读取文件异常
-     */
-    @Throws(IOException::class)
-    fun readFileToString(file: File, charset: String): String {
-        BufferedReader(InputStreamReader(Files.newInputStream(file.toPath()), charset)).use { reader ->
-            return reader.lineSequence().joinToString(System.lineSeparator())
-        }
-    }
-
-    /**
-     * 读取文件内容为字符串，默认字符集为 utf-8
-     *
-     * @param file 文件
-     * @return 文件内容
-     * @throws IOException 读取文件异常
-     */
-    @Throws(IOException::class)
-    fun readFileToString(file: File): String {
-        return readFileToString(file, "utf-8")
-    }
 }
 
+/**
+ * 读取文件内容为字符串
+ *
+ * @param charset 字符集，默认为 utf-8
+ * @return 文件内容
+ * @throws IOException 读取文件异常
+ */
+@Throws(IOException::class)
+fun File.readToString(charset: String = "utf-8"): String {
+    BufferedReader(InputStreamReader(Files.newInputStream(this.toPath()), charset)).use { reader ->
+        return reader.lineSequence().joinToString(System.lineSeparator())
+    }
+}
 
 /**
  * 创建父目录
