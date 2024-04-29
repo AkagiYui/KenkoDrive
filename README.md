@@ -8,6 +8,7 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/AkagiYui/KenkoDrive/test.yml?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/actions/workflows/test.yml)
 [![GitHub Repo stars](https://img.shields.io/github/stars/AkagiYui/KenkoDrive?style=flat-square)](https://github.com/AkagiYui/KenkoDrive/stargazers)
 [![Codecov](https://img.shields.io/codecov/c/github/AkagiYui/KenkoDrive?style=flat-square)](https://codecov.io/gh/AkagiYui/KenkoDrive)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAkagiYui%2FKenkoDrive.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FAkagiYui%2FKenkoDrive?ref=badge_shield)
 
 一个基于 `SpringBoot 3.2`、`Spring Security`、`Gradle 8.7` 和 `JPA` ，使用 `Kotlin` 编写的 Web 云盘应用单体后端。
 项目整体结构清晰，职责明确，注释全面，开箱即用。
@@ -402,3 +403,7 @@ export spring.profiles.active=dev
 - 新增了返回结果包装类
 - 新增了全局异常处理类
 - 新增了`新增用户`接口、`获取所有用户`接口
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAkagiYui%2FKenkoDrive.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAkagiYui%2FKenkoDrive?ref=badge_large)
