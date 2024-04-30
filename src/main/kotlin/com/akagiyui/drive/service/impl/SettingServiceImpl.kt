@@ -116,6 +116,30 @@ class SettingServiceImpl(
             saveSetting(SettingKey.MAIL_VERIFY_CODE_TIMEOUT, value)
         }
 
+    override var aliyunSmsAccessKeyId: String
+        get() = getSetting(SettingKey.ALIYUN_SMS_ACCESS_KEY_ID, "")
+        set(value) {
+            saveSetting(SettingKey.ALIYUN_SMS_ACCESS_KEY_ID, value)
+        }
+
+    override var aliyunSmsAccessKeySecret: String
+        get() = getSetting(SettingKey.ALIYUN_SMS_ACCESS_KEY_SECRET, "")
+        set(value) {
+            saveSetting(SettingKey.ALIYUN_SMS_ACCESS_KEY_SECRET, value)
+        }
+
+    override var aliyunSmsSignName: String
+        get() = getSetting(SettingKey.ALIYUN_SMS_SIGN_NAME, "")
+        set(value) {
+            saveSetting(SettingKey.ALIYUN_SMS_SIGN_NAME, value)
+        }
+
+    override var aliyunSmsTemplateCode: String
+        get() = getSetting(SettingKey.ALIYUN_SMS_TEMPLATE_CODE, "")
+        set(value) {
+            saveSetting(SettingKey.ALIYUN_SMS_TEMPLATE_CODE, value)
+        }
+
     override fun getSettings(): Map<String, Any> {
         val rawMap = mutableMapOf(
             SettingKey.REGISTER_ENABLED to registerEnabled,
@@ -124,13 +148,14 @@ class SettingServiceImpl(
             SettingKey.SMTP_HOST to smtpHost,
             SettingKey.SMTP_PORT to smtpPort,
             SettingKey.SMTP_USERNAME to smtpUsername,
-            SettingKey.SMTP_PASSWORD to smtpPassword.let {
-                val showLength = 1 // 只保留前后 1 位
-                it.take(showLength) + "*".repeat(10) + it.takeLast(showLength)
-            },
+            SettingKey.SMTP_PASSWORD to smtpPassword,
             SettingKey.SMTP_SSL to smtpSsl,
             SettingKey.MAIL_FROM to mailFrom,
             SettingKey.MAIL_VERIFY_CODE_TIMEOUT to mailVerifyCodeTimeout,
+            SettingKey.ALIYUN_SMS_ACCESS_KEY_ID to aliyunSmsAccessKeyId,
+            SettingKey.ALIYUN_SMS_ACCESS_KEY_SECRET to aliyunSmsAccessKeySecret,
+            SettingKey.ALIYUN_SMS_SIGN_NAME to aliyunSmsSignName,
+            SettingKey.ALIYUN_SMS_TEMPLATE_CODE to aliyunSmsTemplateCode,
         )
         return mutableMapOf<String, Any>().apply {
             rawMap.forEach { (key, value) ->

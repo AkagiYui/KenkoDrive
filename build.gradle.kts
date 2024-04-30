@@ -1,3 +1,5 @@
+@file:Suppress("VulnerableLibrariesLocal")
+
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -65,16 +67,10 @@ repositories {
 }
 
 val hutoolVersion = "5.8.25"
-val snakeYAMLVersion = "2.0"
-val jetbrainsAnnotationsVersion = "24.0.1"
-val guavaVersion = "33.0.0-jre"
-val thumbnailatorVersion = "0.4.20"
-val minioVersion = "8.5.8"
-val caffeineVersion = "3.1.8"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
-    implementation("org.yaml:snakeyaml:$snakeYAMLVersion")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
-    implementation("org.jetbrains:annotations:$jetbrainsAnnotationsVersion") // JetBrain 的注解，如 @NonNull
+    implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
+    implementation("org.jetbrains:annotations:24.0.1") // JetBrain 的注解，如 @NonNull
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
     implementation("org.springframework.boot:spring-boot-starter-data-redis")  // Redis 操作
     implementation("org.springframework.boot:spring-boot-starter-cache")  // 缓存
@@ -93,12 +89,17 @@ dependencies {
     implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
-    implementation("com.google.guava:guava:$guavaVersion")  // Guava 工具包
-    implementation("net.coobird:thumbnailator:$thumbnailatorVersion")  // 缩略图生成
-    implementation("io.minio:minio:$minioVersion")  // MinIO 客户端
-    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineVersion")  // Caffeine 内存缓存
+    implementation("com.google.guava:guava:33.0.0-jre")  // Guava 工具包
+    implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
+    implementation("io.minio:minio:8.5.8")  // MinIO 客户端
+    implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+") // 对Kotlin类和数据类的序列化/反序列化的支持
     implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射库
+    implementation("com.aliyun:alibabacloud-dysmsapi20170525:2.0.24") { // 阿里云短信服务
+        // 排除 pull-parser，该库导致 logback 配置文件无法加载
+        // 该库用于解析 XML，但是本项目不需要在阿里云短信服务中使用 XML
+        exclude("pull-parser", "pull-parser")
+    }
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
@@ -109,6 +110,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("com.h2database:h2") // H2 数据库，用于测试
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 // Jacoco 配置

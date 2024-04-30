@@ -5,7 +5,7 @@ package com.akagiyui.drive.service
  *
  * @param transform 转换函数
  */
-enum class SettingKey(val transform: (String) -> Any) {
+enum class SettingKey(val transform: (String) -> Any = { it }) {
     REGISTER_ENABLED({ it.toBoolean() }),
     IS_INITIALIZED({ it.toBoolean() }),
     FILE_UPLOAD_CHUNK_SIZE({ it.toInt() }),
@@ -16,5 +16,9 @@ enum class SettingKey(val transform: (String) -> Any) {
     SMTP_PASSWORD({ it }),
     SMTP_SSL({ it.toBoolean() }),
     MAIL_FROM({ it }),
-    MAIL_VERIFY_CODE_TIMEOUT({ it.toInt() })
+    MAIL_VERIFY_CODE_TIMEOUT({ it.toInt() }),
+    ALIYUN_SMS_ACCESS_KEY_ID({ it }),
+    ALIYUN_SMS_ACCESS_KEY_SECRET({ it }),
+    ALIYUN_SMS_SIGN_NAME({ it }),
+    ALIYUN_SMS_TEMPLATE_CODE({ it }),
 }

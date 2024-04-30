@@ -73,4 +73,24 @@ interface SettingService {
      * 邮件验证码有效时间，单位：分钟，默认：10分钟
      */
     var mailVerifyCodeTimeout: Int
+
+    /**
+     * 阿里云短信服务 AccessKeyId
+     */
+    var aliyunSmsAccessKeyId: String
+
+    /**
+     * 阿里云短信服务 AccessKeySecret
+     */
+    var aliyunSmsAccessKeySecret: String
+
+    /**
+     * 阿里云短信服务签名
+     */
+    var aliyunSmsSignName: String
+
+    /**
+     * 阿里云短信服务模板
+     */
+    var aliyunSmsTemplateCode: String
 }

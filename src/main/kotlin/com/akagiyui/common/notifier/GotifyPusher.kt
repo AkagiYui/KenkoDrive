@@ -1,6 +1,7 @@
 package com.akagiyui.common.notifier
 
 import com.akagiyui.common.delegate.LoggerDelegate
+import com.akagiyui.common.notifier.exception.PushException
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.*
 import org.springframework.web.client.RestTemplate
@@ -46,6 +47,7 @@ class GotifyPusher(
         host = URI.create(host).normalize().toString()
 
         headers = HttpHeaders()
+        @Suppress("UastIncorrectHttpHeaderInspection")
         headers.add("X-Gotify-Key", apiKey)
         headers.contentType = MediaType.APPLICATION_JSON
 
@@ -76,14 +78,17 @@ class GotifyPusher(
             headers,
         )
 
-        val exchange = restTemplate.exchange(
-            "$host/message",
-            HttpMethod.POST,
-            entity,
-            String::class.java,
-        )
-        log.debug("Push message to Gotify: $title")
-        return exchange
+        return try {
+            log.debug("Push message to Gotify: $title")
+            restTemplate.exchange(
+                "$host/message",
+                HttpMethod.POST,
+                entity,
+                String::class.java,
+            )
+        } catch (e: Exception) {
+            throw PushException("Push message to Gotify failed")
+        }
     }
 
 }
