@@ -6,7 +6,7 @@ RUN --mount=type=cache,target=/root/.gradle chmod +x gradlew && ./gradlew bootJa
 FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 LABEL maintainer="AkagiYui"
 
-COPY --from=builder /job/build/libs/*.jar /app.jar
+COPY --from=builder /job/app/build/libs/*.jar /app.jar
 WORKDIR /app
 VOLUME /app/data
 EXPOSE 6677

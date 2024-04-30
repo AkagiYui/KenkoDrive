@@ -8,4 +8,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-include("app")
+include(
+    "app", // 主程序
+    "easy-captcha", // 验证码
+)

@@ -238,6 +238,7 @@ export spring.profiles.active=dev
 - **升级到 Java 21 、Gradle 8.7**
 - **升级到 SpringBoot 3.2.4**
 - **迁移了整个项目至 Kotlin**
+- 将项目结构调整为多模块结构
 - 在构造函数上添加 `@Autowired` 注解而不是在参数上添加
 - 更新了 Docker 镜像构建脚本、 Drone 流水线脚本
 - 删除了 `MetaInfoController` 与 `ServerController` ，并将其功能整合到 `SystemController` 中
@@ -252,6 +253,7 @@ export spring.profiles.active=dev
 - 在 gradle 测试中自动使用 test 配置文件
 - 在 gradle 脚本中添加了插件的阿里云镜像源
 - 修改了`用户`实体的表名为`user_info`，避免关键字冲突
+- 引入了第三方验证码生成库
 - 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
 - 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
 - 添加了 GitHub Actions 流水线脚本，使用 Gradle 运行测试，并上传测试报告

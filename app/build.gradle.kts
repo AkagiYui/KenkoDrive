@@ -42,29 +42,6 @@ configurations {
     }
 }
 
-buildscript {
-    repositories {
-        mavenLocal()
-        maven {
-            setUrl("https://maven.aliyun.com/repository/public/")
-        }
-        maven {
-            setUrl("https://mirrors.huaweicloud.com/repository/maven/")
-        }
-        mavenCentral()
-    }
-}
-
-repositories {
-    mavenLocal()
-    maven {
-        setUrl("https://maven.aliyun.com/repository/public/")
-    }
-    maven {
-        setUrl("https://mirrors.huaweicloud.com/repository/maven/")
-    }
-    mavenCentral()
-}
 
 val hutoolVersion = "5.8.25"
 dependencies {
@@ -101,6 +78,7 @@ dependencies {
         exclude("pull-parser", "pull-parser")
     }
     implementation("cloud.tianai.captcha:tianai-captcha:1.4.1") // 验证码
+    implementation(project(":easy-captcha")) // 验证码
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
@@ -145,12 +123,6 @@ tasks.processResources {
     filesMatching("application.yaml") {
         expand(mapOf("version" to version))
     }
-}
-
-// 自动同意 Gradle Build Scan 的条款
-extensions.findByName("buildScan")?.withGroovyBuilder {
-    setProperty("termsOfServiceUrl", "https://gradle.com/terms-of-service")
-    setProperty("termsOfServiceAgree", "yes")
 }
 
 // Sentry 配置
