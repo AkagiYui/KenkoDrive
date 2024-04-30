@@ -1,16 +1,12 @@
 package com.wf.captcha.utils;
 
 
-import sun.security.action.GetPropertyAction;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import static java.security.AccessController.doPrivileged;
 
 /**
  * 解决自定义字体读取时，产生.tmp临时文件耗磁盘的问题。
@@ -33,7 +29,7 @@ import static java.security.AccessController.doPrivileged;
  * @date 2022-05-07
  */
 public class FontsUtil {
-    private static final Path tmpdir = Paths.get(doPrivileged(new GetPropertyAction("java.io.tmpdir")));
+    private static final Path tmpdir = Paths.get(System.getProperty("java.io.tmpdir"));
 
     /**
      * 手动复制字体文件到临时目录. 调用传文件的构造方法创建字体
