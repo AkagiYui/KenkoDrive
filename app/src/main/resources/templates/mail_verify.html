@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="email code" name="description">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body>
+<br>
+<div style="text-align: center; font-size: 1.4em">
+    <b><span th:text="${appName}"/> 云盘</b>
+</div>
+<br>
+<div style="text-align: center">
+    你的验证码如下，<span th:text="${timeout}"/>分钟内有效，请尽快完成验证。
+</div>
+<br>
+<div style="text-align: center; font-size: 2em">
+    <b><span th:text="${code}"/></b>
+</div>
+<br><br>
+<div style="text-align: center">
+    官网：<a href="https://drive.akagiyui.com" target="_blank">drive.akagiyui.com</a>
+</div>
+<br>
+<div></div>
+<br>
+</body>
+</html>
+

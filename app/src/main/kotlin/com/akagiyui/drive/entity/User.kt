@@ -38,6 +38,12 @@ class User : BaseEntity() {
     var email: String? = null
 
     /**
+     * 手机号
+     */
+    @Column(unique = true)
+    var phone: String? = null
+
+    /**
      * 已禁用
      */
     @Column(nullable = false)

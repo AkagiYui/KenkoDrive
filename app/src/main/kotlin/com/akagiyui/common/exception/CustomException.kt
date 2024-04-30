@@ -12,7 +12,7 @@ class CustomException(
     /**
      * 响应状态枚举
      */
-    private val status: ResponseEnum
+    private val status: ResponseEnum,
 ) : RuntimeException() {
     fun getStatus() = status
 }

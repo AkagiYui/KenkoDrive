@@ -100,6 +100,8 @@ dependencies {
         // 该库用于解析 XML，但是本项目不需要在阿里云短信服务中使用 XML
         exclude("pull-parser", "pull-parser")
     }
+    implementation("cloud.tianai.captcha:tianai-captcha:1.4.1") // 验证码
+    implementation(project(":easy-captcha")) // EasyCaptcha
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
