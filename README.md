@@ -69,26 +69,26 @@
 
 ## 使用技术一览
 
-- [x] [请求频率限制（注解 + 令牌桶）](src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
+- [x] [请求频率限制（注解 + 令牌桶）](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
 - [ ] 请求频率限制（Redis + IP地址限流）
-- [x] [异步任务](src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
-- [x] [邮件发送](src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
-- [x] [参数校验](src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
-- [x] [权限校验](src/main/kotlin/com/akagiyui/drive/model/Permission.kt)
-- [x] [统一 JSON 格式返回](src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
+- [x] [异步任务](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
+- [x] [邮件发送](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
+- [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
+- [x] [权限校验](app/src/main/kotlin/com/akagiyui/drive/model/Permission.kt)
+- [x] [统一 JSON 格式返回](app/src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
 - [ ] 短信发送
 - [ ] 日志记录
 - [ ] 速度限制
 - [ ] 流量限制
-- [x] [邮箱验证码（Redis）](src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
+- [x] [邮箱验证码（Redis）](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
 - [ ] 图片验证码
-- [x] [断点续传](src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
-- [x] [分片上传](src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
-- [x] [分片下载](src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
+- [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
+- [x] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
+- [x] [分片下载](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 文件秒传
 - [x] 相同文件合并（在上传时会检测）
-- [x] [Gotify 消息推送](src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
-- [x] [定时任务](src/main/kotlin/com/akagiyui/drive/task/CronTasks.kt)
+- [x] [Gotify 消息推送](app/src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
+- [x] [定时任务](app/src/main/kotlin/com/akagiyui/drive/task/CronTasks.kt)
 - [ ] OAuth2.0
 - [ ] 对接支付宝
 
@@ -106,20 +106,20 @@
 [![Minio](https://img.shields.io/badge/Minio-c72e49?logo=minio&logoColor=white&style=flat-square)](https://min.io/)
 
 - [x] [Gradle 包管理](build.gradle.kts
-- [x] [Spring Boot 3.2](src/main/kotlin/com/akagiyui/drive/KenkoDriveApplication.kt)
-- [x] [Spring Security（跨域与认证授权）](src/main/kotlin/com/akagiyui/drive/config/SecurityConfig.kt)
+- [x] [Spring Boot 3.2](app/src/main/kotlin/com/akagiyui/drive/KenkoDriveApplication.kt)
+- [x] [Spring Security（跨域与认证授权）](app/src/main/kotlin/com/akagiyui/drive/config/SecurityConfig.kt)
 - [x] MySQL 数据库
-- [x] [Spring Cache 缓存](src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
-- [x] [Caffeine 本地缓存](src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
-- [x] [Redis 缓存](src/main/kotlin/com/akagiyui/drive/component/RedisCache.kt)
+- [x] [Spring Cache 缓存](app/src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
+- [x] [Caffeine 本地缓存](app/src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
+- [x] [Redis 缓存](app/src/main/kotlin/com/akagiyui/drive/component/RedisCache.kt)
 - [ ] [多级缓存](https://github.com/pig-mesh/multilevel-cache-spring-boot-starter)
-- [x] [JWT 鉴权](src/main/kotlin/com/akagiyui/drive/component/TokenUtils.kt)
+- [x] [JWT 鉴权](app/src/main/kotlin/com/akagiyui/drive/component/TokenUtils.kt)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
-- [x] [JPA ORM 框架](src/main/kotlin/com/akagiyui/drive/repository)
-- [x] AOP 切面编程：[频率控制](src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
-  [权限校验](src/main/kotlin/com/akagiyui/drive/component/permission/PermissionCheckAspect.kt)、
-  [请求日志](src/main/kotlin/com/akagiyui/drive/component/RequestLogAspect.kt)
+- [x] [JPA ORM 框架](app/src/main/kotlin/com/akagiyui/drive/repository)
+- [x] AOP 切面编程：[频率控制](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
+  [权限校验](app/src/main/kotlin/com/akagiyui/drive/component/permission/PermissionCheckAspect.kt)、
+  [请求日志](app/src/main/kotlin/com/akagiyui/drive/component/RequestLogAspect.kt)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [ ] Minio 对象存储
 - [ ] 阿里云 OSS 对象存储
