@@ -101,7 +101,6 @@ dependencies {
         exclude("pull-parser", "pull-parser")
     }
     implementation("cloud.tianai.captcha:tianai-captcha:1.4.1") // 验证码
-    implementation(project(":easy-captcha")) // EasyCaptcha
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动

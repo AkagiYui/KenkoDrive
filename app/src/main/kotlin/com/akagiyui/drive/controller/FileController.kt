@@ -9,7 +9,6 @@ import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.model.response.UserFileResponse
 import com.akagiyui.drive.service.*
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
 import org.springframework.core.io.InputStreamResource
@@ -61,7 +60,7 @@ class FileController(
      */
     @GetMapping("/exist/{hash}")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    fun uploadStatus(@PathVariable hash: String, request: HttpServletRequest): Boolean {
+    fun uploadStatus(@PathVariable hash: String): Boolean {
         return fileInfoService.existByHash(hash)
     }
 
