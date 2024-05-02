@@ -92,3 +92,13 @@ fun String.toUnderscoreCase(upperCase: Boolean = false): String {
         lowerSnakeString
     }
 }
+
+val invalidCharsRegex by lazy { "[\\\\/:*?\"<>|]".toRegex() }
+
+/**
+ * 转换为文件系统安全的文件名
+ * @return 文件系统安全的文件名
+ */
+fun String.toSafeFileName(): String {
+    return this.replace(invalidCharsRegex, "_")
+}
