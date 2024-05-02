@@ -3,21 +3,20 @@ package com.wf.captcha;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * 测试类
  * Created by 王帆 on 2018-07-27 上午 10:08.
  */
-public class CaptchaTest {
+class CaptchaTest {
 
     @Test
-    public void test() throws Exception {
-        /*for (int i = 0; i < 10; i++) {
-            SpecCaptcha specCaptcha = new SpecCaptcha();
-            specCaptcha.setLen(4);
-            specCaptcha.setFont(i, 32f);
-            System.out.println(specCaptcha.text());
-            specCaptcha.out(new FileOutputStream(new File("C:/Java/aa" + i + ".png")));
-        }*/
+    void test() {
+        var specCaptcha = new SpecCaptcha(130, 48, 5);
+        String verCode = specCaptcha.text().toLowerCase();
+        System.out.println(verCode);
+        assertEquals(5, verCode.length());
     }
 
     @Test
