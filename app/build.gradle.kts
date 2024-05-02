@@ -31,18 +31,6 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
-configurations {
-    /**
-     * 让 compileOnly 配置继承自 annotationProcessor 配置的所有依赖
-     * 添加到 compileOnly 中的任何库将被视为注解处理器
-     * 但仅在编译时有效，不会被打包到 JAR 文件中
-     */
-    compileOnly {
-        extendsFrom(configurations.annotationProcessor.get())
-    }
-}
-
-
 val hutoolVersion = "5.8.25"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
@@ -64,7 +52,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-undertow")  // Undertow
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
     implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
-    implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加解密
     implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
     implementation("com.google.guava:guava:33.0.0-jre")  // Guava 工具包
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
