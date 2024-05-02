@@ -52,4 +52,11 @@ class FileInfo : BaseEntity() {
     @Column(nullable = false)
     @ColumnDefault("0")
     var downloadCount: Long = 0L
+
+    /**
+     * 锁定
+     */
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    var locked: Boolean = false
 }
