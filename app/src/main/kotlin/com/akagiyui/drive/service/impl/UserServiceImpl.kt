@@ -16,10 +16,7 @@ import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
 import com.akagiyui.drive.model.request.RegisterConfirmRequest
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import com.akagiyui.drive.repository.UserRepository
-import com.akagiyui.drive.service.MailService
-import com.akagiyui.drive.service.RoleService
-import com.akagiyui.drive.service.SettingService
-import com.akagiyui.drive.service.UserService
+import com.akagiyui.drive.service.*
 import jakarta.annotation.Resource
 import jakarta.persistence.criteria.Predicate
 import org.jetbrains.annotations.NotNull

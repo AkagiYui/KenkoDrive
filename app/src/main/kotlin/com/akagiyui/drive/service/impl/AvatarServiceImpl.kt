@@ -13,6 +13,7 @@ import net.coobird.thumbnailator.Thumbnails
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import javax.imageio.ImageIO
 
@@ -84,7 +85,7 @@ class AvatarServiceImpl(
     override fun getAvatar(): AvatarContent {
         val avatarKey = getAvatarKey()
         val avatar: ByteArray = if (storageService.exists(avatarKey)) {
-            val file = storageService.getFile(avatarKey)
+            val file = storageService.get(avatarKey)
             try {
                 file.inputStream.use { inputStream ->
                     inputStream.readBytes()
@@ -117,14 +118,15 @@ class AvatarServiceImpl(
             throw CustomException(ResponseEnum.INTERNAL_ERROR)
         }
 
-        storageService.saveFile(getAvatarKey(), true).use { outputStream ->
-            try {
-                Thumbnails.of(image).size(WIDTH_LIMIT, HEIGHT_LIMIT).outputFormat(IMAGE_FORMAT)
-                    .toOutputStream(outputStream)
-            } catch (e: IOException) {
-                log.error("Save avatar failed", e)
-                throw CustomException(ResponseEnum.INTERNAL_ERROR)
-            }
+        val stream = ByteArrayOutputStream()
+        Thumbnails.of(image)
+            .size(WIDTH_LIMIT, HEIGHT_LIMIT)
+            .outputFormat(IMAGE_FORMAT)
+            .toOutputStream(stream)
+        val content = stream.toByteArray()
+        storageService.store(getAvatarKey(), content, null) {
+            log.debug("Save avatar success")
+            stream.close()
         }
     }
 

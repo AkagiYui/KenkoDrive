@@ -48,8 +48,11 @@ class FileController(
      */
     @PostMapping("", "/")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    fun upload(@RequestParam("file") files: List<MultipartFile>): List<FileInfo> {
-        return fileInfoService.saveFile(files)
+    fun upload(
+        @RequestPart("file") files: List<MultipartFile>,
+        folder: String?,
+    ): List<FileInfo> {
+        return uploadService.receiveMultipartFiles(files, folder)
     }
 
     /**
@@ -125,7 +128,7 @@ class FileController(
         // 获取文件
         val fileInfo = userFileService.getFileInfo(id!!)
 
-        val fileStream = storageService.getFile(fileInfo.storageKey)
+        val fileStream = storageService.get(fileInfo.storageKey)
         fileInfoService.recordDownload(fileInfo)
 
         // 设置响应头
@@ -148,7 +151,7 @@ class FileController(
     fun test(@PathVariable id: String?, @RequestHeader headers: HttpHeaders): ResponseEntity<StreamingResponseBody> {
         // 读取文件
         val fileInfo = userFileService.getFileInfo(id!!)
-        val fileStream = storageService.getFile(fileInfo.storageKey)
+        val fileStream = storageService.get(fileInfo.storageKey)
         fileInfoService.recordDownload(fileInfo)
         val mediaLength = fileInfo.size!!
 

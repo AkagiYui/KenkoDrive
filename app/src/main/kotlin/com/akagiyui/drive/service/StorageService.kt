@@ -1,9 +1,8 @@
 package com.akagiyui.drive.service
 
-import com.akagiyui.drive.model.StorageFile
 import org.springframework.core.io.InputStreamResource
 import org.springframework.scheduling.annotation.Async
-import java.io.OutputStream
+import java.io.File
 
 /**
  * 存储 服务接口
@@ -16,54 +15,41 @@ import java.io.OutputStream
  */
 interface StorageService {
     /**
-     * 获取文件
-     */
-    fun getFile(key: String): InputStreamResource
-
-    /**
      * 保存文件
+     * @param key 文件名
+     * @param file 文件
+     * @param contentType 文件类型
+     * @param callback 完成回调
      */
     @Async
-    fun saveFile(key: String, content: ByteArray)
-
-    /**
-     * 保存文件，请手动关闭输出流
-     *
-     * @param key 文件名
-     * @return 文件输出流
-     */
-    fun saveFile(key: String): OutputStream
+    fun store(key: String, file: File, contentType: String?, callback: () -> Unit = {})
 
     /**
      * 保存文件
-     *
-     * @param key       文件名
-     * @param overwrite 是否覆盖
-     * @return 文件输出流
+     * @param key 文件名
+     * @param content 文件内容
+     * @param contentType 文件类型
+     * @param callback 完成回调
      */
-    fun saveFile(key: String, overwrite: Boolean): OutputStream
+    @Async
+    fun store(key: String, content: ByteArray, contentType: String?, callback: () -> Unit = {})
 
     /**
      * 文件是否存在
+     * @param key 文件名
      */
     fun exists(key: String): Boolean
 
     /**
      * 删除文件
+     * @param key 文件名
      */
     @Async
-    fun deleteFile(key: String)
+    fun delete(key: String)
 
     /**
-     * 存储分片
+     * 获取文件
+     * @param key 文件名
      */
-    fun saveChunk(userId: String, fileHash: String, chunkIndex: Int, content: ByteArray)
-
-    /**
-     * 合并分片
-     *
-     * @return
-     */
-    fun mergeChunk(userId: String, fileHash: String, chunkCount: Long): StorageFile
-
+    fun get(key: String): InputStreamResource
 }

@@ -1,7 +1,6 @@
 package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.FileInfo
-import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 
@@ -14,7 +13,7 @@ interface UserFileService {
     /**
      * 添加关联
      */
-    fun addAssociation(user: User, fileInfo: FileInfo, folder: Folder?)
+    fun addAssociation(user: User, fileInfo: FileInfo, folderId: String? = null)
 
     /**
      * 获取文件夹下的文件

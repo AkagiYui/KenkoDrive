@@ -82,7 +82,7 @@ class FileInfoServiceImpl(
                 }
                 fileInfoRepository.save(fileInfo)
                 // 保存二进制内容
-                storageService.saveFile(fileInfo.storageKey, fileBytes)
+                storageService.store(fileInfo.storageKey, fileBytes, null)
             } else {
                 log.debug("文件已存在，hash: {}", hash)
             }
@@ -103,7 +103,7 @@ class FileInfoServiceImpl(
     @CacheEvict(value = [CacheConstants.FILE_INFO], key = "#id")
     override fun deleteFile(id: String) {
         val fileInfo = getFileInfoWithoutCache(id)
-        storageService.deleteFile(fileInfo.storageKey)
+        storageService.delete(fileInfo.storageKey)
         fileInfoRepository.delete(fileInfo)
     }
 

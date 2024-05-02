@@ -2,11 +2,12 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.FileInfo
-import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.repository.UserFileRepository
+import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserFileService
 import com.akagiyui.drive.service.UserService
 import org.springframework.stereotype.Service
@@ -20,9 +21,11 @@ import org.springframework.stereotype.Service
 class UserFileServiceImpl(
     private val userFileRepository: UserFileRepository,
     private val userService: UserService,
+    private val folderService: FolderService,
 ) : UserFileService {
 
-    override fun addAssociation(user: User, fileInfo: FileInfo, folder: Folder?) {
+    override fun addAssociation(user: User, fileInfo: FileInfo, folderId: String?) {
+        val folder = if (folderId.hasText()) folderService.getFolderById(folderId!!) else null
         if (userFileRepository.existsByUserIdAndFileInfoIdAndFolder(user.id, fileInfo.id, folder)) {
             return
         }

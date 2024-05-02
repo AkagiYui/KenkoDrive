@@ -1,18 +1,24 @@
 package com.akagiyui.drive.service.impl
 
-import cn.hutool.crypto.digest.DigestUtil
+
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.deleteIfExists
+import com.akagiyui.common.utils.hasText
+import com.akagiyui.common.utils.mkdirOrThrow
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.model.ChunkedUploadInfo
 import com.akagiyui.drive.model.request.PreUploadRequest
 import com.akagiyui.drive.service.*
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.task.TaskExecutor
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.io.File
 import java.io.IOException
+import java.security.MessageDigest
 
 /**
  * 上传 服务实现类
@@ -87,7 +93,7 @@ class UploadServiceImpl(
         } catch (e: IOException) {
             throw RuntimeException(e)
         }
-        val realMd5 = DigestUtil.md5Hex(chunkBytes)
+        val realMd5 = MessageDigest.getInstance("MD5").digest(chunkBytes).joinToString("") { "%02x".format(it) }
         if (realMd5 != chunkHash) {
             throw CustomException(ResponseEnum.VERIFY_FAILED)
         }
@@ -100,24 +106,90 @@ class UploadServiceImpl(
 //        }
         saveInfoToRedis(user.id, fileHash, chunkedInfo)
 
-        storageService.saveChunk(user.id, fileHash, chunkIndex, chunkBytes)
-        if (chunkedInfo.isUploadFinish()) {
-            taskExecutor.execute {
-                // 合并分片
-                val storageFile = storageService.mergeChunk(user.id, fileHash, chunkedInfo.chunkCount)
-                // todo 校验整个文件的md5
-                // 保存文件信息
-                val fileInfo = FileInfo().apply {
-                    name = chunkedInfo.filename
-                    size = chunkedInfo.filesize
-                    type = storageFile.type
-                    hash = fileHash
-                    storageKey = storageFile.key
-                }
-                fileInfoService.addFileInfo(fileInfo)
-                // 添加用户文件关联
-                userFileService.addAssociation(user, fileInfo, null)
+//        storageService.saveChunk(user.id, fileHash, chunkIndex, chunkBytes)
+//        if (chunkedInfo.isUploadFinish()) {
+//            taskExecutor.execute {
+//                // 合并分片
+//                val storageFile = storageService.mergeChunk(user.id, fileHash, chunkedInfo.chunkCount)
+//                // todo 校验整个文件的md5
+//                // 保存文件信息
+//                val fileInfo = FileInfo().apply {
+//                    name = chunkedInfo.filename
+//                    size = chunkedInfo.filesize
+//                    type = storageFile.type
+//                    hash = fileHash
+//                    storageKey = storageFile.key
+//                }
+//                fileInfoService.addFileInfo(fileInfo)
+//                // 添加用户文件关联
+//                userFileService.addAssociation(user, fileInfo)
+//            }
+//        }
+    }
+
+    @Value("\${application.storage.local.cacheRoot}")
+    private var uploadCacheFolder: String = "./"
+        get() {
+            File(field).mkdirOrThrow(); return field
+        }
+
+    override fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<FileInfo> {
+        // 上传文件大小限制
+        val uploadFileSizeLimit = settingService.fileUploadMaxSize
+        files.forEach {
+            if (it.size > uploadFileSizeLimit) {
+                throw CustomException(ResponseEnum.FILE_TOO_LARGE)
             }
         }
+        // 获取缓存目录
+        val cacheDirectory: File = getUserCacheDirectory().let {
+            if (folder.hasText()) {
+                File(it, folder!!).apply { mkdirOrThrow() }
+            } else {
+                it
+            }
+        }
+        val fileInfos = mutableListOf<FileInfo>()
+        files.forEach { file ->
+            val onlineFileStream = file.inputStream
+            val cacheFile = File.createTempFile("upload", ".tmp", cacheDirectory)
+            val cacheFileStream = cacheFile.outputStream()
+            val messageDigest = MessageDigest.getInstance("MD5")
+            onlineFileStream.use { input ->
+                cacheFileStream.use { output ->
+                    // 逐缓冲区读取文件内容，同时计算MD5
+                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    var bytes = input.read(buffer)
+                    while (bytes >= 0) {
+                        output.write(buffer, 0, bytes)
+                        messageDigest.update(buffer, 0, bytes)
+                        bytes = input.read(buffer)
+                    }
+                }
+            }
+            val md5String = messageDigest.digest().joinToString("") { "%02x".format(it) }
+            val fileInfo = FileInfo().apply {
+                name = file.originalFilename!!
+                size = file.size
+                type = file.contentType!!
+                hash = md5String
+                storageKey = md5String
+                locked = true
+            }
+            fileInfoService.addFileInfo(fileInfo)
+            userFileService.addAssociation(userService.getUser(), fileInfo, folder)
+            storageService.store("file/${fileInfo.storageKey}", cacheFile, file.contentType) {
+                cacheFile.deleteIfExists()
+                fileInfo.locked = false
+                fileInfoService.addFileInfo(fileInfo)
+            }
+            fileInfos.add(fileInfo)
+        }
+        return fileInfos
+    }
+
+    private fun getUserCacheDirectory(userId: String? = null): File {
+        val id = userId ?: userService.getUser().id
+        return File("$uploadCacheFolder/$id").apply { mkdirOrThrow() }
     }
 }

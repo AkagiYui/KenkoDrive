@@ -76,4 +76,8 @@ class FolderServiceImpl @Autowired constructor(
 
         return folderChain.toList()
     }
+
+    override fun getFolderById(folderId: String): Folder {
+        return folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+    }
 }

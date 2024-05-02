@@ -42,4 +42,11 @@ interface FolderService {
      */
     fun getFolderChain(folderId: String): List<FolderResponse>
 
+    /**
+     * 获取文件夹
+     *
+     * @param folderId 文件夹ID
+     * @return 文件夹
+     */
+    fun getFolderById(folderId: String): Folder
 }
