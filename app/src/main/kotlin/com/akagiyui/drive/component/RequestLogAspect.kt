@@ -63,8 +63,15 @@ class RequestLogAspect {
         val paramsBuffer: String = args
             .asSequence()
             .filterNotNull()
-            .filterNot { it is MultipartFile }
-            .map { objectMapper.writeValueAsString(it).ellipsis(100) } // 序列化并截断参数
+            .map {
+                if (it is MultipartFile) {
+                    "MultipartFile[${it.originalFilename}]"
+                } else if (it is Collection<*> && it.isNotEmpty() && it.first() is MultipartFile) {
+                    "Collection<MultipartFile>[${it.size}]"
+                } else {
+                    objectMapper.writeValueAsString(it).ellipsis(100) // 序列化并截断参数
+                }
+            }
             .joinToString(", ") // 将参数连接成字符串
             .ellipsis(1000)
         requestLog.append("($paramsBuffer)")
