@@ -73,6 +73,19 @@ application:
     local:
       # 本地数据存储目录
       root: ./data
+      # 上传缓存目录
+      cacheRoot: ./data/cache
+    # minio 存储
+    minio:
+      enable: true
+      # MinIO 服务地址
+      endpoint: http://localhost:9000
+      # MinIO 服务访问密钥
+      accessKey: admin
+      # MinIO 服务访问密钥
+      secretKey: password
+      # MinIO 存储桶名称
+      bucket: drive
   avatar:
     # 默认头像
     default: static/default-avatar.jpg

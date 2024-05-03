@@ -19,3 +19,7 @@ logging:
     # 默认日志级别
     root: warn
     com.akagiyui: trace
+application:
+  storage:
+    minio:
+      enable: true
