@@ -32,6 +32,7 @@ allOpen {
 }
 
 val jjwtVersion = "0.12.5"
+val hutoolVersion = "5.8.25"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
@@ -51,6 +52,8 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")  // Undertow
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
+    implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
+    implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加密工具包
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")  // JWT
     implementation("com.bucket4j:bucket4j-core:8.10.1")  // 限流工具
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
