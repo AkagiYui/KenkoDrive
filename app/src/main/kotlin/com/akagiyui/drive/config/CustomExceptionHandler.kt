@@ -26,6 +26,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException
 import org.springframework.web.multipart.MaxUploadSizeExceededException
 import org.springframework.web.multipart.MultipartException
 import org.springframework.web.servlet.NoHandlerFoundException
@@ -136,6 +137,14 @@ class CustomExceptionHandler {
     fun unknownException(e: Exception): ResponseResult<Any> {
         log.error("Unknown exception", e)
         return ResponseResult.response(ResponseEnum.INTERNAL_ERROR)
+    }
+
+    /**
+     * 200 请求中的异步任务超时，应为用户下载速度过慢导致，不返回错误
+     */
+    @ExceptionHandler(AsyncRequestTimeoutException::class)
+    fun asyncRequestTimeoutException(e: Exception): ResponseEntity<Unit> {
+        return ResponseEntity.ok().build()
     }
 
     /**

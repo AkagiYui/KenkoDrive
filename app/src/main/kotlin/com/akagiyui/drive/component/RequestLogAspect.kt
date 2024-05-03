@@ -37,7 +37,7 @@ class RequestLogAspect {
         registerKotlinModule() // 添加 Kotlin 支持
     }
 
-    @Around("execution(* com.akagiyui.drive.controller.*.*(..))")
+    @Around("execution(@(org.springframework.web.bind.annotation.*Mapping) * *(..))")
     @Throws(Throwable::class)
     fun process(joinPoint: ProceedingJoinPoint): Any? {
 

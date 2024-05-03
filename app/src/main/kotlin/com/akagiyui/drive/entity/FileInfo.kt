@@ -26,7 +26,7 @@ class FileInfo : BaseEntity() {
      * 文件大小（字节Byte）
      */
     @Column(nullable = false)
-    var size: Long? = null
+    var size: Long = 0L
 
     /**
      * 文件类型

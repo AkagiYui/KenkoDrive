@@ -67,10 +67,10 @@
 - [ ] 随机取件码生成
 - [ ] 自定义次数、有效期
 
-## 使用技术一览
+## 相关技术一览
 
-- [x] [请求频率限制（注解 + 令牌桶）](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
-- [ ] 请求频率限制（Redis + IP地址限流）
+- [x] [请求频率限制(注解 + 令牌桶)](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
+- [ ] 请求频率限制(Redis + IP地址限流)
 - [x] [异步任务](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [邮件发送](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
@@ -78,15 +78,15 @@
 - [x] [统一 JSON 格式返回](app/src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
 - [ ] 短信发送
 - [ ] 日志记录
-- [ ] 速度限制
+- [x] [速度限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 流量限制
-- [x] [邮箱验证码（Redis）](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
+- [x] [邮箱验证码(Redis)](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
 - [ ] 图片验证码
 - [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [x] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
 - [x] [分片下载](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 文件秒传
-- [x] 相同文件合并（在上传时会检测）
+- [x] [相同文件合并(上传时检测)](app/src/main/kotlin/com/akagiyui/drive/service/impl/UploadServiceImpl.kt)
 - [x] [Gotify 消息推送](app/src/main/kotlin/com/akagiyui/common/notifier/GotifyPusher.kt)
 - [x] [定时任务](app/src/main/kotlin/com/akagiyui/drive/task/CronTasks.kt)
 - [ ] OAuth2.0
@@ -113,7 +113,7 @@
 - [x] [Caffeine 本地缓存](app/src/main/kotlin/com/akagiyui/drive/config/CacheConfig.kt)
 - [x] [Redis 缓存](app/src/main/kotlin/com/akagiyui/drive/component/RedisCache.kt)
 - [ ] [多级缓存](https://github.com/pig-mesh/multilevel-cache-spring-boot-starter)
-- [x] [JWT 鉴权](app/src/main/kotlin/com/akagiyui/drive/component/TokenUtils.kt)
+- [x] [JWT 鉴权](app/src/main/kotlin/com/akagiyui/common/token/TokenTemplate.kt)
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](app/src/main/kotlin/com/akagiyui/drive/repository)
@@ -196,6 +196,7 @@ export spring.profiles.active=dev
 - [博客园: SpringBoot中logback.xml使用application.yml中属性](https://www.cnblogs.com/jianliang-Wu/p/8945343.html)
 - [掘金: SpringBoot实现固定、动态定时任务 | 三种实现方式](https://juejin.cn/post/7013234573823705102)
 - [掘金: SpringData JPA条件查询、排序、分页查询](https://juejin.cn/post/6985573675764285477)
+- [慕课手记: Spring AOP中AspectJ切入点表达式的巧妙利用](https://www.imooc.com/article/details/id/297283)
 - [脚本之家: springboot切换使用undertow容器的方式](https://www.jb51.net/article/254623.htm)
 - [知乎: SpringBoot开始定时任务的三种方式](https://zhuanlan.zhihu.com/p/622930121)
 - [知乎: ObjectMapper，别再像个二货一样一直new了！](https://zhuanlan.zhihu.com/p/498705670)
@@ -259,6 +260,7 @@ export spring.profiles.active=dev
 - 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
 - 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
 - 添加了 GitHub Actions 流水线脚本，使用 Gradle 运行测试，并上传测试报告
+- 添加了下载速度限制
 - 新增了`日志数据库记录器`，将日志记录到数据库中
 - 新增了 slf4j 日志对象获取委托类
 - 新增了`条件分页获取公告`接口、`设置公告状态`接口、`删除公告`接口、`修改公告`接口

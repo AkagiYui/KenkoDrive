@@ -3,6 +3,7 @@ package com.akagiyui.drive.service.impl
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
+import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
@@ -11,6 +12,8 @@ import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserFileService
 import com.akagiyui.drive.service.UserService
 import org.springframework.stereotype.Service
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * 用户文件关联 服务实现类
@@ -22,6 +25,7 @@ class UserFileServiceImpl(
     private val userFileRepository: UserFileRepository,
     private val userService: UserService,
     private val folderService: FolderService,
+    private val redisCache: RedisCache,
 ) : UserFileService {
 
     override fun addAssociation(user: User, fileInfo: FileInfo, folderId: String?) {
@@ -29,7 +33,6 @@ class UserFileServiceImpl(
         if (userFileRepository.existsByUserIdAndFileInfoIdAndFolder(user.id, fileInfo.id, folder)) {
             return
         }
-
         val userFile = UserFile().apply {
             this.user = user
             this.fileInfo = fileInfo
@@ -48,10 +51,22 @@ class UserFileServiceImpl(
         return userFileRepository.existsByFileInfoId(fileId)
     }
 
-    override fun getFileInfo(id: String): FileInfo {
+    override fun getUserFileById(id: String): UserFile {
         val user = userService.getUser()
-        val association = userFileRepository.findByUserIdAndId(user.id, id)
-            ?: throw CustomException(ResponseEnum.NOT_FOUND)
-        return association.fileInfo
+        return userFileRepository.findByUserIdAndId(user.id, id) ?: throw CustomException(ResponseEnum.NOT_FOUND)
+    }
+
+    override fun getTemporaryId(userFileId: String): String {
+        val userFile = getUserFileById(userFileId)
+        val randomId = UUID.randomUUID().toString().replace("-", "")
+        val redisKey = "download:$randomId"
+        redisCache[redisKey, 1, TimeUnit.HOURS] = userFile.id
+        return randomId
+    }
+
+    override fun getFileInfoByTemporaryId(temporaryId: String): UserFile {
+        val redisKey = "download:$temporaryId"
+        val userFileId: String = redisCache[redisKey] ?: throw CustomException(ResponseEnum.NOT_FOUND)
+        return userFileRepository.findById(userFileId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
     }
 }

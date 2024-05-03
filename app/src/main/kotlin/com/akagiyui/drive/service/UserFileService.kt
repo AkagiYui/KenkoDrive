@@ -27,8 +27,17 @@ interface UserFileService {
     fun existByFileId(fileId: String): Boolean
 
     /**
-     * 获取文件信息
+     * 获取用户文件
      */
-    fun getFileInfo(id: String): FileInfo
+    fun getUserFileById(id: String): UserFile
 
+    /**
+     * 获取临时文件ID
+     */
+    fun getTemporaryId(userFileId: String): String
+
+    /**
+     * 根据临时文件ID获取文件信息
+     */
+    fun getFileInfoByTemporaryId(temporaryId: String): UserFile
 }

@@ -72,6 +72,7 @@ class SecurityConfig(
                 it // 允许指定路径通过
                     .requestMatchers(HttpMethod.GET, "/system/version").permitAll()
                     .requestMatchers(HttpMethod.GET, "/system/setting/register").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/file/*/download").permitAll()
                     .requestMatchers(*mvc.matchers("/user/register/**")).permitAll()
                     .requestMatchers(*mvc.matchers("/sse")).permitAll()
                     .anyRequest().authenticated() // 其他请求需要认证

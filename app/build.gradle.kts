@@ -55,7 +55,7 @@ dependencies {
     implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
     implementation("cn.hutool:hutool-crypto:$hutoolVersion")  // Hutool 加密工具包
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")  // JWT
-    implementation("com.bucket4j:bucket4j-core:8.10.1")  // 限流工具
+    implementation("com.bucket4j:bucket4j_jdk17-core:8.12.0")  // 限流工具
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
     implementation("io.minio:minio:8.5.8")  // MinIO 客户端
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存

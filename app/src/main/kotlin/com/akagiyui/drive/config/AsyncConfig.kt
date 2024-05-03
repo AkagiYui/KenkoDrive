@@ -41,6 +41,8 @@ class AsyncConfig : AsyncConfigurer, WebMvcConfigurer {
      */
     override fun configureAsyncSupport(configurer: AsyncSupportConfigurer) {
         configurer.setTaskExecutor(ConcurrentTaskExecutor(Executors.newCachedThreadPool()))
+        // 异步线程的超时时间，单位毫秒，应设置为较大的值，以便文件下载不会被中断，这里设置为 2 小时
+        configurer.setDefaultTimeout(1000L * 60 * 60 * 2)
     }
 
     /**
