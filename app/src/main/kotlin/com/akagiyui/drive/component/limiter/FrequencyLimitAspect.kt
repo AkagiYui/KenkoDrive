@@ -2,19 +2,19 @@ package com.akagiyui.drive.component.limiter
 
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.TooManyRequestsException
-import com.google.common.collect.Maps
-import com.google.common.util.concurrent.RateLimiter
+import io.github.bucket4j.Bucket
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.stereotype.Component
+import java.time.Duration
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * 限流 AOP
  * @author AkagiYui
  */
-@Suppress("UnstableApiUsage")
 @Aspect
 @Component
 class FrequencyLimitAspect {
@@ -24,7 +24,7 @@ class FrequencyLimitAspect {
      * 限流器字典
      * map的key为 Limit.key
      */
-    private val limitMap: MutableMap<String, RateLimiter> = Maps.newConcurrentMap()
+    private val limitMap: MutableMap<String, Bucket> = ConcurrentHashMap()
 
     @Around("@annotation(Limit)")
     @Throws(Throwable::class)
@@ -33,24 +33,23 @@ class FrequencyLimitAspect {
         val signature = joinPoint.signature as MethodSignature
         val method = signature.method
         // 获取 Limit 注解
-        val limit = method.getAnnotation(Limit::class.java)
-        if (limit != null) {
-            val key = limit.key
-            // 验证缓存是否有命中 key
-            val rateLimiter = if (!limitMap.containsKey(key)) {
+        val limitAnnotation = method.getAnnotation(Limit::class.java)
+        if (limitAnnotation != null) {
+            val rateLimiter = limitMap.computeIfAbsent(limitAnnotation.key) {
                 // 创建令牌桶
-                val rateLimiter = RateLimiter.create(limit.permitsPerSecond)
-                limitMap[key] = rateLimiter
-                log.debug("Created RateLimiter: {}", limitMap[key])
-                rateLimiter  // 减少一次访问
-            } else {
-                limitMap[key] as RateLimiter
+                log.debug("Created RateLimiter: {}", limitAnnotation.key)
+                Bucket.builder().addLimit {
+                    it.capacity(limitAnnotation.permitsPerSecond)
+                        .refillGreedy(limitAnnotation.permitsPerSecond, Duration.ofSeconds(1))
+                        .initialTokens(limitAnnotation.permitsPerSecond)
+                }.build()
             }
             // 获取令牌
-            val acquire = rateLimiter.tryAcquire(limit.timeout, limit.timeunit)
+            val duration = Duration.ofMillis(limitAnnotation.timeunit.toMillis(limitAnnotation.timeout))
+            val acquire = rateLimiter.asBlocking().tryConsume(1, duration)
             // 拿不到令牌，抛出异常
             if (!acquire) {
-                log.debug("Too many requests: {}", key)
+                log.debug("Too many requests: {}", limitAnnotation.key)
                 throw TooManyRequestsException()
             }
         }

@@ -18,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
 /**
@@ -109,7 +110,7 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")
-    @Limit(key = "getVerifyCode", permitsPerSecond = 1.0, timeout = 1)
+    @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
     fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest) {
         userService.sendEmailVerifyCode(verifyRequest)
     }

@@ -26,7 +26,7 @@ annotation class Limit(
     /**
      * 每秒放入令牌桶的token数量
      */
-    val permitsPerSecond: Double,
+    val permitsPerSecond: Long,
 
     /**
      * 获取令牌最大等待时间
