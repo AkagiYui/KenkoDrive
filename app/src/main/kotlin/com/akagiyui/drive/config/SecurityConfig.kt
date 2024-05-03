@@ -2,8 +2,8 @@ package com.akagiyui.drive.config
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.ResponseResult
+import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.drive.component.RequestMatcherBuilder
-import com.akagiyui.drive.component.TokenUtils
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter
 import com.akagiyui.drive.filter.TokenAuthenticationFilter
 import com.akagiyui.drive.model.LoginUserDetails
@@ -46,7 +46,7 @@ class SecurityConfig(
     private val customPasswordHandleFilter: CustomPasswordHandleFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
-    private val tokenUtils: TokenUtils,
+    private val tokenTemplate: TokenTemplate,
 ) {
     companion object {
         const val LOGIN_URL: String = "/user/token"
@@ -145,7 +145,7 @@ class SecurityConfig(
         val loginUserDetails = authentication.principal as LoginUserDetails
 
         val user = loginUserDetails.user
-        val token = tokenUtils.createToken(user)
+        val token = tokenTemplate.createToken(user.id)
         val loginResponse = LoginResponse(token, null)
         ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse)
     }

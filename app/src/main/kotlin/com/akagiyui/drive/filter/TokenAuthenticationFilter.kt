@@ -1,7 +1,8 @@
 package com.akagiyui.drive.filter
 
+import com.akagiyui.common.token.TokenTemplate
+import com.akagiyui.common.token.TokenVerifyException
 import com.akagiyui.common.utils.hasText
-import com.akagiyui.drive.component.TokenUtils
 import com.akagiyui.drive.service.UserService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
@@ -22,7 +23,7 @@ import java.io.IOException
  */
 @Component
 class TokenAuthenticationFilter @Autowired constructor(
-    private val tokenUtils: TokenUtils,
+    private val tokenTemplate: TokenTemplate,
     private val userService: UserService,
 ) : OncePerRequestFilter() {
 
@@ -35,8 +36,8 @@ class TokenAuthenticationFilter @Autowired constructor(
         val rawToken = request.getHeader("Authorization") // 获取 Token
         if (rawToken.hasText() && rawToken.startsWith("Bearer ")) {
             val token = rawToken.substring(7)
-            if (tokenUtils.verifyToken(token)) { // 验证 Token
-                val userId = tokenUtils.getUserId(token) // 获取用户 ID
+            try {
+                val userId = tokenTemplate.getUserId(token) // 获取用户 ID
                 if (userId != null) {
                     val userDetails = userService.getUserDetails(userId) // 从 redis 或数据库中获取用户信息
                     // 放入 Spring Security 上下文
@@ -44,6 +45,8 @@ class TokenAuthenticationFilter @Autowired constructor(
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authentication
                 }
+            } catch (_: TokenVerifyException) {
+                // Token 验证失败
             }
         }
         filterChain.doFilter(request, response)
