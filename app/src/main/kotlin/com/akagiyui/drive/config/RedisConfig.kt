@@ -26,6 +26,8 @@ class RedisConfig {
         return RedisTemplate<String, Any?>().apply {
             setConnectionFactory(connectionFactory)
             setDefaultSerializer(GenericJackson2JsonRedisSerializer())
+            // 键使用字符串字面量，否则会在键前后加上双引号
+            keySerializer = stringSerializer
         }
     }
 }
