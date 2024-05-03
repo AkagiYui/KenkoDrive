@@ -27,6 +27,8 @@ class StringUtilTests {
         Assertions.assertTrue("abc".hasText())
         Assertions.assertFalse("".hasText())
         Assertions.assertFalse(" ".hasText())
+        Assertions.assertFalse("\t".hasText())
+        Assertions.assertFalse("\n".hasText())
         Assertions.assertFalse(null.hasText())
     }
 
