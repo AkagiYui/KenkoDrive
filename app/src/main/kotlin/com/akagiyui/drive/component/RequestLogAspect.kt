@@ -3,16 +3,19 @@ package com.akagiyui.drive.component
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.utils.compressPackageName
 import com.akagiyui.common.utils.ellipsis
+import com.akagiyui.common.utils.toStr
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import io.minio.GetObjectResponse
 import jakarta.servlet.http.HttpServletRequest
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
@@ -81,7 +84,14 @@ class RequestLogAspect {
             val startTime = System.currentTimeMillis()
             joinPoint.proceed().also { returnObj ->
                 val duration = System.currentTimeMillis() - startTime
-                val resultLog = returnObj?.let { objectMapper.writeValueAsString(it).ellipsis(500) } ?: "null"
+                val resultLog = returnObj?.let {
+                    when (it) {
+                        is ByteArray -> it.toStr()
+                        is GetObjectResponse -> it.toStr()
+                        is ResponseEntity<*> -> it.toStr().ellipsis(500)
+                        else -> objectMapper.writeValueAsString(it).ellipsis(500)
+                    }
+                } ?: "null"
                 requestLog.append("\n result[${duration}ms] <- $resultLog")
             }
         } catch (throwable: Throwable) {
