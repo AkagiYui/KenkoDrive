@@ -1,14 +1,15 @@
 package com.akagiyui.drive.component
 
-import cn.hutool.core.date.DateField
-import cn.hutool.core.date.DateTime
-import cn.hutool.jwt.JWT
-import cn.hutool.jwt.JWTException
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.drive.entity.User
-import com.akagiyui.drive.model.LoginUserDetails
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.util.*
 
 /**
  * Token工具类
@@ -22,7 +23,7 @@ class TokenUtils {
      * 密钥
      */
     @Value("\${application.token.key}")
-    private val secretKey: ByteArray = "DEFAULT_KEY".toByteArray()
+    private val secretKey: String = "DEFAULT_KEY"
 
     /**
      * 过期时间
@@ -43,30 +44,21 @@ class TokenUtils {
     /**
      * 生成密钥
      *
-     * @param user 用户
-     * @return 密钥
-     */
-    fun createToken(user: LoginUserDetails): String {
-        return createToken(user.user)
-    }
-
-    /**
-     * 生成密钥
-     *
      * @param userId 用户id
      * @return 密钥
      */
     fun createToken(userId: String): String {
-        val currentTime = DateTime.now().apply {
-            setMutable(false)
+        val currentTime = Calendar.getInstance()
+        val expireTime = (currentTime.clone() as Calendar).apply {
+            add(Calendar.HOUR, expireTime)
         }
-        return JWT.create()
-            .setPayload("id", userId)
-            .setKey(secretKey)
-            .setIssuedAt(currentTime)
-            .setNotBefore(currentTime)
-            .setExpiresAt(currentTime.offset(DateField.HOUR, expireTime))
-            .sign()
+        return Jwts.builder()
+            .audience().add(userId).and()
+            .issuedAt(currentTime.time)
+            .notBefore(currentTime.time)
+            .expiration(expireTime.time)
+            .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+            .compact()
     }
 
     /**
@@ -80,8 +72,13 @@ class TokenUtils {
             return false
         }
         return try {
-            JWT.of(token).setKey(secretKey).validate(1)
-        } catch (e: JWTException) {
+            Jwts.parser()
+                .clockSkewSeconds(3 * 60) // 允许3分钟的时间差
+                .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+                .build()
+                .parse(token)
+            true
+        } catch (e: JwtException) {
             false
         } catch (e: Exception) {
             log.error("JWT验证错误", e)
@@ -97,7 +94,12 @@ class TokenUtils {
      */
     fun getUserId(token: String): String? =
         try {
-            JWT.of(token).setKey(secretKey).payloads.getStr("id")
+            val claims: Claims = Jwts.parser()
+                .clockSkewSeconds(3 * 60) // 允许3分钟的时间差
+                .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+                .build()
+                .parseSignedClaims(token).payload
+            claims.audience.firstOrNull()
         } catch (e: Exception) {
             log.error("获取用户ID错误", e)
             null

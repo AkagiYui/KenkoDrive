@@ -31,7 +31,7 @@ allOpen {
     annotation("jakarta.persistence.MappedSuperclass")
 }
 
-val hutoolVersion = "5.8.25"
+val jjwtVersion = "0.12.5"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
@@ -51,8 +51,7 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")  // Undertow
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")  // Thymeleaf Spring Security
-    implementation("cn.hutool:hutool-core:$hutoolVersion")  // Hutool 核心工具包
-    implementation("cn.hutool:hutool-jwt:$hutoolVersion")  // Hutool JWT
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")  // JWT
     implementation("com.bucket4j:bucket4j-core:8.10.1")  // 限流工具
     implementation("net.coobird:thumbnailator:0.4.20")  // 缩略图生成
     implementation("io.minio:minio:8.5.8")  // MinIO 客户端
@@ -71,6 +70,8 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动
     runtimeOnly("org.postgresql:postgresql")  // PostgreSQL 驱动
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")  // MariaDB 驱动
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")  // JWT
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")  // JWT
 
     // scope: test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
