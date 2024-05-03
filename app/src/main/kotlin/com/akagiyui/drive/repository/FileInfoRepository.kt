@@ -2,7 +2,9 @@ package com.akagiyui.drive.repository
 
 import com.akagiyui.drive.entity.FileInfo
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
+import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Stream
 
 /**
@@ -32,6 +34,8 @@ interface FileInfoRepository : JpaRepository<FileInfo, String> {
      *
      * @param id 文件ID
      */
+    @Modifying
+    @Transactional
     @Query("update FileInfo f set f.downloadCount = f.downloadCount + 1 where f.id = ?1")
     fun recordDownload(id: String)
 
