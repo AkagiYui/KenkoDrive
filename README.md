@@ -223,6 +223,7 @@ export spring.profiles.active=dev
 - [CSDN: JPA不用@Repository--笔记](https://blog.csdn.net/zero_cctv/article/details/109322211)
 - [CSDN: java发送邮件](https://blog.csdn.net/lv_zj/article/details/134037631)
 - [CSDN: springboot集成websocket报错Are you running in a Servlet container that supports JSR-356?](https://blog.csdn.net/gz_jax/article/details/120327900)
+- [CSDN: @Scheduled注解简介](https://blog.csdn.net/weixin_52255395/article/details/126952819)
 - [简书: Spring Boot - 数据校验](https://www.jianshu.com/p/e69a1f187482)
 - [简书: java 修改HttpServletRequest的参数或请求头](https://www.jianshu.com/p/a8c9d45775ea)
 

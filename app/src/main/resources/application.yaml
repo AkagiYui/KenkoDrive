@@ -66,7 +66,7 @@ application:
     # 用户 Access Token 超时（小时）
     timeout: 48
     # Token 密钥
-    key: THIS_IS_A_SECRET_KEY
+    key: y9wtRrjfIk6QplzFQBTnqZnxOIbQedeYz94U+P3XQII=
   # 存储相关配置
   storage:
     # 本地存储

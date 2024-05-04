@@ -4,8 +4,10 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
+import io.jsonwebtoken.io.DecodingException
 import io.jsonwebtoken.security.Keys
 import java.util.*
+import javax.crypto.SecretKey
 
 /**
  * Token操作模板
@@ -14,7 +16,12 @@ class TokenTemplate(
     secretKey: String,
     private val duration: Int,
 ) {
-    private val jwtKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey))
+    private val jwtKey: SecretKey = try {
+        val bytes = Decoders.BASE64.decode(secretKey)
+        Keys.hmacShaKeyFor(bytes)
+    } catch (e: DecodingException) {
+        throw Base64DecodeException(e.message)
+    }
 
     /**
      * 生成密钥
