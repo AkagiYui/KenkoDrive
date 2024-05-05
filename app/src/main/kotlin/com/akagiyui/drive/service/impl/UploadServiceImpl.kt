@@ -8,6 +8,7 @@ import com.akagiyui.common.utils.hasText
 import com.akagiyui.common.utils.mkdirOrThrow
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.ChunkedUploadInfo
 import com.akagiyui.drive.model.request.PreUploadRequest
 import com.akagiyui.drive.service.*
@@ -133,7 +134,7 @@ class UploadServiceImpl(
             File(field).mkdirOrThrow(); return field
         }
 
-    override fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<FileInfo> {
+    override fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<UserFile> {
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         files.forEach {
@@ -149,7 +150,7 @@ class UploadServiceImpl(
                 it
             }
         }
-        val fileInfos = mutableListOf<FileInfo>()
+        val userInfos = mutableListOf<UserFile>()
         files.forEach { file ->
             val onlineFileStream = file.inputStream
             val cacheFile = File.createTempFile("upload", ".tmp", cacheDirectory)
@@ -177,15 +178,14 @@ class UploadServiceImpl(
                 locked = true
             }
             fileInfoService.addFileInfo(fileInfo)
-            userFileService.addAssociation(userService.getUser(), fileInfo, folder)
+            userInfos.add(userFileService.addAssociation(userService.getUser(), fileInfo, folder))
             storageService.store("file/${fileInfo.storageKey}", cacheFile, file.contentType) {
                 cacheFile.deleteIfExists()
                 fileInfo.locked = false
                 fileInfoService.addFileInfo(fileInfo)
             }
-            fileInfos.add(fileInfo)
         }
-        return fileInfos
+        return userInfos
     }
 
     private fun getUserCacheDirectory(userId: String? = null): File {

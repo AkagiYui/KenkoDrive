@@ -3,7 +3,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    java // Gradle 内置的 Java 插件，提供 Java 项目的构建支持
     jacoco // 代码覆盖率
     id("org.springframework.boot") version "3.2.4" // Spring Boot
     id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
@@ -66,8 +65,8 @@ dependencies {
         // 该库用于解析 XML，但是本项目不需要在阿里云短信服务中使用 XML
         exclude("pull-parser", "pull-parser")
     }
-    implementation("cloud.tianai.captcha:tianai-captcha:1.4.1") // 验证码
     implementation(project(":easy-captcha")) // 验证码
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // Kotlin 协程
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动

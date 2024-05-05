@@ -13,7 +13,7 @@ interface UserFileService {
     /**
      * 添加关联
      */
-    fun addAssociation(user: User, fileInfo: FileInfo, folderId: String? = null)
+    fun addAssociation(user: User, fileInfo: FileInfo, folderId: String? = null): UserFile
 
     /**
      * 获取文件夹下的文件

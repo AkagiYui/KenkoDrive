@@ -1,6 +1,6 @@
 package com.akagiyui.drive.service
 
-import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.request.PreUploadRequest
 import org.springframework.web.multipart.MultipartFile
 
@@ -23,5 +23,5 @@ interface UploadService {
     /**
      * 接收文件
      */
-    fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<FileInfo>
+    fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<UserFile>
 }

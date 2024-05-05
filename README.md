@@ -200,6 +200,7 @@ export spring.profiles.active=dev
 - [脚本之家: springboot切换使用undertow容器的方式](https://www.jb51.net/article/254623.htm)
 - [知乎: SpringBoot开始定时任务的三种方式](https://zhuanlan.zhihu.com/p/622930121)
 - [知乎: ObjectMapper，别再像个二货一样一直new了！](https://zhuanlan.zhihu.com/p/498705670)
+- [知乎: 基于 HTTP Range 实现文件分片并发下载！](https://zhuanlan.zhihu.com/p/620113538)
 - [哔哩哔哩: 【java工程师必知】SpringBoot Validation入参校验国际化](https://www.bilibili.com/video/av742302746/)
 - [哔哩哔哩: 嘿嘿，我发现了百度网盘秒传的秘密！](https://www.bilibili.com/video/av1751974636)
 - [哔哩哔哩: 【IT老齐508】二十分钟快速上手Gradle](https://www.bilibili.com/video/av1602972088)
