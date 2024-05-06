@@ -28,10 +28,10 @@ interface RoleRepository : JpaRepository<Role, String>, JpaSpecificationExecutor
     fun existsByName(name: String): Boolean
 
     /**
-     * 根据角色id查找用户id
+     * 根据角色ID查找用户ID
      *
-     * @param id 角色id
-     * @return 用户id列表
+     * @param id 角色ID
+     * @return 用户ID列表
      */
     @Query(value = "SELECT user_id FROM user_role WHERE role_id = :roleId", nativeQuery = true)
     fun findUserIdsById(@Param("roleId") id: String): List<String>

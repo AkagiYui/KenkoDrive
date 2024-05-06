@@ -105,7 +105,7 @@ class FileController(
     /**
      * 获取文件列表
      *
-     * @param folderId 文件夹id
+     * @param folderId 文件夹ID
      * @return 文件列表
      */
     @GetMapping("", "/")
@@ -119,7 +119,7 @@ class FileController(
     /**
      * 获取文件信息
      *
-     * @param id 文件id
+     * @param id 文件ID
      * @return 文件信息
      */
     @GetMapping("/{id}")
@@ -227,7 +227,7 @@ class FileController(
     /**
      * 删除文件
      *
-     * @param id 文件id
+     * @param id 文件ID
      */
     @DeleteMapping("/{id}")
     @RequirePermission

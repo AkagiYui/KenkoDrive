@@ -17,15 +17,15 @@ import org.springframework.security.core.userdetails.UserDetailsService
  */
 interface UserService : UserDetailsService {
     /**
-     * 根据id查找用户
-     * @param id 用户id
+     * 根据ID查找用户
+     * @param id 用户ID
      * @return 用户
      */
     fun findUserById(id: String): User
 
     /**
-     * 根据id查找用户
-     * @param ids 用户id
+     * 根据ID查找用户
+     * @param ids 用户ID
      * @return 用户
      */
     fun findUserByIds(ids: List<String>): List<User>

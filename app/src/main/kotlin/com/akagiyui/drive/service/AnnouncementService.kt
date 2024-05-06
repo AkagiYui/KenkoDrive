@@ -15,7 +15,7 @@ interface AnnouncementService {
     /**
      * 新增公告
      *
-     * @return 公告id
+     * @return 公告ID
      */
     fun addAnnouncement(announcement: Announcement): Announcement
 
@@ -43,7 +43,7 @@ interface AnnouncementService {
     /**
      * 设置公告状态
      *
-     * @param id       公告id
+     * @param id       公告ID
      * @param disabled 公告开关
      */
     fun disable(id: String, disabled: Boolean)
@@ -51,14 +51,14 @@ interface AnnouncementService {
     /**
      * 删除公告
      *
-     * @param id 公告id
+     * @param id 公告ID
      */
     fun delete(id: String)
 
     /**
      * 更新公告
      *
-     * @param id      公告id
+     * @param id      公告ID
      * @param request 更新内容
      */
     fun update(id: String, request: UpdateAnnouncementRequest)

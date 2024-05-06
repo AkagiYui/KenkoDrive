@@ -30,9 +30,9 @@ import java.util.stream.Collectors
 @RequestMapping("/user")
 class UserController(private val userService: UserService, private val avatarService: AvatarService) {
     /**
-     * 根据用户id查找用户
+     * 根据用户ID查找用户
      *
-     * @param id 用户id
+     * @param id 用户ID
      * @return 用户
      */
     @GetMapping("/{id}")
@@ -149,7 +149,7 @@ class UserController(private val userService: UserService, private val avatarSer
     /**
      * 更新用户信息
      *
-     * @param id      用户id
+     * @param id      用户ID
      * @param userInfo 用户信息
      */
     @PutMapping("/{id}")
@@ -161,7 +161,7 @@ class UserController(private val userService: UserService, private val avatarSer
     /**
      * 获取用户角色
      *
-     * @param id 用户id
+     * @param id 用户ID
      * @return 角色列表
      */
     @GetMapping("/{id}/role")
@@ -231,8 +231,8 @@ class UserController(private val userService: UserService, private val avatarSer
     /**
      * 分配角色
      *
-     * @param id      用户id
-     * @param roleIds 角色id列表
+     * @param id      用户ID
+     * @param roleIds 角色ID列表
      */
     @PutMapping("/{id}/role")
     @RequirePermission(Permission.ROLE_ASSIGN)
@@ -243,8 +243,8 @@ class UserController(private val userService: UserService, private val avatarSer
     /**
      * 移除角色
      *
-     * @param id      用户id
-     * @param roleIds 角色id列表
+     * @param id      用户ID
+     * @param roleIds 角色ID列表
      */
     @DeleteMapping("/{id}/role")
     @RequirePermission(Permission.ROLE_ASSIGN)

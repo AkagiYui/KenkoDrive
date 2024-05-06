@@ -54,7 +54,7 @@ class RoleController(private val roleService: RoleService, private val userServi
      * 添加角色
      *
      * @param role 角色
-     * @return 角色id
+     * @return 角色ID
      */
     @PostMapping("", "/")
     @RequirePermission(Permission.ROLE_ADD)
@@ -65,7 +65,7 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 删除角色
      *
-     * @param id 角色id
+     * @param id 角色ID
      */
     @DeleteMapping("/{id}")
     @RequirePermission(Permission.ROLE_DELETE)
@@ -76,7 +76,7 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 更新角色
      *
-     * @param id   角色id
+     * @param id   角色ID
      * @param role 角色
      */
     @PutMapping("/{id}")
@@ -88,7 +88,7 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 设置角色状态
      *
-     * @param id       角色id
+     * @param id       角色ID
      * @param disabled 是否禁用
      */
     @PutMapping("/{id}/status")
@@ -113,8 +113,8 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 获取角色用户
      *
-     * @param id 角色id
-     * @return 用户id列表
+     * @param id 角色ID
+     * @return 用户ID列表
      */
     @GetMapping("/{id}/users")
     @RequirePermission(Permission.USER_VIEW)
@@ -125,8 +125,8 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 分配用户
      *
-     * @param id      角色id
-     * @param userIds 用户id列表
+     * @param id      角色ID
+     * @param userIds 用户ID列表
      */
     @PutMapping("/{id}/users")
     @RequirePermission(Permission.ROLE_ASSIGN)
@@ -139,8 +139,8 @@ class RoleController(private val roleService: RoleService, private val userServi
     /**
      * 移除用户
      *
-     * @param id      角色id
-     * @param userIds 用户id列表
+     * @param id      角色ID
+     * @param userIds 用户ID列表
      */
     @DeleteMapping("/{id}/users")
     @RequirePermission(Permission.ROLE_ASSIGN)

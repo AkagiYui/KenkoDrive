@@ -71,7 +71,7 @@ class AnnouncementController @Autowired constructor(
     /**
      * 更新公告状态
      *
-     * @param id       公告id
+     * @param id       公告ID
      * @param disabled 是否关闭
      */
     @PutMapping("/{id}/status")
@@ -83,7 +83,7 @@ class AnnouncementController @Autowired constructor(
     /**
      * 删除公告
      *
-     * @param id 公告id
+     * @param id 公告ID
      */
     @DeleteMapping("/{id}")
     @RequirePermission(Permission.ANNOUNCEMENT_DELETE)
@@ -94,7 +94,7 @@ class AnnouncementController @Autowired constructor(
     /**
      * 修改公告
      *
-     * @param id      公告id
+     * @param id      公告ID
      * @param request 更新请求
      */
     @PutMapping("/{id}")

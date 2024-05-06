@@ -1,3 +1,9 @@
+logging:
+  # 日志级别
+  level:
+    # 默认日志级别
+    root: warn
+    com.akagiyui: trace
 spring:
   config:
     # 导入 .env 配置，该配置文件优先级最高
@@ -13,13 +19,25 @@ spring:
       hibernate:
         # 格式化 SQL 日志
         format_sql: true
-logging:
-  # 日志级别
-  level:
-    # 默认日志级别
-    root: warn
-    com.akagiyui: trace
+  datasource:
+    url: jdbc:mysql://localhost/drive?user=root&password=&useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
 application:
   storage:
+    local:
+      # 本地文件存储目录
+      root: ./data
+      # 上传缓存目录
+      cacheRoot: ./data/cache
     minio:
       enable: true
+      # MinIO 服务地址
+      endpoint: http://localhost:9000
+      # MinIO 服务访问密钥
+      accessKey: admin
+      # MinIO 服务访问密钥
+      secretKey: password
+      # MinIO 桶名称
+      bucket: drive
+  token:
+    # Token 密钥
+    key: Hn1fj4GsnARLFFTpbSZ2X3u5TgVWGJyxlWrwo1MTap0=

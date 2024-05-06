@@ -9,7 +9,7 @@ import com.akagiyui.drive.entity.Role
  */
 class RoleInfoResponse(role: Role) {
     /**
-     * 角色id
+     * 角色ID
      */
     val id = role.id
 

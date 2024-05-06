@@ -26,7 +26,7 @@ class TokenTemplate(
     /**
      * 生成密钥
      *
-     * @param userId 用户id
+     * @param userId 用户ID
      * @return 密钥
      */
     fun createToken(userId: String): String {
@@ -44,10 +44,10 @@ class TokenTemplate(
     }
 
     /**
-     * 获取密钥中的用户id
+     * 获取密钥中的用户ID
      *
      * @param token 密钥
-     * @return 用户id
+     * @return 用户ID
      */
     fun getUserId(token: String): String? {
         return try {

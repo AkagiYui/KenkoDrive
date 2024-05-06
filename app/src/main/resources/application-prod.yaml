@@ -22,6 +22,8 @@ spring:
     redis:
       # redis 地址
       host: localhost
+      # redis 端口
+      port: 6379
 application:
   storage:
     local:
@@ -41,4 +43,4 @@ application:
       bucket: drive
   token:
     # Token 密钥
-    key: YOUR_JWT_KEY
+    key: T9Q1y0GyrRidGEOIUtZw7dvSo1yZJA0xwhiRO+1nnMI=

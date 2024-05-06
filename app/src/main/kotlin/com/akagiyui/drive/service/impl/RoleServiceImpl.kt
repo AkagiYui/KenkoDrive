@@ -29,9 +29,9 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
     private val log by LoggerDelegate()
 
     /**
-     * 根据id查找角色，不存在则抛出异常
+     * 根据ID查找角色，不存在则抛出异常
      *
-     * @param id 角色id
+     * @param id 角色ID
      * @return 角色
      */
     private fun getRoleById(id: String): Role {

@@ -36,9 +36,9 @@ interface RoleService {
     fun find(index: Int, size: Int, filter: RoleFilter?): Page<Role>
 
     /**
-     * 根据id查找角色
+     * 根据ID查找角色
      *
-     * @param ids 角色id
+     * @param ids 角色ID
      * @return 角色
      */
     fun find(ids: Set<String>): Set<Role>
@@ -54,7 +54,7 @@ interface RoleService {
      * 添加角色
      *
      * @param role 角色
-     * @return 角色id
+     * @return 角色ID
      */
     fun addRole(role: AddRoleRequest): String
 
@@ -69,14 +69,14 @@ interface RoleService {
     /**
      * 删除角色
      *
-     * @param id 角色id
+     * @param id 角色ID
      */
     fun deleteRole(id: String)
 
     /**
      * 更新角色
      *
-     * @param id   角色id
+     * @param id   角色ID
      * @param role 角色
      */
     fun updateRole(id: String, role: UpdateRoleRequest)
@@ -84,7 +84,7 @@ interface RoleService {
     /**
      * 禁用角色
      *
-     * @param id       角色id
+     * @param id       角色ID
      * @param disabled 是否禁用
      */
     fun disable(id: String, disabled: Boolean)
@@ -92,16 +92,16 @@ interface RoleService {
     /**
      * 获取角色用户
      *
-     * @param id 角色id
+     * @param id 角色ID
      * @return 用户列表
      */
     fun getUsers(id: String): Set<User>
 
     /**
-     * 根据角色id查找用户id
+     * 根据角色id查找用户ID
      *
-     * @param id 角色id
-     * @return 用户id列表
+     * @param id 角色ID
+     * @return 用户ID列表
      */
     fun findUserIdsById(id: String): List<String>
 

@@ -10,7 +10,7 @@ import com.akagiyui.drive.entity.Announcement
 class AnnouncementResponse() {
 
     /**
-     * 公告id
+     * 公告ID
      */
     var id: String? = null
 

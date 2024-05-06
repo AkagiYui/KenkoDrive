@@ -9,7 +9,7 @@ import com.akagiyui.drive.entity.User
  */
 class UserInfoResponse(user: User) {
     /**
-     * 用户id
+     * 用户ID
      */
     val id = user.id
 

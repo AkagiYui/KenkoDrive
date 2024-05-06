@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service
 class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRepository) : AnnouncementService {
 
     /**
-     * 根据id查找公告或抛出异常
+     * 根据ID查找公告或抛出异常
      *
-     * @param id 公告id
+     * @param id 公告ID
      * @return 公告实体
      */
     private fun getAnnouncement(id: String): Announcement {

@@ -9,7 +9,7 @@ import com.akagiyui.drive.entity.UserFile
  */
 class UserFileResponse(userFile: UserFile) {
     /**
-     * 文件id
+     * 文件ID
      */
     val id = userFile.id
 
