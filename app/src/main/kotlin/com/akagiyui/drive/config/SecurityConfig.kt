@@ -73,6 +73,7 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.GET, "/system/version").permitAll()
                     .requestMatchers(HttpMethod.GET, "/system/setting/register").permitAll()
                     .requestMatchers(HttpMethod.GET, "/file/*/download").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/captcha/**").permitAll()
                     .requestMatchers(*mvc.matchers("/user/register/**")).permitAll()
                     .requestMatchers(*mvc.matchers("/sse")).permitAll()
                     .anyRequest().authenticated() // 其他请求需要认证

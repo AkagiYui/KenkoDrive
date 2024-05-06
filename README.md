@@ -81,7 +81,7 @@
 - [x] [速度限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 流量限制
 - [x] [邮箱验证码(Redis)](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
-- [ ] 图片验证码
+- [x] [图片验证码](app/src/main/kotlin/com/akagiyui/drive/controller/CaptchaController.kt)
 - [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [x] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
 - [x] [分片下载](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
@@ -269,6 +269,7 @@ cd KenkoDrive
 - 新增了获取所有配置项的服务
 - 新增了`初始化数据库`任务，在首次启动时自动添加默认角色与管理员用户
 - 新增了`查询文件夹路径`接口
+- 新增了`创建验证码`接口、`检查验证码`接口
 
 ### 2024年3月
 
