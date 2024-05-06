@@ -46,7 +46,11 @@ class FrequencyLimitAspect {
             }
             // 获取令牌
             val duration = Duration.ofMillis(limitAnnotation.timeunit.toMillis(limitAnnotation.timeout))
-            val acquire = rateLimiter.asBlocking().tryConsume(1, duration)
+            val acquire = if (duration.isZero) {
+                rateLimiter.tryConsume(1)
+            } else {
+                rateLimiter.asBlocking().tryConsume(1, duration)
+            }
             // 拿不到令牌，抛出异常
             if (!acquire) {
                 log.debug("Too many requests: {}", limitAnnotation.key)
