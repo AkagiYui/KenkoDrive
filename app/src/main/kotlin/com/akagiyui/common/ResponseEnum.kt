@@ -62,9 +62,9 @@ enum class ResponseEnum(val code: Int, val msg: String) {
     TOO_MANY_REQUESTS(10010, "Too many requests"),
 
     /**
-     * 应用已存在
+     * 验证码无效
      */
-    CLIENT_EXIST(10011, "Client exist"),
+    INVALID_CAPTCHA(10011, "Invalid captcha"),
 
     /**
      * 应用不存在
