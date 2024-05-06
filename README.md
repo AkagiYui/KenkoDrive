@@ -28,7 +28,7 @@
 
 ## 业务功能一览
 
-- [ ] 用户注册
+- [x] 用户注册
 - [x] 用户名/邮箱登录
 - [x] 个人信息设置、头像上传、密码重置
 - [ ] 文件(夹)上传/下载/删除
@@ -70,7 +70,7 @@
 ## 相关技术一览
 
 - [x] [请求频率限制(注解 + 令牌桶)](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)
-- [ ] 请求频率限制(Redis + IP地址限流)
+- [x] [下载速度限制](app/src/main/kotlin/com/akagiyui/common/BucketManager.kt)
 - [x] [异步任务](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [邮件发送](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
@@ -105,7 +105,7 @@
 [![Drone](https://img.shields.io/badge/Drone-212121?logo=drone&logoColor=white&style=flat-square)](https://www.drone.io/)
 [![Minio](https://img.shields.io/badge/Minio-c72e49?logo=minio&logoColor=white&style=flat-square)](https://min.io/)
 
-- [x] [Gradle 包管理](build.gradle.kts
+- [x] [Gradle 包管理](build.gradle.kts)
 - [x] [Spring Boot 3.2](app/src/main/kotlin/com/akagiyui/drive/KenkoDriveApplication.kt)
 - [x] [Spring Security（跨域与认证授权）](app/src/main/kotlin/com/akagiyui/drive/config/SecurityConfig.kt)
 - [x] MySQL 数据库
@@ -117,11 +117,11 @@
 - [x] [Docker 容器化部署](docker-compose.yaml)
 - [x] [Drone CI/CD 自动化部署](.drone.yml)
 - [x] [JPA ORM 框架](app/src/main/kotlin/com/akagiyui/drive/repository)
-- [x] AOP 切面编程：[频率控制](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
+- [x] AOP 切面：[频率控制](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
   [权限校验](app/src/main/kotlin/com/akagiyui/drive/component/permission/PermissionCheckAspect.kt)、
   [请求日志](app/src/main/kotlin/com/akagiyui/drive/component/RequestLogAspect.kt)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
-- [ ] Minio 对象存储
+- [x] [Minio 对象存储](app/src/main/kotlin/com/akagiyui/drive/config/MinioConfig.kt)
 - [ ] 阿里云 OSS 对象存储
 - [ ] WebDAV
 - [ ] 搜索引擎

@@ -33,5 +33,18 @@ services:
       - /srv/kenko-drive/mysql/data:/var/lib/mysql
     restart: always
 
+  minio:
+    image: minio/minio
+    network_mode: service:redis
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: password
+    volumes:
+      - /srv/kenko-drive/minio/data:/data
+    restart: always
+    command:
+      - server
+      - /data
+
 volumes:
   redis-data:
