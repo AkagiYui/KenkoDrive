@@ -1,5 +1,8 @@
 package com.akagiyui.common.utils
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /**
  * 截断字符串
  *
@@ -50,7 +53,12 @@ fun String.compressPackageName(allowedLength: Int? = null): String {
  *
  * @return 是否为空
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.hasText(): Boolean {
+    // 契约：如果返回true，则说明this为String
+    contract {
+        returns(true) implies (this@hasText is String)
+    }
     return !this.isNullOrBlank()
 }
 

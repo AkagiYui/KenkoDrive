@@ -145,7 +145,7 @@ class UploadServiceImpl(
         // 获取缓存目录
         val cacheDirectory: File = getUserCacheDirectory().let {
             if (folder.hasText()) {
-                File(it, folder!!).apply { mkdirOrThrow() }
+                File(it, folder).apply { mkdirOrThrow() }
             } else {
                 it
             }

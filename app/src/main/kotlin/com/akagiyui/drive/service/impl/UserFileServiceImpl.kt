@@ -29,7 +29,7 @@ class UserFileServiceImpl(
 ) : UserFileService {
 
     override fun addAssociation(user: User, fileInfo: FileInfo, folderId: String?): UserFile {
-        val folder = if (folderId.hasText()) folderService.getFolderById(folderId!!) else null
+        val folder = if (folderId.hasText()) folderService.getFolderById(folderId) else null
         if (userFileRepository.existsByUserIdAndFileInfoIdAndFolder(user.id, fileInfo.id, folder)) {
             throw RuntimeException("文件已存在")
         }

@@ -101,8 +101,9 @@ tasks.withType<Test> {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        // 严格检查 JSR-305 注解，如 @NonNull、@Nullable
-        freeCompilerArgs += "-Xjsr305=strict"
+        freeCompilerArgs = listOf(
+            "-Xjsr305=strict", // 严格检查 JSR-305 注解，如 @NonNull、@Nullable
+        )
         jvmTarget = "21"
     }
 }
