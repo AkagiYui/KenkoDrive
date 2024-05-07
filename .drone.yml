@@ -16,6 +16,9 @@ volumes:
   - name: gradle-cache
     host:
       path: /srv/gradle/caches
+  - name: gradle-config
+    host:
+      path: /srv/gradle/config
   - name: application-config
     host:
       path: /srv/kenko-drive/config
@@ -25,22 +28,44 @@ services:
     image: redis:7-alpine
 
 steps:
-  - name: test and create cache
-    image: gradle:8.7.0-jdk21-alpine
+  - name: Gradle Build and Create Cache
+    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
     failure: ignore
     volumes:
       - name: gradle-cache
-        path: /home/gradle/.gradle
+        path: /root/.gradle
+      - name: gradle-config
+        path: /gradle-config
     commands:
-      - gradle test -i
+      - cp /gradle-config/gradle.properties /root/.gradle/gradle.properties
+      - chmod +x ./gradlew
+      - ./gradlew assemble -i
 
-  - name: build jar package
-    image: gradle:8.7.0-jdk21-alpine
+  - name: Gradle Test
+    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
+    failure: ignore
     volumes:
       - name: gradle-cache
-        path: /home/gradle/.gradle
+        path: /root/.gradle
+      - name: gradle-config
+        path: /gradle-config
     commands:
-      - gradle bootJar
+      - cp /gradle-config/gradle.properties /root/.gradle/gradle.properties
+      - chmod +x ./gradlew
+      - ./gradlew test -i
+
+  - name: Build Jar Package
+    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
+    volumes:
+      - name: gradle-cache
+        path: /root/.gradle
+      - name: gradle-config
+        path: /gradle-config
+    commands:
+      - cp /gradle-config/gradle.properties /root/.gradle/gradle.properties
+      - chmod +x ./gradlew
+      - rm app/build/libs/*.jar
+      - ./gradlew bootJar -i
 
   - name: build and deploy container
     image: docker:dind
@@ -50,4 +75,4 @@ steps:
       - name: application-config
         path: /drone/src/config
     commands:
-      - docker compose -p kenko-drive up -d --build application
+      - docker compose -p kenko-drive -f docker-compose-drone.yaml up -d --build application

@@ -1,0 +1,50 @@
+name: kenko-drive
+
+services:
+  application:
+    build:
+      context: .
+      dockerfile: Dockerfile-drone
+    network_mode: service:redis
+    volumes:
+      - /srv/kenko-drive/data:/app/data
+    restart: always
+    depends_on:
+      - redis
+      - mysql
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - "16677:6677"
+    restart: always
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: drive
+      MYSQL_USER: drive
+      MYSQL_PASSWORD: drive
+    network_mode: service:redis
+    volumes:
+      - /srv/kenko-drive/mysql/data:/var/lib/mysql
+    restart: always
+
+  minio:
+    image: minio/minio
+    network_mode: service:redis
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: password
+    volumes:
+      - /srv/kenko-drive/minio/data:/data
+    restart: always
+    command:
+      - server
+      - /data
+
+volumes:
+  redis-data:

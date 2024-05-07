@@ -9,6 +9,7 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
@@ -19,6 +20,7 @@ import org.springframework.web.context.request.ServletRequestAttributes
  */
 @Aspect
 @Component
+@ConditionalOnProperty(prefix = "application.captcha.geetest", name = ["id", "key"])
 class GeetestCaptchaV4Aspect(
     @Value("\${application.captcha.geetest.id}") private val captchaId: String,
     @Value("\${application.captcha.geetest.key}") private val captchaKey: String,
