@@ -80,8 +80,10 @@
 - [ ] 日志记录
 - [x] [速度限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 流量限制
-- [x] [邮箱验证码(Redis)](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)
-- [x] [图片验证码](app/src/main/kotlin/com/akagiyui/drive/service/CaptchaService.kt)
+- [x] 验证码(CAPTCHA): [图片验证码](app/src/main/kotlin/com/akagiyui/drive/service/CaptchaService.kt)、
+  极验行为验证码
+- [x] 一次性密码(OTP): [邮箱验证码](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)、
+  阿里云短信验证码
 - [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [x] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
 - [x] [分片下载](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
