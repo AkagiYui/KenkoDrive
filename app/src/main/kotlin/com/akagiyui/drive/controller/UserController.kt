@@ -1,6 +1,6 @@
 package com.akagiyui.drive.controller
 
-import com.akagiyui.drive.component.captcha.CaptchaProtected
+import com.akagiyui.drive.component.captcha.GeetestCaptchaV4Protected
 import com.akagiyui.drive.component.limiter.Limit
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.Role
@@ -111,7 +111,7 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @PostMapping("/register/email")
     @PreAuthorize("isAnonymous()")
-    @CaptchaProtected
+    @GeetestCaptchaV4Protected
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
     fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest) {
         userService.sendEmailVerifyCode(verifyRequest)

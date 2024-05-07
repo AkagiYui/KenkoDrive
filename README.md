@@ -81,7 +81,7 @@
 - [x] [速度限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 流量限制
 - [x] 验证码(CAPTCHA): [图片验证码](app/src/main/kotlin/com/akagiyui/drive/service/CaptchaService.kt)、
-  极验行为验证码
+  [极验行为验证码](app/src/main/kotlin/com/akagiyui/drive/component/captcha/GeetestCaptchaV4Aspect.kt)
 - [x] 一次性密码(OTP): [邮箱验证码](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)、
   阿里云短信验证码
 - [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
@@ -261,6 +261,7 @@ cd KenkoDrive
 - 在 gradle 脚本中添加了插件的阿里云镜像源
 - 修改了`用户`实体的表名为`user_info`，避免关键字冲突
 - 引入了第三方验证码生成库
+- 引入了极验行为验证码
 - 添加了 Kotlin 对 Java 类中 Lombok 注解的支持
 - 添加了 Spring 的 Kotlin 插件，使其自动为 Spring Bean 添加 open 关键字
 - 添加了 GitHub Actions 流水线脚本，使用 Gradle 运行测试，并上传测试报告
