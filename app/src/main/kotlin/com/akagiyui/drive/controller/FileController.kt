@@ -167,24 +167,35 @@ class FileController(
             this[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_OCTET_STREAM_VALUE
             val filename = URLEncoder.encode(userFile.name, StandardCharsets.UTF_8) // 防止中文出错
             this[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=$filename"
+            this[HttpHeaders.CONTENT_LENGTH] = "$mediaLength"
         }
+
+        // 设置[开始位置]与[长度]
         var start = 0L
         var rangeLength = mediaLength
-        if (single) {
-            responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$mediaLength"
-        } else {
-            // 获取范围
+        val downloadPartial = !single && rangeString != null
+        // 获取范围
+        if (downloadPartial) {
             val ranges = HttpRange.parseRanges(rangeString)
             val range = ranges.firstOrNull()
-            start = range?.getRangeStart(mediaLength) ?: 0 // 开始位置
-            val end = range?.getRangeEnd(mediaLength) ?: (mediaLength - 1) // 结束位置
+            if (range == null) {
+                log.debug("Invalid range: {}", rangeString)
+                responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
+                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes */$mediaLength"
+                return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
+                    .headers(responseHeaders)
+                    .body(null)
+            }
+
+            start = range.getRangeStart(mediaLength) // 开始位置
+            val end = range.getRangeEnd(mediaLength) // 结束位置
             rangeLength = end - start + 1 // 范围长度
             log.debug("range: {}, length: {} Bytes", range, rangeLength)
 
             // 如果范围不合法，提早返回
             if (rangeLength <= 0) {
                 responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
-                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes 0-0/$mediaLength"
+                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes */$mediaLength"
                 return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
                     .headers(responseHeaders)
                     .body(null)
@@ -227,15 +238,12 @@ class FileController(
             // https://github.com/spring-projects/spring-framework/commit/42fc4a35d59a37131bfe15d029738ab25f358241
         }
 
-        return if (single) {
-            ResponseEntity.ok()
-                .headers(responseHeaders)
-                .body(streamBody)
+        val statusCode = if (downloadPartial) {
+            HttpServletResponse.SC_PARTIAL_CONTENT
         } else {
-            ResponseEntity.status(HttpServletResponse.SC_PARTIAL_CONTENT)
-                .headers(responseHeaders)
-                .body(streamBody)
+            HttpServletResponse.SC_OK
         }
+        return ResponseEntity.status(statusCode).headers(responseHeaders).body(streamBody)
     }
 
     /**
