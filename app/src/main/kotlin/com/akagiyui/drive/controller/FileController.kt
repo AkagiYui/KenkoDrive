@@ -146,45 +146,53 @@ class FileController(
      * 文件下载，支持断点续传
      *
      * @param temporaryId 文件临时ID
+     * @param rangeString 范围
+     * @param single 是否单线程下载
      */
     @GetMapping("/{id}/download")
     @PreAuthorize("permitAll()")
     fun download(
         @PathVariable("id") temporaryId: String,
         @RequestHeader("Range", required = false) rangeString: String?,
+        @RequestParam("single", defaultValue = "false") single: Boolean,
     ): ResponseEntity<StreamingResponseBody> {
         // 读取文件
         val userFile = userFileService.getFileInfoByTemporaryId(temporaryId)
         val fileInfo = userFile.fileInfo
         val fileResource = storageService.get("file/${fileInfo.storageKey}")
         val mediaLength = fileInfo.size
-        // 获取范围
-        val ranges = HttpRange.parseRanges(rangeString)
-        val range = ranges.firstOrNull()
-        val start = range?.getRangeStart(mediaLength) ?: 0 // 开始位置
-        val end = range?.getRangeEnd(mediaLength) ?: (mediaLength - 1) // 结束位置
-        val rangeLength = end - start + 1 // 范围长度
-        log.debug("range: {}, length: {} Bytes", range, rangeLength)
 
         // 设置响应头
         val responseHeaders = HttpHeaders().apply {
-            this[HttpHeaders.ACCEPT_RANGES] = "bytes"
             this[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_OCTET_STREAM_VALUE
             val filename = URLEncoder.encode(userFile.name, StandardCharsets.UTF_8) // 防止中文出错
             this[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=$filename"
         }
+        var start = 0L
+        var rangeLength = mediaLength
+        if (single) {
+            responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$mediaLength"
+        } else {
+            // 获取范围
+            val ranges = HttpRange.parseRanges(rangeString)
+            val range = ranges.firstOrNull()
+            start = range?.getRangeStart(mediaLength) ?: 0 // 开始位置
+            val end = range?.getRangeEnd(mediaLength) ?: (mediaLength - 1) // 结束位置
+            rangeLength = end - start + 1 // 范围长度
+            log.debug("range: {}, length: {} Bytes", range, rangeLength)
 
-        // 如果范围不合法，提早返回
-        if (rangeLength <= 0) {
-            responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
-            responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes 0-0/$mediaLength"
-            return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
-                .headers(responseHeaders)
-                .body(null)
+            // 如果范围不合法，提早返回
+            if (rangeLength <= 0) {
+                responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
+                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes 0-0/$mediaLength"
+                return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
+                    .headers(responseHeaders)
+                    .body(null)
+            }
+            responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$rangeLength"
+            responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes $start-$end/$mediaLength"
+            responseHeaders[HttpHeaders.ACCEPT_RANGES] = "bytes"
         }
-
-        responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$rangeLength"
-        responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes $start-$end/$mediaLength"
 
         val streamBody = StreamingResponseBody { outputStream: OutputStream ->
             fileResource.inputStream.use { inputStream ->
@@ -219,9 +227,15 @@ class FileController(
             // https://github.com/spring-projects/spring-framework/commit/42fc4a35d59a37131bfe15d029738ab25f358241
         }
 
-        return ResponseEntity.status(HttpServletResponse.SC_PARTIAL_CONTENT)
-            .headers(responseHeaders)
-            .body(streamBody)
+        return if (single) {
+            ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(streamBody)
+        } else {
+            ResponseEntity.status(HttpServletResponse.SC_PARTIAL_CONTENT)
+                .headers(responseHeaders)
+                .body(streamBody)
+        }
     }
 
     /**
