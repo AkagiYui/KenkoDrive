@@ -14,6 +14,7 @@ import com.akagiyui.drive.service.*
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
 import org.springframework.beans.factory.DisposableBean
+import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpRange
 import org.springframework.http.MediaType
@@ -23,7 +24,6 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody
-import java.io.IOException
 import java.io.OutputStream
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -147,9 +147,9 @@ class FileController(
      *
      * @param temporaryId 文件临时ID
      * @param rangeString 范围
-     * @param single 是否单线程下载
+     * @param single 是否下载整个文件
      */
-    @GetMapping("/{id}/download")
+    @GetMapping("/{id}/download/**")
     @PreAuthorize("permitAll()")
     fun download(
         @PathVariable("id") temporaryId: String,
@@ -164,21 +164,31 @@ class FileController(
 
         // 设置响应头
         val responseHeaders = HttpHeaders().apply {
-            this[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_OCTET_STREAM_VALUE
+            this[HttpHeaders.CONTENT_TYPE] = MediaType.APPLICATION_OCTET_STREAM_VALUE // 二进制流
             val filename = URLEncoder.encode(userFile.name, StandardCharsets.UTF_8) // 防止中文出错
-            this[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=$filename"
-            this[HttpHeaders.CONTENT_LENGTH] = "$mediaLength"
+            this[HttpHeaders.CONTENT_DISPOSITION] = "attachment; filename=$filename" // 下载文件名
+            this[HttpHeaders.CONTENT_LENGTH] = "$mediaLength" // 文件长度
         }
 
-        // 设置[开始位置]与[长度]
-        var start = 0L
-        var rangeLength = mediaLength
-        val downloadPartial = !single && rangeString != null
-        // 获取范围
-        if (downloadPartial) {
-            val ranges = HttpRange.parseRanges(rangeString)
-            val range = ranges.firstOrNull()
-            if (range == null) {
+        var statusCode = HttpServletResponse.SC_OK // 状态码
+        var start = 0L // 开始位置
+        var rangeLength = mediaLength // 范围长度
+        if (!single && rangeString != null) { // 获取范围，修改[开始位置]、[长度]与[状态码]
+            try {
+                val ranges = HttpRange.parseRanges(rangeString)
+                val range = ranges.firstOrNull()
+                checkNotNull(range)
+                start = range.getRangeStart(mediaLength) // 开始位置
+                val end = range.getRangeEnd(mediaLength) // 结束位置
+                rangeLength = end - start + 1 // 范围长度
+                log.debug("range: {}, length: {} Bytes", range, rangeLength)
+
+                check(rangeLength > 0) // 如果范围不合法，提早返回
+                responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$rangeLength"
+                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes $start-$end/$mediaLength"
+                responseHeaders[HttpHeaders.ACCEPT_RANGES] = "bytes"
+                statusCode = HttpServletResponse.SC_PARTIAL_CONTENT
+            } catch (e: IllegalStateException) {
                 log.debug("Invalid range: {}", rangeString)
                 responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
                 responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes */$mediaLength"
@@ -186,64 +196,51 @@ class FileController(
                     .headers(responseHeaders)
                     .body(null)
             }
-
-            start = range.getRangeStart(mediaLength) // 开始位置
-            val end = range.getRangeEnd(mediaLength) // 结束位置
-            rangeLength = end - start + 1 // 范围长度
-            log.debug("range: {}, length: {} Bytes", range, rangeLength)
-
-            // 如果范围不合法，提早返回
-            if (rangeLength <= 0) {
-                responseHeaders[HttpHeaders.CONTENT_LENGTH] = "0"
-                responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes */$mediaLength"
-                return ResponseEntity.status(HttpServletResponse.SC_REQUESTED_RANGE_NOT_SATISFIABLE)
-                    .headers(responseHeaders)
-                    .body(null)
-            }
-            responseHeaders[HttpHeaders.CONTENT_LENGTH] = "$rangeLength"
-            responseHeaders[HttpHeaders.CONTENT_RANGE] = "bytes $start-$end/$mediaLength"
-            responseHeaders[HttpHeaders.ACCEPT_RANGES] = "bytes"
         }
 
-        val streamBody = StreamingResponseBody { outputStream: OutputStream ->
-            fileResource.inputStream.use { inputStream ->
-                val bytesActuallySkipped = inputStream.skip(start)
-                if (bytesActuallySkipped != start) {
-                    throw IOException("Skipped $bytesActuallySkipped bytes, expected $start bytes")
-                }
-                val speed = max(DEFAULT_BUFFER_SIZE.toLong(), 1000L * 1000 * 4)
-                require(!bandwidthBucketManager.closed) {
-                    "Application is shutting down"
-                }
-                val limiter = bandwidthBucketManager[userFile.user.id, speed]
-                // 异步写入
-                val data = ByteArray(DEFAULT_BUFFER_SIZE)
-                var totalWritten = 0
-                while (totalWritten < rangeLength) {
-                    val numberOfBytesToWrite: Int = inputStream.read(data)
-                    if (numberOfBytesToWrite <= 0) {
-                        break
-                    }
-                    limiter.asBlocking().consume(numberOfBytesToWrite.toLong())
-                    try {
-                        outputStream.write(data, 0, numberOfBytesToWrite)
-                    } catch (e: InterruptedException) {
-                        log.debug("Download interrupted: {}", userFile.id)
-                        break
-                    }
-                    totalWritten += numberOfBytesToWrite
-                }
-            }
-            // Spring 在外部会主动进行flush，这里不需要再flush，也意味着不需要关闭流
-            // https://github.com/spring-projects/spring-framework/commit/42fc4a35d59a37131bfe15d029738ab25f358241
-        }
-
-        val statusCode = if (downloadPartial) {
-            HttpServletResponse.SC_PARTIAL_CONTENT
-        } else {
-            HttpServletResponse.SC_OK
-        }
+        val streamBody = StreamingResponseBody { writeStream(it, fileResource, userFile.user.id, start, rangeLength) }
         return ResponseEntity.status(statusCode).headers(responseHeaders).body(streamBody)
+    }
+
+    /**
+     * 异步写入下载流
+     *
+     * @param outputStream 输出流
+     * @param fileResource 文件资源
+     * @param bucketKey 限速桶Key
+     * @param start 文件开始位置
+     * @param rangeLength 期望写入长度
+     */
+    private fun writeStream(
+        outputStream: OutputStream,
+        fileResource: InputStreamResource,
+        bucketKey: String,
+        start: Long,
+        rangeLength: Long,
+    ) {
+        fileResource.inputStream.use { inputStream ->
+            val bytesActuallySkipped = inputStream.skip(start)
+            check(bytesActuallySkipped != start) { "Skipped $bytesActuallySkipped bytes, expected $start bytes" }
+            val speed = max(DEFAULT_BUFFER_SIZE.toLong(), 1000L * 1000 * 4) // 用户上限速度
+            check(!bandwidthBucketManager.closed) { "Application is shutting down" } // 应用正在关闭，提前结束下载
+            val limiter = bandwidthBucketManager[bucketKey, speed] // 限速器
+            val data = ByteArray(DEFAULT_BUFFER_SIZE) // 缓冲区
+            var totalWritten = 0 // 已写入数据量
+            while (totalWritten < rangeLength) { // 限制写入数据量
+                val numberOfBytesToWrite: Int = inputStream.read(data)
+                if (numberOfBytesToWrite <= 0) break
+                limiter.asBlocking().consume(numberOfBytesToWrite.toLong())
+                try {
+                    outputStream.write(data, 0, numberOfBytesToWrite)
+                } catch (e: InterruptedException) {
+                    log.debug("Download interrupted")
+                    break
+                }
+                totalWritten += numberOfBytesToWrite
+            }
+        }
+        // Spring 在外部会主动进行flush，这里不需要再flush，也意味着不需要关闭流
+        // https://github.com/spring-projects/spring-framework/commit/42fc4a35d59a37131bfe15d029738ab25f358241
     }
 
     /**
