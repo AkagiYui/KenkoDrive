@@ -56,12 +56,12 @@ class UserFileServiceImpl(
         return userFileRepository.findByUserIdAndId(user.id, id) ?: throw CustomException(ResponseEnum.NOT_FOUND)
     }
 
-    override fun getTemporaryId(userFileId: String): String {
+    override fun getTemporaryId(userFileId: String): Pair<String, UserFile> {
         val userFile = getUserFileById(userFileId)
         val randomId = UUID.randomUUID().toString().replace("-", "")
         val redisKey = "download:$randomId"
         redisCache[redisKey, 1, TimeUnit.HOURS] = userFile.id
-        return randomId
+        return randomId to userFile
     }
 
     override fun getFileInfoByTemporaryId(temporaryId: String): UserFile {

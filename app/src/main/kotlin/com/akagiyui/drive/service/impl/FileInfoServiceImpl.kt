@@ -95,9 +95,9 @@ class FileInfoServiceImpl(
         return fileInfos
     }
 
-    @CacheEvict(value = [CacheConstants.FILE_INFO], key = "#fileInfo.id")
-    override fun recordDownload(fileInfo: FileInfo) {
-        fileInfoRepository.recordDownload(fileInfo.id)
+    @CacheEvict(value = [CacheConstants.FILE_INFO], key = "#fileInfoId")
+    override fun recordDownload(fileInfoId: String) {
+        fileInfoRepository.recordDownload(fileInfoId)
     }
 
     @CacheEvict(value = [CacheConstants.FILE_INFO], key = "#id")

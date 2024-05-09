@@ -39,7 +39,7 @@ interface FileInfoService {
     /**
      * 记录下载
      */
-    fun recordDownload(fileInfo: FileInfo)
+    fun recordDownload(fileInfoId: String)
 
     /**
      * 删除文件

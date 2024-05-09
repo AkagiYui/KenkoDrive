@@ -126,7 +126,6 @@ class FileController(
     @RequirePermission
     fun getFileInfo(@PathVariable id: String): FileInfo {
         val fileInfo = fileInfoService.getFileInfo(id)
-        fileInfoService.recordDownload(fileInfo) // 记录下载
         return fileInfo
     }
 
@@ -139,7 +138,9 @@ class FileController(
     @GetMapping("/{id}/token")
     @RequirePermission
     fun getTemporaryId(@PathVariable("id") userFileId: String): String {
-        return userFileService.getTemporaryId(userFileId)
+        val (randomId, userFile) = userFileService.getTemporaryId(userFileId)
+        fileInfoService.recordDownload(userFile.fileInfo.id) // 记录下载
+        return randomId
     }
 
     /**
