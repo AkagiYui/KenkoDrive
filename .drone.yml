@@ -30,7 +30,6 @@ services:
 steps:
   - name: Gradle Build and Create Cache
     image: bellsoft/liberica-runtime-container:jre-21-slim-musl
-    failure: ignore
     volumes:
       - name: gradle-cache
         path: /root/.gradle
@@ -67,7 +66,7 @@ steps:
       - rm app/build/libs/*.jar
       - ./gradlew bootJar -i
 
-  - name: build and deploy container
+  - name: Build and Deploy container
     image: docker:dind
     volumes:
       - name: dockersock
