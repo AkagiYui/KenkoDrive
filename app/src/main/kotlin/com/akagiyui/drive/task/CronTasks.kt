@@ -27,9 +27,9 @@ class CronTasks @Autowired constructor(
     /**
      * 删除未使用的文件
      *
-     * 每周四凌晨4点执行
+     * 北京时间每天凌晨4点执行
      */
-    @Scheduled(cron = "0 0 4 ? * 4")
+    @Scheduled(cron = "0 0 4 * * ? ", zone = "Asia/Shanghai")
     fun removeUnusedFile() {
         log.info("Start remove unused file")
         // 遍历所有文件，如果没有被引用则删除
