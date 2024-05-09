@@ -28,15 +28,19 @@ class UserFileServiceImpl(
     private val redisCache: RedisCache,
 ) : UserFileService {
 
-    override fun addAssociation(user: User, fileInfo: FileInfo, folderId: String?): UserFile {
+    override fun addAssociation(user: User, userFileName: String, fileInfo: FileInfo, folderId: String?): UserFile {
         val folder = if (folderId.hasText()) folderService.getFolderById(folderId) else null
-        if (userFileRepository.existsByUserIdAndFileInfoIdAndFolder(user.id, fileInfo.id, folder)) {
-            throw RuntimeException("文件已存在")
+        var fileName = userFileName
+        while (userFileRepository.existsByUserIdAndNameAndFolder(user.id, fileName, folder)) {
+            val index = fileName.lastIndexOf(".")
+            val name = fileName.substring(0, index)
+            val suffix = fileName.substring(index)
+            fileName = "$name(${UUID.randomUUID()})$suffix"
         }
         val userFile = UserFile().apply {
             this.user = user
             this.fileInfo = fileInfo
-            name = fileInfo.name
+            name = fileName
             this.folder = folder
         }
         return userFileRepository.save(userFile)

@@ -160,7 +160,7 @@ class FileController(
         // 读取文件
         val userFile = userFileService.getFileInfoByTemporaryId(temporaryId)
         val fileInfo = userFile.fileInfo
-        val fileResource = storageService.get("file/${fileInfo.storageKey}")
+        val fileResource = storageService.get(fileInfo.storageKey)
         val mediaLength = fileInfo.size
 
         // 设置响应头

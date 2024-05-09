@@ -17,7 +17,7 @@ import org.hibernate.annotations.DynamicInsert
 @DynamicInsert
 class FileInfo : BaseEntity() {
     /**
-     * 文件名
+     * 第一个上传的文件名
      */
     @Column(nullable = false)
     lateinit var name: String

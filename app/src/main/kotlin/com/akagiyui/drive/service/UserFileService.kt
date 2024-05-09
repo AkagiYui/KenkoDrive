@@ -11,9 +11,13 @@ import com.akagiyui.drive.entity.UserFile
  */
 interface UserFileService {
     /**
-     * 添加关联
+     * 添加用户文件与真实文件的关联
+     * @param user 用户
+     * @param userFileName 用户文件名
+     * @param fileInfo 真实文件信息
+     * @param folderId 用户文件夹ID
      */
-    fun addAssociation(user: User, fileInfo: FileInfo, folderId: String? = null): UserFile
+    fun addAssociation(user: User, userFileName: String, fileInfo: FileInfo, folderId: String? = null): UserFile
 
     /**
      * 获取文件夹下的文件

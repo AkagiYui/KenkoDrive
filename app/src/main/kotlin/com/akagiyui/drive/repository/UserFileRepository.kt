@@ -22,6 +22,16 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
     fun existsByUserIdAndFileInfoIdAndFolder(userId: String, fileInfoId: String, folder: Folder?): Boolean
 
     /**
+     * 根据用户ID、文件名、文件夹判断用户文件是否存在
+     *
+     * @param userId 用户ID
+     * @param name   文件名
+     * @param folder 文件夹
+     * @return 用户文件是否存在
+     */
+    fun existsByUserIdAndNameAndFolder(userId: String, name: String, folder: Folder?): Boolean
+
+    /**
      * 根据用户ID、文件夹ID获取用户文件列表
      *
      * @param userId   用户ID

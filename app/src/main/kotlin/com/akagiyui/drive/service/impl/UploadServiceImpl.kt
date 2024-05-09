@@ -169,17 +169,35 @@ class UploadServiceImpl(
                 }
             }
             val md5String = messageDigest.digest().joinToString("") { "%02x".format(it) }
+            val existFileInfo = try {
+                fileInfoService.getFileInfoByHash(md5String)
+            } catch (e: CustomException) {
+                null
+            }
+            if (existFileInfo != null) {
+                // 如果文件已存在，则直接关联
+                userInfos.add(
+                    userFileService.addAssociation(
+                        userService.getUser(),
+                        file.originalFilename!!,
+                        existFileInfo,
+                        folder
+                    )
+                )
+                return@forEach
+            }
+            val storageKey = "file/$md5String"
             val fileInfo = FileInfo().apply {
                 name = file.originalFilename!!
                 size = file.size
                 type = file.contentType!!
                 hash = md5String
-                storageKey = md5String
+                this.storageKey = storageKey
                 locked = true
             }
             fileInfoService.addFileInfo(fileInfo)
-            userInfos.add(userFileService.addAssociation(userService.getUser(), fileInfo, folder))
-            storageService.store("file/${fileInfo.storageKey}", cacheFile, file.contentType) {
+            userInfos.add(userFileService.addAssociation(userService.getUser(), fileInfo.name, fileInfo, folder))
+            storageService.store(storageKey, cacheFile, file.contentType) {
                 cacheFile.deleteIfExists()
                 fileInfo.locked = false
                 fileInfoService.addFileInfo(fileInfo)
