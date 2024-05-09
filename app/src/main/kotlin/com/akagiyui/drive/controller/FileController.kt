@@ -220,7 +220,7 @@ class FileController(
     ) {
         fileResource.inputStream.use { inputStream ->
             val bytesActuallySkipped = inputStream.skip(start)
-            check(bytesActuallySkipped != start) { "Skipped $bytesActuallySkipped bytes, expected $start bytes" }
+            check(bytesActuallySkipped == start) { "Skipped $bytesActuallySkipped bytes, expected $start bytes" }
             val speed = max(DEFAULT_BUFFER_SIZE.toLong(), 1000L * 1000 * 4) // 用户上限速度
             check(!bandwidthBucketManager.closed) { "Application is shutting down" } // 应用正在关闭，提前结束下载
             val limiter = bandwidthBucketManager[bucketKey, speed] // 限速器
