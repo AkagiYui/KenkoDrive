@@ -66,15 +66,7 @@ class RequestLogAspect {
         val paramsBuffer: String = args
             .asSequence()
             .filterNotNull()
-            .map {
-                if (it is MultipartFile) {
-                    "MultipartFile[${it.originalFilename}]"
-                } else if (it is Collection<*> && it.isNotEmpty() && it.first() is MultipartFile) {
-                    "Collection<MultipartFile>[${it.size}]"
-                } else {
-                    objectMapper.writeValueAsString(it).ellipsis(100) // 序列化并截断参数
-                }
-            }
+            .map { anyToString(it).ellipsis(100) }
             .joinToString(", ") // 将参数连接成字符串
             .ellipsis(1000)
         requestLog.append("($paramsBuffer)")
@@ -84,14 +76,7 @@ class RequestLogAspect {
             val startTime = System.currentTimeMillis()
             joinPoint.proceed().also { returnObj ->
                 val duration = System.currentTimeMillis() - startTime
-                val resultLog = returnObj?.let {
-                    when (it) {
-                        is ByteArray -> it.toStr()
-                        is GetObjectResponse -> it.toStr()
-                        is ResponseEntity<*> -> it.toStr().ellipsis(500)
-                        else -> objectMapper.writeValueAsString(it).ellipsis(500)
-                    }
-                } ?: "null"
+                val resultLog = anyToString(returnObj).ellipsis(500)
                 requestLog.append("\n result[${duration}ms] <- $resultLog")
             }
         } catch (throwable: Throwable) {
@@ -100,6 +85,31 @@ class RequestLogAspect {
         } finally {
             log.debug(requestLog.toString())
         }
+    }
+
+    private fun anyToString(any: Any?): String {
+        if (any == null) {
+            return "null"
+        }
+        if (any::class.isData) {
+            return any.toString()
+        }
+        if (any is ByteArray) {
+            return any.toStr()
+        }
+        if (any is GetObjectResponse) {
+            return any.toStr()
+        }
+        if (any is ResponseEntity<*>) {
+            return any.toStr()
+        }
+        if (any is MultipartFile) {
+            return "MultipartFile[${any.originalFilename}]"
+        }
+        if ((any is Collection<*>) && any.isNotEmpty() && (any.first() is MultipartFile)) {
+            return "Collection<MultipartFile>[${any.size}]"
+        }
+        return objectMapper.writeValueAsString(any)
     }
 
     private val httpServletRequest: HttpServletRequest?

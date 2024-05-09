@@ -32,7 +32,7 @@ fun GetObjectResponse.toStr(): String {
  * Extension toString for ResponseEntity
  */
 fun ResponseEntity<*>.toStr(): String {
-    return "ResponseEntity<$statusCode>[${body.toString()}]"
+    return "ResponseEntity<${statusCode.value()}>[${body.toString()}]"
 }
 
 /**
