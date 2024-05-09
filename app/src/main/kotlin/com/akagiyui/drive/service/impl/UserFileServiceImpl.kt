@@ -69,4 +69,9 @@ class UserFileServiceImpl(
         val userFileId: String = redisCache[redisKey] ?: throw CustomException(ResponseEnum.NOT_FOUND)
         return userFileRepository.findById(userFileId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
     }
+
+    override fun userDeleteFile(id: String) {
+        val userFile = getUserFileById(id)
+        userFileRepository.delete(userFile)
+    }
 }

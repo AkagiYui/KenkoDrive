@@ -40,4 +40,9 @@ interface UserFileService {
      * 根据临时文件ID获取文件信息
      */
     fun getFileInfoByTemporaryId(temporaryId: String): UserFile
+
+    /**
+     * 删除用户文件
+     */
+    fun userDeleteFile(id: String)
 }

@@ -246,11 +246,11 @@ class FileController(
     /**
      * 删除文件
      *
-     * @param id 文件ID
+     * @param id 用户文件ID
      */
     @DeleteMapping("/{id}")
     @RequirePermission
     fun deleteFile(@PathVariable id: String) {
-        fileInfoService.deleteFile(id)
+        userFileService.userDeleteFile(id)
     }
 }

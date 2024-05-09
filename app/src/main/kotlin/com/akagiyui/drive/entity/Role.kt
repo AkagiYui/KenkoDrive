@@ -3,6 +3,7 @@ package com.akagiyui.drive.entity
 import com.akagiyui.common.entity.BaseEntity
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.Permission.PermissionConverter
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.DynamicInsert
@@ -53,5 +54,6 @@ class Role : BaseEntity() {
      * 该角色下的用户
      */
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     var users: MutableSet<User> = mutableSetOf()
 }
