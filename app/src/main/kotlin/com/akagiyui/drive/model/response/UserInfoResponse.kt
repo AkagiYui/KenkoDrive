@@ -16,7 +16,7 @@ class UserInfoResponse(user: User) {
     /**
      * 用户名
      */
-    val username: String = user.username
+    val username: String? = user.username
 
     /**
      * 昵称

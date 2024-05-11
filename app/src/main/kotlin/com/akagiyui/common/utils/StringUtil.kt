@@ -110,3 +110,24 @@ val invalidCharsRegex by lazy { "[\\\\/:*?\"<>|]".toRegex() }
 fun String.toSafeFileName(): String {
     return this.replace(invalidCharsRegex, "_")
 }
+
+val String.Companion.BASE_NUMBER: String
+    get() = "0123456789"
+
+
+/**
+ * 生成随机字符串
+ *
+ * @param base   基础字符集
+ * @param length 长度
+ * @return 随机字符串
+ */
+fun String.Companion.random(base: String, length: Int): String {
+    val random = java.util.Random()
+    val sb = StringBuilder()
+    for (i in 0 until length) {
+        val number = random.nextInt(base.length)
+        sb.append(base[number])
+    }
+    return sb.toString()
+}

@@ -180,4 +180,19 @@ interface UserService : UserDetailsService {
      */
     fun getRoles(id: String): Set<Role>
 
+    /**
+     * 发送短信验证码
+     *
+     * @param phone 手机号
+     */
+    fun sendSmsOneTimePassword(phone: String)
+
+    /**
+     * 获取短信验证码
+     *
+     * @param phone 手机号
+     * @param code 验证码
+     */
+    fun getAccessTokenBySms(phone: String, code: String): String
+
 }

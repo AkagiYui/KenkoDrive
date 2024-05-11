@@ -54,14 +54,14 @@ class LoginUserDetails() : UserDetails {
      * @return 用户密码
      */
     @JsonIgnore
-    override fun getPassword(): String = user.password
+    override fun getPassword(): String = user.password ?: ""
 
     /**
      * 获取用户名
      * @return 用户名
      */
     @JsonIgnore
-    override fun getUsername(): String = user.username
+    override fun getUsername(): String = user.username ?: ""
 
     /**
      * 用户账号是否未过期

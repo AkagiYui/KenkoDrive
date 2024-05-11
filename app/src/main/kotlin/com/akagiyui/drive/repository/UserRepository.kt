@@ -39,4 +39,11 @@ interface UserRepository : JpaRepository<User, String>, JpaSpecificationExecutor
      */
     fun existsByUsername(username: String): Boolean
 
+    /**
+     * 根据手机号查找用户
+     * @param phone 手机号
+     * @return 用户
+     */
+    fun findByPhone(phone: String): User?
+
 }

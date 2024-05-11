@@ -8,6 +8,7 @@ import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.request.*
+import com.akagiyui.drive.model.response.LoginResponse
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
 import com.akagiyui.drive.service.AvatarService
@@ -115,6 +116,26 @@ class UserController(private val userService: UserService, private val avatarSer
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
     fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest) {
         userService.sendEmailVerifyCode(verifyRequest)
+    }
+
+    /**
+     * 获取短信验证码
+     *
+     * @param phone 手机号
+     */
+    @PostMapping("/sms")
+    @PreAuthorize("isAnonymous()")
+    @GeetestCaptchaV4Protected
+    @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
+    fun getSmsOneTimePassword(@RequestParam("phone") phone: String) {
+        userService.sendSmsOneTimePassword(phone)
+    }
+
+    @GetMapping("/token/sms")
+    @PreAuthorize("isAnonymous()")
+    @Limit(key = "smsLogin", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
+    fun getSmsToken(@RequestParam("phone") phone: String, @RequestParam("code") code: String): LoginResponse {
+        return LoginResponse(userService.getAccessTokenBySms(phone, code), null)
     }
 
     /**

@@ -4,7 +4,10 @@ import cn.hutool.core.util.RandomUtil
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.token.TokenTemplate
+import com.akagiyui.common.utils.BASE_NUMBER
 import com.akagiyui.common.utils.hasText
+import com.akagiyui.common.utils.random
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
@@ -46,8 +49,10 @@ class UserServiceImpl(
     private val repository: UserRepository,
     private val redisCache: RedisCache,
     private val mailService: MailService,
+    private val smsService: SmsService,
     private val settingService: SettingService,
     private val roleService: RoleService,
+    private val tokenTemplate: TokenTemplate,
 ) : UserService {
     private val log by LoggerDelegate()
 
@@ -297,7 +302,7 @@ class UserServiceImpl(
 
     override fun resetPassword(id: String, newPassword: String) {
         val user = findUserByIdWithCache(id)
-        user.password = encryptPassword(user.username, newPassword)
+        user.password = encryptPassword(user.username!!, newPassword)
         repository.save(user)
     }
 
@@ -335,7 +340,7 @@ class UserServiceImpl(
             user.email = userInfo.email
         }
         if (userInfo.password.hasText()) {
-            user.password = encryptPassword(user.username, userInfo.password!!)
+            user.password = encryptPassword(user.username!!, userInfo.password!!)
         }
         repository.save(user)
     }
@@ -346,6 +351,14 @@ class UserServiceImpl(
         return HashSet(user.roles)
     }
 
+    override fun sendSmsOneTimePassword(phone: String) {
+        val verifyCode = String.random(String.BASE_NUMBER, 6)
+        val redisKey = "smsCode:$phone"
+        redisCache[redisKey, 10, TimeUnit.MINUTES] = verifyCode
+        // 发送短信验证码
+        smsService.sendSmsOneTimePassword(phone, verifyCode)
+    }
+
     /**
      * 根据用户名获取用户信息
      *
@@ -354,9 +367,40 @@ class UserServiceImpl(
     @Cacheable(cacheNames = [CacheConstants.USER_DETAILS], key = "#loginUsernameParam")
     @Transactional
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(loginUsernameParam: String?): UserDetails {
-        val user = repository.getFirstByUsernameOrEmail(loginUsernameParam!!)
+    override fun loadUserByUsername(loginUsernameParam: String): UserDetails {
+        val user = repository.getFirstByUsernameOrEmail(loginUsernameParam)
             ?: throw UsernameNotFoundException("Username or password error")
         return LoginUserDetails(user)
+    }
+
+    @CacheEvict(
+        cacheNames = [
+            CacheConstants.USER_DETAILS,
+            CacheConstants.USER_LOGIN_DETAILS,
+            CacheConstants.USER_PAGE,
+            CacheConstants.USER_LIST,
+        ],
+        allEntries = true,
+    )
+    override fun getAccessTokenBySms(phone: String, code: String): String {
+        val redisKey = "smsCode:$phone"
+        val verifyCode = redisCache.get<String>(redisKey) ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+        if (verifyCode != code) {
+            throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+        }
+        redisCache.delete(redisKey)
+        // 判断用户是否存在
+        var user = repository.findByPhone(phone)
+        if (user == null) {
+            // 不存在则新增用户
+            val newUser = User().apply {
+                this.phone = phone
+                nickname = phone
+                roles = roleService.getAllDefaultRoles()
+            }
+            user = repository.save(newUser)
+        }
+
+        return tokenTemplate.createToken(user.id)
     }
 }

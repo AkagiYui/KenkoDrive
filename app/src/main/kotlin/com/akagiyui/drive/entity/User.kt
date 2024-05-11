@@ -17,14 +17,14 @@ class User : BaseEntity() {
     /**
      * 用户名
      */
-    @Column(nullable = false, unique = true)
-    lateinit var username: String
+    @Column(unique = true)
+    var username: String? = null
 
     /**
      * 密码
      */
-    @Column(nullable = false)
-    lateinit var password: String
+    @Column
+    var password: String? = null
 
     /**
      * 昵称
