@@ -1,15 +1,16 @@
 package com.akagiyui.drive.filter
 
+import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.common.token.TokenVerifyException
 import com.akagiyui.common.utils.hasText
+import com.akagiyui.drive.model.SessionUserAuthentication
 import com.akagiyui.drive.service.UserService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
@@ -39,14 +40,17 @@ class TokenAuthenticationFilter @Autowired constructor(
             try {
                 val userId = tokenTemplate.getUserId(token) // 获取用户 ID
                 if (userId != null) {
-                    val userDetails = userService.getUserDetails(userId) // 从 redis 或数据库中获取用户信息
-                    // 放入 Spring Security 上下文
-                    val authentication = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-                    authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    // 将用户信息放入 Spring Security 上下文
+                    val authentication = SessionUserAuthentication(
+                        userService.findUserById(userId),
+                        WebAuthenticationDetailsSource().buildDetails(request)
+                    )
                     SecurityContextHolder.getContext().authentication = authentication
                 }
             } catch (_: TokenVerifyException) {
                 // Token 验证失败
+            } catch (_: CustomException) {
+                // 找不到用户
             }
         }
         filterChain.doFilter(request, response)

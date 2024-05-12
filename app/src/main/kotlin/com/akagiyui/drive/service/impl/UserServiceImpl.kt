@@ -13,7 +13,6 @@ import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
-import com.akagiyui.drive.model.LoginUserDetails
 import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.request.AddUserRequest
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
@@ -157,8 +156,7 @@ class UserServiceImpl(
     override fun getSessionUser(): User {
         // 从 SecurityContextHolder 中获取用户信息
         val authentication = SecurityContextHolder.getContext().authentication
-        val userDetails = authentication.principal as LoginUserDetails
-        return userDetails.user
+        return authentication.principal as User
     }
 
     @Transactional
@@ -168,13 +166,6 @@ class UserServiceImpl(
             throw UnAuthorizedException()
         }
         return tokenTemplate.createToken(user.id)
-    }
-
-    @Cacheable(cacheNames = [CacheConstants.USER_LOGIN_DETAILS], key = "#userId")
-    @Transactional
-    override fun getUserDetails(userId: String): LoginUserDetails {
-        val user = findUserById(userId)
-        return LoginUserDetails(user)
     }
 
     override fun sendEmailVerifyCode(verifyRequest: EmailVerifyCodeRequest) {
@@ -280,9 +271,12 @@ class UserServiceImpl(
 
     @Transactional
     override fun getPermission(): Set<String> {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val userDetails = authentication.principal as LoginUserDetails
-        return userDetails.permissions
+        return getSessionUser().roles
+            .asSequence()
+            .map { it.permissions }
+            .flatten()
+            .map { it.name }
+            .toSet()
     }
 
     override fun getRole(): Set<String> {

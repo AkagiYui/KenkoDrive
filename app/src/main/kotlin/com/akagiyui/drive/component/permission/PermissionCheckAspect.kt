@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 
 /**
@@ -24,8 +23,7 @@ class PermissionCheckAspect {
     fun checkPermission(requiredPermission: RequirePermission) {
         // 获取当前用户的权限
         val authentication = SecurityContextHolder.getContext().authentication
-        val userDetails = authentication.principal as UserDetails
-        val authorities: Set<Permission> = userDetails.authorities.map { Permission.valueOf(it.authority) }.toSet()
+        val authorities: Set<Permission> = authentication.authorities.map { Permission.valueOf(it.authority) }.toSet()
 
         // 获取注解中的权限
         val permissions = requiredPermission.value

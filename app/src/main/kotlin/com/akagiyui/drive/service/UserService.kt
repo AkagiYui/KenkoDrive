@@ -2,7 +2,6 @@ package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
-import com.akagiyui.drive.model.LoginUserDetails
 import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.request.AddUserRequest
 import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
@@ -75,13 +74,6 @@ interface UserService {
      * @return 用户
      */
     fun getSessionUser(): User
-
-    /**
-     * 从 redis 或数据库获取当前用户，如果 redis 中不存在则从数据库中获取，并将用户信息存入 redis
-     * @param userId 用户ID
-     * @return 用户
-     */
-    fun getUserDetails(userId: String): LoginUserDetails
 
     /**
      * 发送邮箱验证码
