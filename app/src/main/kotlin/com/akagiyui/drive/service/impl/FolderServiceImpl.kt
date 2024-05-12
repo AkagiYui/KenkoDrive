@@ -25,7 +25,7 @@ class FolderServiceImpl @Autowired constructor(
 ) : FolderService {
 
     override fun createFolder(name: String, parentId: String?): Folder {
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
 
         val resolvedParentId = if (parentId.hasText()) parentId else null
         val parentFolder = resolvedParentId?.let {
@@ -50,14 +50,14 @@ class FolderServiceImpl @Autowired constructor(
     }
 
     override fun getSubFolders(parentId: String?): List<Folder> {
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
         val resolvedParentId = if (parentId.hasText()) parentId else null
 
         return folderRepository.findByUserIdAndParentId(user.id, resolvedParentId)
     }
 
     override fun getFolderChain(folderId: String): List<FolderResponse> {
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
         if (!folderId.hasText()) {
             return listOf()
         }

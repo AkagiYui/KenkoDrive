@@ -131,7 +131,7 @@ class AvatarServiceImpl(
     }
 
     private fun getAvatarKey(): String {
-        val user: User = userService.getUser()
+        val user: User = userService.getSessionUser()
         return "avatar/${user.id}.$IMAGE_FORMAT"
     }
 }

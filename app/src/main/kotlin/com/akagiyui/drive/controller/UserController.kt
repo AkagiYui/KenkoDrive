@@ -164,7 +164,7 @@ class UserController(private val userService: UserService, private val avatarSer
     @GetMapping("/info")
     @RequirePermission
     fun getUserInfo(): UserInfoResponse {
-        return UserInfoResponse(userService.getUser())
+        return UserInfoResponse(userService.getSessionUser())
     }
 
     /**

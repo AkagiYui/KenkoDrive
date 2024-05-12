@@ -88,7 +88,7 @@ class FileInfoServiceImpl(
             }
             // 添加用户与文件的关联记录
             fileInfoRepository.getFirstByHash(hash)?.let { fileInfo ->
-                userFileService.addAssociation(userService.getUser(), filename, fileInfo, null)
+                userFileService.addAssociation(userService.getSessionUser(), filename, fileInfo, null)
                 fileInfos.add(fileInfo) // 记录返回结果
             } ?: throw CustomException(ResponseEnum.INTERNAL_ERROR)
         }

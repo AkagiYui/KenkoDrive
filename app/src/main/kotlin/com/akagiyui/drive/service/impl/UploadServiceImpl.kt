@@ -59,7 +59,7 @@ class UploadServiceImpl(
             throw CustomException(ResponseEnum.FILE_TOO_LARGE)
         }
 
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
 
         // 是否已经存在上传信息
         if (isInfoInRedis(user.id, preUploadRequest.hash)) {
@@ -78,7 +78,7 @@ class UploadServiceImpl(
             throw CustomException(ResponseEnum.BAD_REQUEST)
         }
 
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
         if (!isInfoInRedis(user.id, fileHash)) {
             throw CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
@@ -178,7 +178,7 @@ class UploadServiceImpl(
                 // 如果文件已存在，则直接关联
                 userInfos.add(
                     userFileService.addAssociation(
-                        userService.getUser(),
+                        userService.getSessionUser(),
                         file.originalFilename!!,
                         existFileInfo,
                         folder
@@ -196,7 +196,7 @@ class UploadServiceImpl(
                 locked = true
             }
             fileInfoService.addFileInfo(fileInfo)
-            userInfos.add(userFileService.addAssociation(userService.getUser(), fileInfo.name, fileInfo, folder))
+            userInfos.add(userFileService.addAssociation(userService.getSessionUser(), fileInfo.name, fileInfo, folder))
             storageService.store(storageKey, cacheFile, file.contentType) {
                 cacheFile.deleteIfExists()
                 fileInfo.locked = false
@@ -207,7 +207,7 @@ class UploadServiceImpl(
     }
 
     private fun getUserCacheDirectory(userId: String? = null): File {
-        val id = userId ?: userService.getUser().id
+        val id = userId ?: userService.getSessionUser().id
         return File("$uploadCacheFolder/$id").apply { mkdirOrThrow() }
     }
 }

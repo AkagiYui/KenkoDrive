@@ -32,7 +32,7 @@ class AnnouncementController @Autowired constructor(
     @RequirePermission(Permission.ANNOUNCEMENT_ADD)
     fun addAnnouncement(@RequestBody @Validated request: AddAnnouncementRequest): String {
         val announcement = request.toAnnouncement().apply {
-            author = userService.getUser()
+            author = userService.getSessionUser()
         }
         return announcementService.addAnnouncement(announcement).id
     }

@@ -74,7 +74,7 @@ interface UserService {
      * 从 Security 获取当前用户
      * @return 用户
      */
-    fun getUser(): User
+    fun getSessionUser(): User
 
     /**
      * 从 redis 或数据库获取当前用户，如果 redis 中不存在则从数据库中获取，并将用户信息存入 redis

@@ -154,7 +154,7 @@ class UserServiceImpl(
         return repository.existsById(id)
     }
 
-    override fun getUser(): User {
+    override fun getSessionUser(): User {
         // 从 SecurityContextHolder 中获取用户信息
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as LoginUserDetails
@@ -268,7 +268,7 @@ class UserServiceImpl(
         allEntries = true,
     )
     override fun updateInfo(userInfo: UpdateUserInfoRequest) {
-        val user = getUser()
+        val user = getSessionUser()
         if (userInfo.nickname.hasText()) {
             user.nickname = userInfo.nickname
         }
@@ -286,7 +286,7 @@ class UserServiceImpl(
     }
 
     override fun getRole(): Set<String> {
-        val user = getUser()
+        val user = getSessionUser()
         return user.roles.stream().map(Role::id).collect(Collectors.toSet())
     }
 

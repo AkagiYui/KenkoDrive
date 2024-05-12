@@ -47,7 +47,7 @@ class UserFileServiceImpl(
     }
 
     override fun getFiles(folderId: String?): List<UserFile> {
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
         return userFileRepository.findByUserIdAndFolderId(user.id, folderId)
     }
 
@@ -56,7 +56,7 @@ class UserFileServiceImpl(
     }
 
     override fun getUserFileById(id: String): UserFile {
-        val user = userService.getUser()
+        val user = userService.getSessionUser()
         return userFileRepository.findByUserIdAndId(user.id, id) ?: throw CustomException(ResponseEnum.NOT_FOUND)
     }
 
