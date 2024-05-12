@@ -1,6 +1,5 @@
 package com.akagiyui.drive.config
 
-import com.akagiyui.drive.component.RequestMatcherBuilder
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter
 import com.akagiyui.drive.filter.TokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
@@ -55,7 +54,7 @@ class SecurityConfig(
      */
     @Bean
     @Throws(Exception::class)
-    fun filterChain(http: HttpSecurity, mvc: RequestMatcherBuilder): SecurityFilterChain {
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .authorizeHttpRequests {
                 it // 允许指定路径通过
@@ -66,8 +65,8 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.POST, "/user/sms").permitAll()
                     .requestMatchers(HttpMethod.POST, LOGIN_URL).anonymous()
                     .requestMatchers(HttpMethod.GET, "/user/token/sms").permitAll()
-                    .requestMatchers(*mvc.matchers("/user/register/**")).permitAll()
-                    .requestMatchers(*mvc.matchers("/sse")).permitAll()
+                    .requestMatchers("/user/register/**").permitAll()
+                    .requestMatchers("/sse").permitAll()
                     .anyRequest().authenticated() // 其他请求需要认证
             }
             .csrf { it.disable() } // 关闭 CSRF

@@ -1,8 +1,6 @@
-package com.akagiyui.drive.component
+package com.akagiyui.common
 
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
-import org.springframework.stereotype.Component
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector
 
 /**
@@ -13,13 +11,10 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector
  *
  * @author AkagiYui
  */
-@Component
 class RequestMatcherBuilder(
     private val introspector: HandlerMappingIntrospector,
-    private val servletPath: String?,
+    private val servletPath: String? = null,
 ) {
-    @Autowired
-    constructor(introspector: HandlerMappingIntrospector) : this(introspector, null)
 
     fun matchers(vararg patterns: String): Array<MvcRequestMatcher> {
         return Array(patterns.size) { index ->
