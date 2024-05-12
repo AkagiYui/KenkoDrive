@@ -10,6 +10,7 @@ import java.nio.file.Files
 
 /**
  * 文件工具类
+ * File类为Java类，没有伴生对象，无法扩展方法，这里使用工具类
  *
  * @author AkagiYui
  */
