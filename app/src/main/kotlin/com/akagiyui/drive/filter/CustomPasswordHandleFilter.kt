@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
@@ -31,7 +32,7 @@ class CustomPasswordHandleFilter @Autowired constructor(
         val url = request.requestURI
         val method = request.method
 
-        if ((SecurityConfig.LOGIN_URL == url) && ("POST" == method)) {
+        if ((SecurityConfig.LOGIN_URL == url) && (HttpMethod.POST.name() == method)) {
             val rawUsername = request.getParameter("username")
             val rawPassword = request.getParameter("password")
 

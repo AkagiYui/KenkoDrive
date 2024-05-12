@@ -13,6 +13,7 @@ import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.UserService
+import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -129,6 +130,12 @@ class UserController(private val userService: UserService, private val avatarSer
     @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
     fun getSmsOneTimePassword(@RequestParam("phone") phone: String) {
         userService.sendSmsOneTimePassword(phone)
+    }
+
+    @PostMapping("/token")
+    @PreAuthorize("isAnonymous()")
+    fun getToken(@NotNull username: String, @NotNull password: String): LoginResponse {
+        return LoginResponse(userService.getAccessToken(username, password), null)
     }
 
     @GetMapping("/token/sms")

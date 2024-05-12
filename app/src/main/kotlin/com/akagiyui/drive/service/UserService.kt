@@ -9,13 +9,12 @@ import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
 import com.akagiyui.drive.model.request.RegisterConfirmRequest
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import org.springframework.data.domain.Page
-import org.springframework.security.core.userdetails.UserDetailsService
 
 /**
  * 用户服务接口
  * @author AkagiYui
  */
-interface UserService : UserDetailsService {
+interface UserService {
     /**
      * 根据ID查找用户
      * @param id 用户ID
@@ -194,5 +193,14 @@ interface UserService : UserDetailsService {
      * @param code 验证码
      */
     fun getAccessTokenBySms(phone: String, code: String): String
+
+    /**
+     * 获取访问令牌
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 访问令牌
+     */
+    fun getAccessToken(username: String, password: String): String
 
 }

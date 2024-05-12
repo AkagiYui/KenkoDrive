@@ -149,6 +149,7 @@ class CustomExceptionHandler {
 
     /**
      * 处理 Spring Security 请求拒绝异常
+     * 如请求头不合法、请求方法不合法等
      *
      * @return RequestRejectedHandler
      */

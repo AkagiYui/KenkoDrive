@@ -1,27 +1,17 @@
 package com.akagiyui.drive.config
 
-import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.ResponseResult
-import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.drive.component.RequestMatcherBuilder
 import com.akagiyui.drive.filter.CustomPasswordHandleFilter
 import com.akagiyui.drive.filter.TokenAuthenticationFilter
-import com.akagiyui.drive.model.LoginUserDetails
-import com.akagiyui.drive.model.response.LoginResponse
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.*
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.AuthenticationException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.AuthenticationEntryPoint
@@ -46,7 +36,6 @@ class SecurityConfig(
     private val customPasswordHandleFilter: CustomPasswordHandleFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
-    private val tokenTemplate: TokenTemplate,
 ) {
     companion object {
         const val LOGIN_URL: String = "/user/token"
@@ -75,28 +64,18 @@ class SecurityConfig(
                     .requestMatchers(HttpMethod.GET, "/file/*/download/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/captcha/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/user/sms").permitAll()
+                    .requestMatchers(HttpMethod.POST, LOGIN_URL).anonymous()
                     .requestMatchers(HttpMethod.GET, "/user/token/sms").permitAll()
                     .requestMatchers(*mvc.matchers("/user/register/**")).permitAll()
                     .requestMatchers(*mvc.matchers("/sse")).permitAll()
                     .anyRequest().authenticated() // 其他请求需要认证
             }
-
-            // 关闭 CSRF
-            .csrf { it.disable() }
-
-            // 关闭 Session
-            .sessionManagement {
-                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            }
+            .csrf { it.disable() } // 关闭 CSRF
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // 关闭 Session
             .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加 JWT 过滤器
 //            .addFilterBefore(customPasswordHandleFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加密码处理过滤器
-            .formLogin {
-                it
-                    .loginProcessingUrl(LOGIN_URL)
-                    .successHandler(this::onAuthenticationSuccess)
-                    .failureHandler(this::onAuthenticationFailure)
-                    .permitAll()
-            }
+            .formLogin { it.disable() }
+            .logout { it.disable() }
             .exceptionHandling {
                 it
                     .authenticationEntryPoint(authenticationEntryPoint)
@@ -125,32 +104,4 @@ class SecurityConfig(
         }
     }
 
-    /**
-     * 认证失败处理
-     */
-    @Suppress("UNUSED_PARAMETER")
-    private fun onAuthenticationFailure(
-        httpServletRequest: HttpServletRequest,
-        response: HttpServletResponse,
-        e: AuthenticationException,
-    ) {
-        ResponseResult.writeResponse(response, HttpStatus.UNAUTHORIZED, ResponseEnum.UNAUTHORIZED)
-    }
-
-    /**
-     * 认证成功处理
-     */
-    @Suppress("UNUSED_PARAMETER")
-    private fun onAuthenticationSuccess(
-        httpServletRequest: HttpServletRequest,
-        response: HttpServletResponse,
-        authentication: Authentication,
-    ) {
-        val loginUserDetails = authentication.principal as LoginUserDetails
-
-        val user = loginUserDetails.user
-        val token = tokenTemplate.createToken(user.id)
-        val loginResponse = LoginResponse(token, null)
-        ResponseResult.writeResponse(response, HttpStatus.OK, loginResponse)
-    }
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.UnAuthorizedException
 import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.common.utils.BASE_NUMBER
 import com.akagiyui.common.utils.hasText
@@ -31,8 +32,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -160,6 +159,15 @@ class UserServiceImpl(
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as LoginUserDetails
         return userDetails.user
+    }
+
+    @Transactional
+    override fun getAccessToken(username: String, password: String): String {
+        val user = repository.getFirstByUsernameOrEmail(username) ?: throw UnAuthorizedException()
+        if (!passwordEncoder.matches(password, user.password)) {
+            throw UnAuthorizedException()
+        }
+        return tokenTemplate.createToken(user.id)
     }
 
     @Cacheable(cacheNames = [CacheConstants.USER_LOGIN_DETAILS], key = "#userId")
@@ -357,20 +365,6 @@ class UserServiceImpl(
         redisCache[redisKey, 10, TimeUnit.MINUTES] = verifyCode
         // 发送短信验证码
         smsService.sendSmsOneTimePassword(phone, verifyCode)
-    }
-
-    /**
-     * 根据用户名获取用户信息
-     *
-     * @param loginUsernameParam 登录username参数
-     */
-    @Cacheable(cacheNames = [CacheConstants.USER_DETAILS], key = "#loginUsernameParam")
-    @Transactional
-    @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(loginUsernameParam: String): UserDetails {
-        val user = repository.getFirstByUsernameOrEmail(loginUsernameParam)
-            ?: throw UsernameNotFoundException("Username or password error")
-        return LoginUserDetails(user)
     }
 
     @CacheEvict(
