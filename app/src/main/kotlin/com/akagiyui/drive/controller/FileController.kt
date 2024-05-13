@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import java.io.OutputStream
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.time.Duration
 import kotlin.math.max
 
 /**
@@ -44,9 +45,11 @@ class FileController(
     private val uploadService: UploadService,
 ) : DisposableBean {
     private val log by LoggerDelegate()
-    val bandwidthBucketManager = BucketManager(1000 * 60 * 5)
+    val speedBucketManager = BucketManager(1000 * 60 * 5) // 限速桶管理器，5分钟清理一次
+    val bandwidthBucketManager = BucketManager(1000 * 60 * 60 * 24 * 2) // 带宽桶管理器，2天清理一次
 
     override fun destroy() {
+        speedBucketManager.close()
         bandwidthBucketManager.close()
     }
 
@@ -222,15 +225,23 @@ class FileController(
         fileResource.inputStream.use { inputStream ->
             val bytesActuallySkipped = inputStream.skip(start)
             check(bytesActuallySkipped == start) { "Skipped $bytesActuallySkipped bytes, expected $start bytes" }
-            val speed = max(DEFAULT_BUFFER_SIZE.toLong(), 1000L * 1000 * 4) // 用户上限速度
-            check(!bandwidthBucketManager.closed) { "Application is shutting down" } // 应用正在关闭，提前结束下载
-            val limiter = bandwidthBucketManager[bucketKey, speed] // 限速器
+            val speed = max(DEFAULT_BUFFER_SIZE.toLong(), 1000L * 1000 * 4) // 用户上限速度，4MB/s
+            check(!speedBucketManager.closed && !bandwidthBucketManager.closed) {
+                "Application is shutting down" // 应用正在关闭，提前结束下载
+            }
+            val speedLimiter = speedBucketManager[bucketKey, speed] // 速度限速器
+            val bandwidthLimiter = bandwidthBucketManager[
+                bucketKey,
+                1000L * 1000 * 1000 * 10, // 10GB
+                Duration.ofDays(1) // 1天
+            ] // 流量限制器
             val data = ByteArray(DEFAULT_BUFFER_SIZE) // 缓冲区
             var totalWritten = 0 // 已写入数据量
             while (totalWritten < rangeLength) { // 限制写入数据量
                 val numberOfBytesToWrite: Int = inputStream.read(data)
                 if (numberOfBytesToWrite <= 0) break
-                limiter.asBlocking().consume(numberOfBytesToWrite.toLong())
+                speedLimiter.asBlocking().consume(numberOfBytesToWrite.toLong())
+                bandwidthLimiter.asBlocking().consume(numberOfBytesToWrite.toLong())
                 try {
                     outputStream.write(data, 0, numberOfBytesToWrite)
                 } catch (e: InterruptedException) {

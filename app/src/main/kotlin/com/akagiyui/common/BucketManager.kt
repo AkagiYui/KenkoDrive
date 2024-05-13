@@ -76,6 +76,28 @@ class BucketManager(private val idleTime: Long = 1000 * 60 * 5) {
     }
 
     /**
+     * 获取桶
+     *
+     * @param key 键
+     * @param refillPerUnit 每单位时间填充速率
+     * @param timeUnit 时间单位
+     */
+    operator fun get(key: String, refillPerUnit: Long, timeUnit: Duration): Bucket {
+        check(!isClosed.get()) { "BucketManager is closed" }
+        return bucketMap.computeIfAbsent(key) {
+            log.debug("Create bucket: {}, refillPerUnit: {}, timeUnit: {}", key, refillPerUnit, timeUnit)
+            Bucket.builder()
+                .addLimit {
+                    it.capacity(refillPerUnit)
+                        .refillGreedy(refillPerUnit, timeUnit)
+                        .initialTokens(refillPerUnit)
+                }
+                .withListener(BandwidthBucketListener(key, accessTimeMap))
+                .build()
+        }
+    }
+
+    /**
      * 关闭管理器
      */
     fun close() {

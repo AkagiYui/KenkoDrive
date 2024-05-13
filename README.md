@@ -14,6 +14,7 @@
 
 > [!IMPORTANT]
 > 该项目仅为个人学习项目，不具备商业使用价值，仅供学习交流。
+> 如果你需要一款类似的软件，不妨看看[alist](https://github.com/alist-org/alist)。
 
 > [!CAUTION]
 > 该项目仍处于初期开发阶段，数据库结构将会频繁变动，不建议在生产环境中使用，请注意备份数据。
@@ -31,7 +32,7 @@
 - [x] 用户注册
 - [x] 用户名/邮箱登录
 - [x] 个人信息设置、头像上传、密码重置
-- [ ] 文件(夹)上传/下载/删除
+- [x] 文件(夹)上传/下载/删除
 - [ ] 文件分享
 - [ ] 游客广场
 - [x] 管理员用户管理
@@ -76,16 +77,14 @@
 - [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
 - [x] [权限校验](app/src/main/kotlin/com/akagiyui/drive/model/Permission.kt)
 - [x] [统一 JSON 格式返回](app/src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
-- [ ] 短信发送
-- [ ] 日志记录
-- [x] [速度限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
-- [ ] 流量限制
+- [ ] [日志记录](app/src/main/kotlin/com/akagiyui/drive/component/DatabaseLogAppender.kt)
+- [x] [速度限制、流量限制](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [x] 验证码(CAPTCHA): [图片验证码](app/src/main/kotlin/com/akagiyui/drive/service/CaptchaService.kt)、
   [极验行为验证码](app/src/main/kotlin/com/akagiyui/drive/component/captcha/GeetestCaptchaV4Aspect.kt)
 - [x] 一次性密码(OTP): [邮箱验证码](app/src/main/kotlin/com/akagiyui/drive/service/impl/MailServiceImpl.kt)、
-  阿里云短信验证码
+  [阿里云短信验证码](app/src/main/kotlin/com/akagiyui/drive/service/impl/SmsServiceImpl.kt)
 - [x] [断点续传](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
-- [x] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
+- [ ] [分片上传](app/src/main/kotlin/com/akagiyui/drive/service/UploadService.kt)
 - [x] [分片下载](app/src/main/kotlin/com/akagiyui/drive/controller/FileController.kt)
 - [ ] 文件秒传
 - [x] [相同文件合并(上传时检测)](app/src/main/kotlin/com/akagiyui/drive/service/impl/UploadServiceImpl.kt)
