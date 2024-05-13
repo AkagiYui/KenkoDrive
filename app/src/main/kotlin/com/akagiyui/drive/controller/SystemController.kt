@@ -4,7 +4,10 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.toUnderscoreCase
 import com.akagiyui.drive.component.permission.RequirePermission
+import com.akagiyui.drive.entity.ActionLog
 import com.akagiyui.drive.model.Permission
+import com.akagiyui.drive.model.response.PageResponse
+import com.akagiyui.drive.service.ActionLogService
 import com.akagiyui.drive.service.SettingKey
 import com.akagiyui.drive.service.SettingService
 import org.springframework.beans.factory.annotation.Value
@@ -17,7 +20,10 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/system")
-class SystemController(private val settingService: SettingService) {
+class SystemController(
+    private val settingService: SettingService,
+    private val actionLogService: ActionLogService,
+) {
 
     @Value("\${application.version:unknown}")
     lateinit var version: String
@@ -58,5 +64,20 @@ class SystemController(private val settingService: SettingService) {
         } catch (e: IllegalArgumentException) {
             throw CustomException(ResponseEnum.BAD_REQUEST)
         }
+    }
+
+    /**
+     * 获取操作日志
+     * @param index 页码
+     * @param size 每页大小
+     * @return 操作日志分页
+     */
+    @GetMapping("/log")
+    @RequirePermission(Permission.ACTION_LOG_GET)
+    fun getActionLog(
+        @RequestParam(defaultValue = "0") index: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+    ): PageResponse<ActionLog> {
+        return PageResponse(actionLogService.find(index, size))
     }
 }

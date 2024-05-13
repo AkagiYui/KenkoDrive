@@ -1,10 +1,22 @@
 package com.akagiyui.drive.model.response
 
+import org.springframework.data.domain.Page
+
+
 /**
  * 分页响应基类
  * @author AkagiYui
  */
-class PageResponse<T> {
+class PageResponse<T>() {
+
+    constructor(page: Page<T>) : this() {
+        this.page = page.number
+        this.size = page.size
+        this.pageCount = page.totalPages
+        this.total = page.totalElements
+        this.list = page.content
+    }
+
     /**
      * 当前页
      */

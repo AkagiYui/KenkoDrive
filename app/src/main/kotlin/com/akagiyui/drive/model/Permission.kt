@@ -108,6 +108,11 @@ enum class Permission(val description: String) {
      * 前端启用调试模式
      */
     FRONTEND_ENABLE_DEBUG_MODE("前端启用调试模式"),
+
+    /**
+     * 获取操作日志
+     */
+    ACTION_LOG_GET("获取操作日志"),
     ;
 
     /**
