@@ -14,8 +14,6 @@ plugins {
      * 自动为 Spring Bean 添加 open 修饰符
      */
     kotlin("plugin.spring") version "1.9.23"
-
-    id("io.sentry.jvm.gradle") version "4.3.0" // Sentry
 }
 
 group = "com.akagiyui" // 项目组织
@@ -114,12 +112,4 @@ tasks.processResources {
     filesMatching("application.yaml") {
         expand(mapOf("version" to version))
     }
-}
-
-// Sentry 配置
-sentry {
-    includeSourceContext.set(true)
-    org.set("akagiyui")
-    projectName.set("kenkodrive-springboot")
-    authToken.set(System.getenv("SENTRY_AUTH_TOKEN"))
 }
