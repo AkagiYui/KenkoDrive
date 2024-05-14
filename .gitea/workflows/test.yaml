@@ -6,9 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:latest
-      env:
-        http_proxy: ${{ secrets.HTTP_PROXY }}
-        https_proxy: ${{ secrets.HTTP_PROXY }}
       volumes:
         - /srv/gradle/caches:/root/.gradle
 
@@ -24,8 +21,17 @@ jobs:
           - 6379:6379
 
     steps:
+      - name: Set up Http Proxy
+        run: export http_proxy="${{ secrets.HTTP_PROXY }}" && export https_proxy="${{ secrets.HTTP_PROXY }}"
+
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Set up Gradle Proxy
+        run: echo "systemProp.http.proxyHost=${{ secrets.GRADLE_PROXY_HOST_HOST }}" >> gradle.properties \
+          && echo "systemProp.http.proxyPort=${{ secrets.GRADLE_PROXY_HOST_PORT }}" >> gradle.properties \
+          && echo "systemProp.https.proxyHost=${{ secrets.GRADLE_PROXY_HOST_HOST }}" >> gradle.properties \
+          && echo "systemProp.https.proxyPort=${{ secrets.GRADLE_PROXY_HOST_PORT }}" >> gradle.properties
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
