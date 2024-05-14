@@ -29,8 +29,26 @@ jobs:
           java-version: '21'
           distribution: 'liberica'
 
+      - name: Cache Gradle Wrapper
+        uses: https://gitea.com/actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
       - name: Gradle Init
         run: chmod +x gradlew && ./gradlew --version
+
+      - name: Cache Gradle Wrapper
+        uses: https://gitea.com/actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Build with Gradle
         run: ./gradlew assemble --no-daemon --warning-mode all --scan
@@ -42,19 +60,21 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Test with Gradle
         run: export SPRING_DATA_REDIS_HOST=redis && ./gradlew test --no-daemon --warning-mode all --scan
-
-      - name: Gotify Notification
-        if: failure()
-        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" -X POST -F "title=Kenko Drive Demo"  -F "message=构建失败" -F "priority=5"
 
       - name: Build Jar Package
         run: rm app/build/libs/*.jar && ./gradlew bootJar -i
 
       - name: Deploy to Docker
         run: docker compose -p kenko-drive -f docker-compose-drone.yaml up -d --build application
+
+      - name: Gotify Notification
+        if: failure()
+        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" -X POST -F "title=Kenko Drive Demo"  -F "message=构建失败" -F "priority=5"
 
       - name: Gotify Notification
         run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" -X POST -F "title=Kenko Drive Demo"  -F "message=部署完成" -F "priority=5"

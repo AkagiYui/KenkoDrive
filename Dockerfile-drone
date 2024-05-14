@@ -2,8 +2,8 @@ FROM bellsoft/liberica-runtime-container:jre-21-slim-musl
 LABEL maintainer="AkagiYui"
 
 COPY app/build/libs/*.jar /app/app.jar
-COPY ./config/*.yaml /app/
-COPY ./config/*.yml /app/
+COPY *.yaml /app/
+COPY *.yml /app/
 WORKDIR /app
 VOLUME /app/data
 EXPOSE 6677
