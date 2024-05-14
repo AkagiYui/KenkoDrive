@@ -23,6 +23,9 @@ class PermissionCheckAspect {
     fun checkPermission(requiredPermission: RequirePermission) {
         // 获取当前用户的权限
         val authentication = SecurityContextHolder.getContext().authentication
+        if (authentication.principal == "anonymousUser") {
+            throw CustomException(ResponseEnum.UNAUTHORIZED)
+        }
         val authorities: Set<Permission> = authentication.authorities.map { Permission.valueOf(it.authority) }.toSet()
 
         // 获取注解中的权限

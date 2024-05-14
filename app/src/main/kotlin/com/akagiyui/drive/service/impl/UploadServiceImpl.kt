@@ -8,6 +8,7 @@ import com.akagiyui.common.utils.hasText
 import com.akagiyui.common.utils.mkdirOrThrow
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.ChunkedUploadInfo
 import com.akagiyui.drive.model.request.PreUploadRequest
@@ -29,7 +30,6 @@ import java.security.MessageDigest
 @Service
 class UploadServiceImpl(
     private val redisCache: RedisCache,
-    private val userService: UserService,
     private val settingService: SettingService,
     private val storageService: StorageService,
     private val fileInfoService: FileInfoService,
@@ -52,14 +52,12 @@ class UploadServiceImpl(
         return redisCache[redisKey] ?: throw CustomException(ResponseEnum.TASK_NOT_FOUND)
     }
 
-    override fun requestUpload(preUploadRequest: PreUploadRequest) {
+    override fun requestUpload(user: User, preUploadRequest: PreUploadRequest) {
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         if (preUploadRequest.filesize > uploadFileSizeLimit) {
             throw CustomException(ResponseEnum.FILE_TOO_LARGE)
         }
-
-        val user = userService.getSessionUser()
 
         // 是否已经存在上传信息
         if (isInfoInRedis(user.id, preUploadRequest.hash)) {
@@ -73,12 +71,11 @@ class UploadServiceImpl(
         saveInfoToRedis(user.id, preUploadRequest.hash, chunkedInfo)
     }
 
-    override fun uploadChunk(fileHash: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int) {
+    override fun uploadChunk(user: User, fileHash: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int) {
         if (chunk.isEmpty || (chunkIndex < 0) || chunkHash.isBlank()) {
             throw CustomException(ResponseEnum.BAD_REQUEST)
         }
 
-        val user = userService.getSessionUser()
         if (!isInfoInRedis(user.id, fileHash)) {
             throw CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
@@ -134,7 +131,7 @@ class UploadServiceImpl(
             File(field).mkdirOrThrow(); return field
         }
 
-    override fun receiveMultipartFiles(files: List<MultipartFile>, folder: String?): List<UserFile> {
+    override fun receiveMultipartFiles(user: User, files: List<MultipartFile>, folder: String?): List<UserFile> {
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         files.forEach {
@@ -143,7 +140,7 @@ class UploadServiceImpl(
             }
         }
         // 获取缓存目录
-        val cacheDirectory: File = getUserCacheDirectory().let {
+        val cacheDirectory: File = getUserCacheDirectory(user.id).let {
             if (folder.hasText()) {
                 File(it, folder).apply { mkdirOrThrow() }
             } else {
@@ -178,7 +175,7 @@ class UploadServiceImpl(
                 // 如果文件已存在，则直接关联
                 userInfos.add(
                     userFileService.addAssociation(
-                        userService.getSessionUser(),
+                        user,
                         file.originalFilename!!,
                         existFileInfo,
                         folder
@@ -196,7 +193,7 @@ class UploadServiceImpl(
                 locked = true
             }
             fileInfoService.addFileInfo(fileInfo)
-            userInfos.add(userFileService.addAssociation(userService.getSessionUser(), fileInfo.name, fileInfo, folder))
+            userInfos.add(userFileService.addAssociation(user, fileInfo.name, fileInfo, folder))
             storageService.store(storageKey, cacheFile, file.contentType) {
                 cacheFile.deleteIfExists()
                 fileInfo.locked = false
@@ -207,7 +204,6 @@ class UploadServiceImpl(
     }
 
     private fun getUserCacheDirectory(userId: String? = null): File {
-        val id = userId ?: userService.getSessionUser().id
-        return File("$uploadCacheFolder/$id").apply { mkdirOrThrow() }
+        return File("$uploadCacheFolder/$userId").apply { mkdirOrThrow() }
     }
 }

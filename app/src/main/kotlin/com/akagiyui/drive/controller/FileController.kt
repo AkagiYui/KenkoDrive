@@ -2,8 +2,10 @@ package com.akagiyui.drive.controller
 
 import com.akagiyui.common.BucketManager
 import com.akagiyui.common.delegate.LoggerDelegate
+import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.PreUploadRequest
@@ -64,8 +66,9 @@ class FileController(
     fun upload(
         @RequestPart("file") files: List<MultipartFile>,
         folder: String?,
+        @CurrentUser user: User,
     ): List<UserFile> {
-        return uploadService.receiveMultipartFiles(files, folder)
+        return uploadService.receiveMultipartFiles(user, files, folder)
     }
 
     /**
@@ -87,8 +90,8 @@ class FileController(
      */
     @PostMapping("/upload/request")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    fun uploadRequest(@RequestBody @Validated request: PreUploadRequest) {
-        uploadService.requestUpload(request)
+    fun uploadRequest(@RequestBody @Validated request: PreUploadRequest, @CurrentUser user: User) {
+        uploadService.requestUpload(user, request)
     }
 
     /**
@@ -101,8 +104,9 @@ class FileController(
         @RequestParam("file") chunk: MultipartFile,
         @RequestParam("hash") chunkHash: String,
         @RequestParam("index") chunkIndex: @Min(1) Int,
+        @CurrentUser user: User,
     ) {
-        uploadService.uploadChunk(fileHash, chunk, chunkHash, chunkIndex)
+        uploadService.uploadChunk(user, fileHash, chunk, chunkHash, chunkIndex)
     }
 
     /**
@@ -113,10 +117,16 @@ class FileController(
      */
     @GetMapping("", "/")
     @RequirePermission
-    fun getFileList(@RequestParam(name = "folder", required = false) folderId: String?): FolderContentResponse {
-        val files = UserFileResponse.fromUserFileList(userFileService.getFiles(folderId))
-        val folders = FolderResponse.fromFolderList(folderService.getSubFolders(folderId))
-        return FolderContentResponse(files, folders, folderId?.let { folderService.getFolderChain(it) } ?: emptyList())
+    fun getFileList(
+        @RequestParam(name = "folder", required = false) folderId: String?,
+        @CurrentUser user: User,
+    ): FolderContentResponse {
+        val files = UserFileResponse.fromUserFileList(userFileService.getFiles(user.id, folderId))
+        val folders = FolderResponse.fromFolderList(folderService.getSubFolders(user.id, folderId))
+        return FolderContentResponse(
+            files,
+            folders,
+            folderId?.let { folderService.getFolderChain(user.id, it) } ?: emptyList())
     }
 
     /**
@@ -140,8 +150,8 @@ class FileController(
      */
     @GetMapping("/{id}/token")
     @RequirePermission
-    fun getTemporaryId(@PathVariable("id") userFileId: String): String {
-        val (randomId, userFile) = userFileService.getTemporaryId(userFileId)
+    fun createTemporaryId(@PathVariable("id") userFileId: String, @CurrentUser user: User): String {
+        val (randomId, userFile) = userFileService.getTemporaryId(user.id, userFileId)
         fileInfoService.recordDownload(userFile.fileInfo.id) // 记录下载
         return randomId
     }
@@ -262,7 +272,7 @@ class FileController(
      */
     @DeleteMapping("/{id}")
     @RequirePermission
-    fun deleteFile(@PathVariable id: String) {
-        userFileService.userDeleteFile(id)
+    fun deleteFile(@PathVariable id: String, @CurrentUser user: User) {
+        userFileService.userDeleteFile(user.id, id)
     }
 }

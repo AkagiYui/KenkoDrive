@@ -1,6 +1,8 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.permission.RequirePermission
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateFolderRequest
 import com.akagiyui.drive.model.response.FolderResponse
@@ -23,8 +25,11 @@ class FolderController(private val folderService: FolderService) {
      */
     @GetMapping("", "/")
     @RequirePermission
-    fun listFolder(@RequestParam(name = "parent", required = false) parentId: String?): List<FolderResponse> {
-        return FolderResponse.fromFolderList(folderService.getSubFolders(parentId))
+    fun listFolder(
+        @RequestParam(name = "parent", required = false) parentId: String?,
+        @CurrentUser user: User,
+    ): List<FolderResponse> {
+        return FolderResponse.fromFolderList(folderService.getSubFolders(user.id, parentId))
     }
 
     /**
@@ -35,7 +40,7 @@ class FolderController(private val folderService: FolderService) {
      */
     @PostMapping("", "/")
     @RequirePermission(Permission.FOLDER_CREATE)
-    fun createFolder(@RequestBody request: CreateFolderRequest): FolderResponse {
-        return FolderResponse(folderService.createFolder(request.name, request.parent))
+    fun createFolder(@RequestBody request: CreateFolderRequest, @CurrentUser user: User): FolderResponse {
+        return FolderResponse(folderService.createFolder(user, request.name, request.parent))
     }
 }

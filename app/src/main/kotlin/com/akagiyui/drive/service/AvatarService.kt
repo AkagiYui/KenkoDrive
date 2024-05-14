@@ -13,12 +13,12 @@ interface AvatarService {
      * 获取头像
      * @return 头像
      */
-    fun getAvatar(): AvatarContent
+    fun getAvatar(userId: String): AvatarContent
 
     /**
      * 保存头像
      *
      * @param avatar 头像
      */
-    fun saveAvatar(avatar: MultipartFile)
+    fun saveAvatar(userId: String, avatar: MultipartFile)
 }

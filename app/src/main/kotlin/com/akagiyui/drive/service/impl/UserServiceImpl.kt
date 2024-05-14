@@ -30,7 +30,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -51,14 +50,10 @@ class UserServiceImpl(
     private val settingService: SettingService,
     private val roleService: RoleService,
     private val tokenTemplate: TokenTemplate,
+    private val passwordEncoder: PasswordEncoder,
 ) : UserService {
     private val log by LoggerDelegate()
-
     private var emailVerifyTimeout: Long = settingService.mailVerifyCodeTimeout.toLong()
-
-    @Resource
-    @Lazy
-    lateinit var passwordEncoder: PasswordEncoder
 
     @Cacheable(value = [CacheConstants.USER_BY_ID], key = "#id")
     override fun findUserById(id: String): User {
@@ -153,12 +148,6 @@ class UserServiceImpl(
         return repository.existsById(id)
     }
 
-    override fun getSessionUser(): User {
-        // 从 SecurityContextHolder 中获取用户信息
-        val authentication = SecurityContextHolder.getContext().authentication
-        return authentication.principal as User
-    }
-
     @Transactional
     override fun getAccessToken(username: String, password: String): String {
         val user = repository.getFirstByUsernameOrEmail(username) ?: throw UnAuthorizedException()
@@ -205,7 +194,7 @@ class UserServiceImpl(
      */
     @Resource
     @Lazy
-    lateinit var userService: UserService
+    lateinit var selfProxy: UserService
 
     override fun confirmRegister(registerConfirmRequest: RegisterConfirmRequest) {
         // 从 redis 取回验证码
@@ -223,7 +212,7 @@ class UserServiceImpl(
             throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
         // 添加用户
-        userService.addUser(AddUserRequest().apply {
+        selfProxy.addUser(AddUserRequest().apply {
             username = verifyRequest.username
             password = verifyRequest.password
             email = verifyRequest.email
@@ -258,20 +247,19 @@ class UserServiceImpl(
         ],
         allEntries = true,
     )
-    override fun updateInfo(userInfo: UpdateUserInfoRequest) {
-        val user = getSessionUser()
-        if (userInfo.nickname.hasText()) {
-            user.nickname = userInfo.nickname
+    override fun updateInfo(user: User, newUserInfo: UpdateUserInfoRequest) {
+        if (newUserInfo.nickname.hasText()) {
+            user.nickname = newUserInfo.nickname
         }
-        if (userInfo.email.hasText()) {
-            user.email = userInfo.email
+        if (newUserInfo.email.hasText()) {
+            user.email = newUserInfo.email
         }
         repository.save(user)
     }
 
     @Transactional
-    override fun getPermission(): Set<String> {
-        return getSessionUser().roles
+    override fun getPermission(user: User): Set<String> {
+        return user.roles
             .asSequence()
             .map { it.permissions }
             .flatten()
@@ -279,8 +267,7 @@ class UserServiceImpl(
             .toSet()
     }
 
-    override fun getRole(): Set<String> {
-        val user = getSessionUser()
+    override fun getRole(user: User): Set<String> {
         return user.roles.stream().map(Role::id).collect(Collectors.toSet())
     }
 

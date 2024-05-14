@@ -1,5 +1,6 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.captcha.GeetestCaptchaV4Protected
 import com.akagiyui.drive.component.limiter.Limit
 import com.akagiyui.drive.component.permission.RequirePermission
@@ -163,8 +164,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @GetMapping("/info")
     @RequirePermission
-    fun getUserInfo(): UserInfoResponse {
-        return UserInfoResponse(userService.getSessionUser())
+    fun getUserInfo(@CurrentUser user: User): UserInfoResponse {
+        return UserInfoResponse(user)
     }
 
     /**
@@ -172,8 +173,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @PutMapping("/info")
     @RequirePermission
-    fun updateLoginUserInfo(@RequestBody @Validated userInfo: UpdateUserInfoRequest) {
-        userService.updateInfo(userInfo)
+    fun updateLoginUserInfo(@RequestBody @Validated userInfo: UpdateUserInfoRequest, @CurrentUser user: User) {
+        userService.updateInfo(user, userInfo)
     }
 
     /**
@@ -208,8 +209,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @PostMapping("/avatar")
     @RequirePermission
-    fun updateAvatar(@RequestParam("avatar") avatar: MultipartFile) {
-        avatarService.saveAvatar(avatar)
+    fun updateAvatar(@RequestParam("avatar") avatar: MultipartFile, @CurrentUser user: User) {
+        avatarService.saveAvatar(user.id, avatar)
     }
 
     /**
@@ -219,8 +220,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @GetMapping("/avatar")
     @RequirePermission
-    fun getAvatar(): ResponseEntity<ByteArray> {
-        val avatar = avatarService.getAvatar()
+    fun getAvatar(@CurrentUser user: User): ResponseEntity<ByteArray> {
+        val avatar = avatarService.getAvatar(user.id)
 
         val header = HttpHeaders()
         header.contentType = MediaType.valueOf("image/" + avatar.contentType)
@@ -236,8 +237,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @GetMapping("/permission")
     @RequirePermission
-    fun getPermission(): Set<String> {
-        return userService.getPermission()
+    fun getPermission(@CurrentUser user: User): Set<String> {
+        return userService.getPermission(user)
     }
 
     /**
@@ -245,8 +246,8 @@ class UserController(private val userService: UserService, private val avatarSer
      */
     @GetMapping("/role")
     @RequirePermission
-    fun getRole(): Set<String> {
-        return userService.getRole()
+    fun getRole(@CurrentUser user: User): Set<String> {
+        return userService.getRole(user)
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.User
 import org.springframework.web.multipart.MultipartFile
 import java.util.stream.Stream
 
@@ -34,7 +35,7 @@ interface FileInfoService {
     /**
      * 保存文件
      */
-    fun saveFile(files: List<MultipartFile>): List<FileInfo>
+    fun saveFile(user: User, files: List<MultipartFile>): List<FileInfo>
 
     /**
      * 记录下载

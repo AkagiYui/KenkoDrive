@@ -4,10 +4,10 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Folder
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.repository.FolderRepository
 import com.akagiyui.drive.service.FolderService
-import com.akagiyui.drive.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -15,18 +15,13 @@ import org.springframework.stereotype.Service
  * 文件夹服务实现类
  *
  * @author AkagiYui
- * @property folderRepository FolderRepository
- * @property userService UserService
  */
 @Service
 class FolderServiceImpl @Autowired constructor(
     private val folderRepository: FolderRepository,
-    private val userService: UserService,
 ) : FolderService {
 
-    override fun createFolder(name: String, parentId: String?): Folder {
-        val user = userService.getSessionUser()
-
+    override fun createFolder(user: User, name: String, parentId: String?): Folder {
         val resolvedParentId = if (parentId.hasText()) parentId else null
         val parentFolder = resolvedParentId?.let {
             folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
@@ -45,25 +40,19 @@ class FolderServiceImpl @Autowired constructor(
         return folder
     }
 
-    override fun createFolder(name: String): Folder {
-        return createFolder(name, null)
-    }
-
-    override fun getSubFolders(parentId: String?): List<Folder> {
-        val user = userService.getSessionUser()
+    override fun getSubFolders(userId: String, parentId: String?): List<Folder> {
         val resolvedParentId = if (parentId.hasText()) parentId else null
 
-        return folderRepository.findByUserIdAndParentId(user.id, resolvedParentId)
+        return folderRepository.findByUserIdAndParentId(userId, resolvedParentId)
     }
 
-    override fun getFolderChain(folderId: String): List<FolderResponse> {
-        val user = userService.getSessionUser()
+    override fun getFolderChain(userId: String, folderId: String): List<FolderResponse> {
         if (!folderId.hasText()) {
             return listOf()
         }
 
         val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
-        if (folder.user.id != user.id) {
+        if (folder.user.id != userId) {
             throw CustomException(ResponseEnum.NOT_FOUND)
         }
 

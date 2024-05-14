@@ -6,12 +6,12 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.repository.FileInfoRepository
 import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.StorageService
 import com.akagiyui.drive.service.UserFileService
-import com.akagiyui.drive.service.UserService
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -30,7 +30,6 @@ class FileInfoServiceImpl(
     private val fileInfoRepository: FileInfoRepository,
     private val storageService: StorageService,
     private val userFileService: UserFileService,
-    private val userService: UserService,
 ) : FileInfoService {
 
     private val log by LoggerDelegate()
@@ -52,7 +51,7 @@ class FileInfoServiceImpl(
         return fileInfoRepository.findById(id).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
     }
 
-    override fun saveFile(files: List<MultipartFile>): List<FileInfo> {
+    override fun saveFile(user: User, files: List<MultipartFile>): List<FileInfo> {
         val fileInfos = mutableListOf<FileInfo>()
         files.forEach { file ->
             // 读取文件信息
@@ -88,7 +87,7 @@ class FileInfoServiceImpl(
             }
             // 添加用户与文件的关联记录
             fileInfoRepository.getFirstByHash(hash)?.let { fileInfo ->
-                userFileService.addAssociation(userService.getSessionUser(), filename, fileInfo, null)
+                userFileService.addAssociation(user, filename, fileInfo, null)
                 fileInfos.add(fileInfo) // 记录返回结果
             } ?: throw CustomException(ResponseEnum.INTERNAL_ERROR)
         }

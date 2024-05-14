@@ -1,6 +1,8 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.permission.RequirePermission
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.AddAnnouncementRequest
@@ -9,8 +11,6 @@ import com.akagiyui.drive.model.response.AnnouncementDisplayResponse
 import com.akagiyui.drive.model.response.AnnouncementResponse
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.service.AnnouncementService
-import com.akagiyui.drive.service.UserService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 
@@ -21,18 +21,21 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/announcement")
-class AnnouncementController @Autowired constructor(
+class AnnouncementController(
     private val announcementService: AnnouncementService,
-    private val userService: UserService,
 ) {
     /**
      * 新增公告
+     *
+     * @param request 新增请求
+     * @param user    当前用户
+     * @return 公告ID
      */
     @PostMapping("", "/")
     @RequirePermission(Permission.ANNOUNCEMENT_ADD)
-    fun addAnnouncement(@RequestBody @Validated request: AddAnnouncementRequest): String {
+    fun addAnnouncement(@RequestBody @Validated request: AddAnnouncementRequest, @CurrentUser user: User): String {
         val announcement = request.toAnnouncement().apply {
-            author = userService.getSessionUser()
+            author = user
         }
         return announcementService.addAnnouncement(announcement).id
     }

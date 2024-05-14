@@ -70,12 +70,6 @@ interface UserService {
     fun isExist(id: String): Boolean
 
     /**
-     * 从 Security 获取当前用户
-     * @return 用户
-     */
-    fun getSessionUser(): User
-
-    /**
      * 发送邮箱验证码
      */
     fun sendEmailVerifyCode(verifyRequest: EmailVerifyCodeRequest)
@@ -107,21 +101,21 @@ interface UserService {
     /**
      * 更新用户信息
      *
-     * @param userInfo 用户信息
+     * @param newUserInfo 用户信息
      */
-    fun updateInfo(userInfo: UpdateUserInfoRequest)
+    fun updateInfo(user: User, newUserInfo: UpdateUserInfoRequest)
 
     /**
      * 获取用户权限
      * @return 权限列表
      */
-    fun getPermission(): Set<String>
+    fun getPermission(user: User): Set<String>
 
     /**
      * 获取用户角色
      * @return 角色列表
      */
-    fun getRole(): Set<String>
+    fun getRole(user: User): Set<String>
 
     /**
      * 启用/禁用用户

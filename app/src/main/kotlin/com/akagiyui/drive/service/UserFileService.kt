@@ -23,7 +23,7 @@ interface UserFileService {
      * 获取文件夹下的文件
      * @param folderId 文件夹ID
      */
-    fun getFiles(folderId: String?): List<UserFile>
+    fun getFiles(userId: String, folderId: String?): List<UserFile>
 
     /**
      * 判断文件是否有用户关联
@@ -33,12 +33,12 @@ interface UserFileService {
     /**
      * 获取用户文件
      */
-    fun getUserFileById(id: String): UserFile
+    fun getUserFileById(userId: String, id: String): UserFile
 
     /**
      * 获取临时文件ID
      */
-    fun getTemporaryId(userFileId: String): Pair<String, UserFile>
+    fun getTemporaryId(userId: String, userFileId: String): Pair<String, UserFile>
 
     /**
      * 根据临时文件ID获取文件信息
@@ -48,5 +48,5 @@ interface UserFileService {
     /**
      * 删除用户文件
      */
-    fun userDeleteFile(id: String)
+    fun userDeleteFile(userId: String, id: String)
 }

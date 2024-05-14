@@ -4,11 +4,9 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.FileUtil
-import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.AvatarContent
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.StorageService
-import com.akagiyui.drive.service.UserService
 import net.coobird.thumbnailator.Thumbnails
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -23,10 +21,7 @@ import javax.imageio.ImageIO
  * @author AkagiYui
  */
 @Service
-class AvatarServiceImpl(
-    private val userService: UserService,
-    private val storageService: StorageService,
-) : AvatarService {
+class AvatarServiceImpl(private val storageService: StorageService) : AvatarService {
     private val log by LoggerDelegate()
 
     companion object {
@@ -82,8 +77,8 @@ class AvatarServiceImpl(
         }
     }
 
-    override fun getAvatar(): AvatarContent {
-        val avatarKey = getAvatarKey()
+    override fun getAvatar(userId: String): AvatarContent {
+        val avatarKey = getAvatarKey(userId)
         val avatar: ByteArray = if (storageService.exists(avatarKey)) {
             val file = storageService.get(avatarKey)
             try {
@@ -100,7 +95,7 @@ class AvatarServiceImpl(
         return AvatarContent(avatar, IMAGE_FORMAT)
     }
 
-    override fun saveAvatar(avatar: MultipartFile) {
+    override fun saveAvatar(userId: String, avatar: MultipartFile) {
         if (avatar.isEmpty) {
             throw CustomException(ResponseEnum.BAD_REQUEST)
         }
@@ -124,14 +119,13 @@ class AvatarServiceImpl(
             .outputFormat(IMAGE_FORMAT)
             .toOutputStream(stream)
         val content = stream.toByteArray()
-        storageService.store(getAvatarKey(), content, null) {
+        storageService.store(getAvatarKey(userId), content, null) {
             log.debug("Save avatar success")
             stream.close()
         }
     }
 
-    private fun getAvatarKey(): String {
-        val user: User = userService.getSessionUser()
-        return "avatar/${user.id}.$IMAGE_FORMAT"
+    private fun getAvatarKey(userId: String): String {
+        return "avatar/${userId}.$IMAGE_FORMAT"
     }
 }
