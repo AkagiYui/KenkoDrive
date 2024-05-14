@@ -7,6 +7,7 @@ import com.akagiyui.drive.service.UserFileService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 定时任务
@@ -30,6 +31,7 @@ class CronTasks @Autowired constructor(
      * 北京时间每天凌晨4点执行
      */
     @Scheduled(cron = "0 0 4 * * ? ", zone = "Asia/Shanghai")
+    @Transactional
     fun removeUnusedFile() {
         log.info("Start remove unused file")
         // 遍历所有文件，如果没有被引用则删除
