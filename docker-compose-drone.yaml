@@ -12,6 +12,7 @@ services:
     depends_on:
       - redis
       - mysql
+      - minio
 
   redis:
     image: redis:7-alpine
