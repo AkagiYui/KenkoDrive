@@ -1,14 +1,16 @@
-name: Spring Boot Test
-run-name: ${{ gitea.actor }} is testing out Gitea Actions 🚀
+name: Demo Deploy Pipeline
 on: [ push ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     container:
-      image: bellsoft/liberica-runtime-container:jdk-21-slim-musl
+      image: ubuntu:latest
       volumes:
         - cache:/root/.gradle
+      env:
+        http_proxy: ${{ secrets.HTTP_PROXY }}
+        https_proxy: ${{ secrets.HTTP_PROXY }}
 
     services:
       redis:
