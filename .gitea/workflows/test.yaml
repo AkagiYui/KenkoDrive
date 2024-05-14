@@ -29,17 +29,22 @@ jobs:
           java-version: '21'
           distribution: 'liberica'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Gradle Init
+        run: chmod +x gradlew && ./gradlew --version
 
       - name: Build with Gradle
         run: ./gradlew assemble --no-daemon --warning-mode all --scan
 
-      - name: Set up Spring Boot Environment
-        run: export SPRING_DATA_REDIS_HOST=redis
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - name: Test with Gradle
-        run: ./gradlew test --no-daemon --warning-mode all --scan
+        run: export SPRING_DATA_REDIS_HOST=redis && ./gradlew test --no-daemon --warning-mode all --scan
 
       - name: Gotify Notification
         if: failure()
