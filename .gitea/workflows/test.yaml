@@ -4,6 +4,8 @@ on: [ push ]
 jobs:
   test:
     runs-on: ubuntu-latest
+    container:
+      image: gitea/runner-images:ubuntu-latest
 
     services:
       redis:
@@ -28,6 +30,12 @@ jobs:
           && echo "systemProp.http.proxyPort=${{ secrets.GRADLE_PROXY_HOST_PORT }}" >> gradle.properties \
           && echo "systemProp.https.proxyHost=${{ secrets.GRADLE_PROXY_HOST_HOST }}" >> gradle.properties \
           && echo "systemProp.https.proxyPort=${{ secrets.GRADLE_PROXY_HOST_PORT }}" >> gradle.properties
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'liberica'
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
