@@ -21,10 +21,10 @@ jobs:
         run: export http_proxy="${{ secrets.HTTP_PROXY }}" && export https_proxy="${{ secrets.HTTP_PROXY }}"
 
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: https://gitea.com/actions/checkout@v4
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v4
+        uses: https://gitea.com/actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'liberica'
@@ -33,7 +33,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: https://gitea.com/gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
         run: ./gradlew assemble --no-daemon --warning-mode all --scan
@@ -54,12 +54,7 @@ jobs:
 
       - name: Gotify Notification
         if: failure()
-        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message" \
-          -X POST \
-          -H "Authorization:Bearer ${{ secrets.GOTIFY_TOKEN }}" \
-          -F "title=Gitea" \
-          -F "message=构建失败" \
-          -F "priority=5"
+        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" -X POST -F "title=Kenko Drive Demo"  -F "message=构建失败" -F "priority=5"
 
       - name: Build Jar Package
         run: rm app/build/libs/*.jar && ./gradlew bootJar -i
@@ -68,8 +63,4 @@ jobs:
         run: docker compose -p kenko-drive -f docker-compose-drone.yaml up -d --build application
 
       - name: Gotify Notification
-        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" \
-          -X POST \
-          -F "title=Kenko Drive Demo" \
-          -F "message=部署完成" \
-          -F "priority=5"
+        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" -X POST -F "title=Kenko Drive Demo"  -F "message=部署完成" -F "priority=5"
