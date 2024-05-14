@@ -35,19 +35,11 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assemble --no-daemon --warning-mode all --scan
 
+      - name: Set up Spring Boot Environment
+        run: export SPRING_DATA_REDIS_HOST=redis
+
       - name: Test with Gradle
         run: ./gradlew test --no-daemon --warning-mode all --scan
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: |
-            app/build/reports
-            app/build/test-results
-            easy-captcha/build/reports
-            easy-captcha/build/test-results
 
       - name: Gotify Notification
         if: failure()
