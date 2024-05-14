@@ -29,39 +29,21 @@ jobs:
           java-version: '21'
           distribution: 'liberica'
 
-      - name: Cache Gradle Wrapper
+      - name: Gradle Cache
         uses: https://gitea.com/actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Gradle Init
         run: chmod +x gradlew && ./gradlew --version
 
-      - name: Cache Gradle Wrapper
-        uses: https://gitea.com/actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
       - name: Build with Gradle
         run: ./gradlew assemble --no-daemon --warning-mode all --scan
-
-      - name: Cache Gradle packages
-        uses: https://gitea.com/actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
 
       - name: Test with Gradle
         run: export SPRING_DATA_REDIS_HOST=redis && ./gradlew test --no-daemon --warning-mode all --scan

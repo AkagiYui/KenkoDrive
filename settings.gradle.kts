@@ -12,3 +12,9 @@ include(
     "app", // 主程序
     "easy-captcha", // 验证码
 )
+
+buildCache {
+    local {
+        isEnabled = true
+    }
+}
