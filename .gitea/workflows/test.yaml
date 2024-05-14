@@ -4,10 +4,6 @@ on: [ push ]
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:latest
-      volumes:
-        - /srv/gradle/caches:/root/.gradle
 
     services:
       redis:
