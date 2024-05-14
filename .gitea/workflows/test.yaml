@@ -6,11 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ubuntu:latest
-      volumes:
-        - cache:/root/.gradle
       env:
         http_proxy: ${{ secrets.HTTP_PROXY }}
         https_proxy: ${{ secrets.HTTP_PROXY }}
+      volumes:
+        - /srv/gradle/caches:/root/.gradle
 
     services:
       redis:
