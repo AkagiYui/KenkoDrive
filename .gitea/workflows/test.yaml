@@ -4,10 +4,6 @@ on: [ push ]
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: gitea/runner-images:ubuntu-latest
-      volumes:
-        - /srv/gradle/caches:/root/.gradle
 
     services:
       redis:
@@ -40,10 +36,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
 
       - name: Build with Gradle
-        run: ./gradlew assemble --no-daemon --warning-mode all
+        run: ./gradlew assemble --no-daemon --warning-mode all --scan
 
       - name: Test with Gradle
-        run: ./gradlew test --no-daemon --warning-mode all
+        run: ./gradlew test --no-daemon --warning-mode all --scan
 
       - name: Upload test results
         if: always()
@@ -72,9 +68,8 @@ jobs:
         run: docker compose -p kenko-drive -f docker-compose-drone.yaml up -d --build application
 
       - name: Gotify Notification
-        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message" \
+        run: curl "${{ secrets.GOTIFY_BASE_URL }}/message?token=${{ secrets.GOTIFY_TOKEN }}" \
           -X POST \
-          -H "Authorization:Bearer ${{ secrets.GOTIFY_TOKEN }}" \
-          -F "title=Gitea" \
+          -F "title=Kenko Drive Demo" \
           -F "message=部署完成" \
           -F "priority=5"
