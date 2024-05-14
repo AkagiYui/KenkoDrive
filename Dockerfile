@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jre-21-slim-musl AS builder
+FROM bellsoft/liberica-runtime-container:jdk-21-slim-musl AS builder
 COPY . /job
 WORKDIR /job
 RUN --mount=type=cache,target=/root/.gradle chmod +x gradlew && ./gradlew bootJar

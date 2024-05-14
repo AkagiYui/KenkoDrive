@@ -29,7 +29,7 @@ services:
 
 steps:
   - name: Gradle Build and Create Cache
-    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
+    image: bellsoft/liberica-runtime-container:jdk-21-slim-musl
     volumes:
       - name: gradle-cache
         path: /root/.gradle
@@ -41,7 +41,7 @@ steps:
       - ./gradlew assemble -i
 
   - name: Gradle Test
-    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
+    image: bellsoft/liberica-runtime-container:jdk-21-slim-musl
     failure: ignore
     volumes:
       - name: gradle-cache
@@ -54,7 +54,7 @@ steps:
       - ./gradlew test -i
 
   - name: Build Jar Package
-    image: bellsoft/liberica-runtime-container:jre-21-slim-musl
+    image: bellsoft/liberica-runtime-container:jdk-21-slim-musl
     volumes:
       - name: gradle-cache
         path: /root/.gradle
