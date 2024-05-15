@@ -113,6 +113,11 @@ enum class Permission(val description: String) {
      * 获取操作日志
      */
     ACTION_LOG_GET("获取操作日志"),
+
+    /**
+     * 获取系统信息
+     */
+    SYSTEM_INFO_GET("获取系统信息"),
     ;
 
     /**

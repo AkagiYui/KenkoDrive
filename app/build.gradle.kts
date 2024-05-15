@@ -41,7 +41,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")  // 认证 & 授权
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")  // 模板引擎
     implementation("org.springframework.boot:spring-boot-starter-validation")  // 参数校验
-    implementation("org.springframework.boot:spring-boot-starter-websocket") {  // Web 开发
+    implementation("org.springframework.boot:spring-boot-starter-websocket") {  // WebSocket 开发
         exclude("org.springframework.boot", "spring-boot-starter-tomcat")  // 排除内置 Tomcat
     }
     implementation("org.springframework.boot:spring-boot-starter-web") {  // Web 开发

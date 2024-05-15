@@ -16,17 +16,21 @@ class SessionUserAuthentication(
     private val details: WebAuthenticationDetails,
 ) : Authentication {
 
-    override fun getName(): String {
-        return user.id
-    }
-
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return user.roles
+    private val userAuthorities by lazy {
+        user.roles
             .asSequence()
             .map { it.permissions }
             .flatten()
             .map { GrantedAuthority { it.name } }
             .toMutableList()
+    }
+
+    override fun getName(): String {
+        return user.id
+    }
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return userAuthorities
     }
 
     override fun getCredentials(): Any {
