@@ -43,13 +43,13 @@ jobs:
         run: chmod +x gradlew && ./gradlew --version
 
       - name: Build with Gradle
-        run: ./gradlew assemble --no-daemon --warning-mode all --scan
+        run: ./gradlew assemble --no-daemon --build-cache --warning-mode all --scan
 
       - name: Test with Gradle
-        run: export SPRING_DATA_REDIS_HOST=redis && ./gradlew test --no-daemon --warning-mode all --scan
+        run: export SPRING_DATA_REDIS_HOST=redis && ./gradlew test --no-daemon --build-cache --warning-mode all --scan
 
       - name: Build Jar Package
-        run: rm app/build/libs/*.jar && ./gradlew bootJar -i
+        run: rm app/build/libs/*.jar && ./gradlew --build-cache bootJar -i
 
       - name: Deploy to Docker
         run: docker compose -p kenko-drive -f docker-compose-drone.yaml up -d --build application
