@@ -2,6 +2,7 @@ package com.akagiyui.drive.controller
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.SystemInformationUtil
 import com.akagiyui.common.utils.toUnderscoreCase
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.ActionLog
@@ -12,6 +13,7 @@ import com.akagiyui.drive.service.SettingKey
 import com.akagiyui.drive.service.SettingService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.*
+
 
 /**
  * 系统 API
@@ -79,5 +81,19 @@ class SystemController(
         @RequestParam(defaultValue = "10") size: Int,
     ): PageResponse<ActionLog> {
         return PageResponse(actionLogService.find(index, size))
+    }
+
+    /**
+     * 获取系统信息
+     */
+    @GetMapping("/", "")
+    @RequirePermission(Permission.SYSTEM_INFO_GET)
+    fun getSystemInfo(): Map<String, Any> {
+        return mapOf(
+            "jvm" to SystemInformationUtil.getJvmInformation(),
+            "memory" to SystemInformationUtil.getMemoryInformation(),
+            "system" to SystemInformationUtil.getSystemInformation(),
+            "hardware" to SystemInformationUtil.getHardwareInformation(),
+        )
     }
 }

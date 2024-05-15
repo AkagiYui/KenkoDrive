@@ -32,6 +32,8 @@ val jjwtVersion = "0.12.5"
 val hutoolVersion = "5.8.25"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib") // Kotlin 标准库
+    implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // Kotlin 协程
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
     implementation("org.jetbrains:annotations:24.0.1") // JetBrain 的注解，如 @NonNull
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
@@ -57,14 +59,13 @@ dependencies {
     implementation("io.minio:minio:8.5.8")  // MinIO 客户端
     implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")  // Caffeine 内存缓存
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.+") // 对Kotlin类和数据类的序列化/反序列化的支持
-    implementation("org.jetbrains.kotlin:kotlin-reflect") // Kotlin 反射库
     implementation("com.aliyun:alibabacloud-dysmsapi20170525:2.0.24") { // 阿里云短信服务
         // 排除 pull-parser，该库导致 logback 配置文件无法加载
         // 该库用于解析 XML，但是本项目不需要在阿里云短信服务中使用 XML
         exclude("pull-parser", "pull-parser")
     }
+    implementation("com.github.oshi:oshi-core:6.6.0")  // 系统信息获取
     implementation(project(":easy-captcha")) // 验证码
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // Kotlin 协程
 
     // scope: runtime
     runtimeOnly("com.mysql:mysql-connector-j")  // MySQL 驱动

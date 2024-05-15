@@ -92,6 +92,7 @@
 - [x] [定时任务](app/src/main/kotlin/com/akagiyui/drive/task/CronTasks.kt)
 - [ ] OAuth2.0
 - [ ] 对接支付宝
+- [ ] Gravatar / Cravatar 头像
 
 ## 技术栈
 
