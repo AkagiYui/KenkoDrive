@@ -6,6 +6,7 @@ import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.RoleFilter
 import com.akagiyui.drive.model.request.AddRoleRequest
@@ -13,6 +14,7 @@ import com.akagiyui.drive.model.request.UpdateRoleRequest
 import com.akagiyui.drive.repository.RoleRepository
 import com.akagiyui.drive.service.RoleService
 import org.hibernate.Hibernate
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.jpa.domain.Specification
@@ -102,6 +104,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         roleRepository.delete(role)
     }
 
+    @CacheEvict(cacheNames = [CacheConstants.USER_BY_ID], allEntries = true)
     override fun updateRole(id: String, role: UpdateRoleRequest) {
         val oldRole = getRoleById(id)
         // 修改角色名
