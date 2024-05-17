@@ -2,7 +2,7 @@ package com.akagiyui.drive.config
 
 import com.akagiyui.common.WebSocketPermissionChecker
 import com.akagiyui.common.model.WebSocketHandlerWithPermissions
-import com.akagiyui.drive.controller.websocket.MemoryWebSocketHandler
+import com.akagiyui.drive.controller.persist.MemoryWebSocketHandler
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer

@@ -128,6 +128,8 @@
 - [ ] WebDAV
 - [ ] 搜索引擎
 - [x] 事务管理
+- [x] [WebSocket](app/src/main/kotlin/com/akagiyui/drive/controller/persist/MemoryWebSocketHandler.kt)
+- [x] [SSE(Server-Sent Events)](app/src/main/kotlin/com/akagiyui/drive/controller/persist/MemorySseController.kt)
 
 ## RoadMap
 

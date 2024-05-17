@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 /**
  * 请求日志 切面
@@ -108,6 +109,9 @@ class RequestLogAspect {
         }
         if ((any is Collection<*>) && any.isNotEmpty() && (any.first() is MultipartFile)) {
             return "Collection<MultipartFile>[${any.size}]"
+        }
+        if (any is SseEmitter) {
+            return any.toString()
         }
         return objectMapper.writeValueAsString(any)
     }

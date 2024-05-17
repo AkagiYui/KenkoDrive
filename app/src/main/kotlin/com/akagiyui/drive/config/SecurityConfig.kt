@@ -1,6 +1,5 @@
 package com.akagiyui.drive.config
 
-import com.akagiyui.drive.filter.CustomPasswordHandleFilter
 import com.akagiyui.drive.filter.TokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -30,7 +29,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfig(
     private val tokenAuthenticationFilter: TokenAuthenticationFilter,
-    private val customPasswordHandleFilter: CustomPasswordHandleFilter,
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
 ) {
@@ -51,23 +49,35 @@ class SecurityConfig(
         return http
             .authorizeHttpRequests {
                 it // 允许指定路径通过
-                    .requestMatchers(HttpMethod.GET, "/system/version").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/system/setting/register").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/file/*/download/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/captcha/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/user/sms").permitAll()
-                    .requestMatchers(HttpMethod.POST, LOGIN_URL).anonymous()
-                    .requestMatchers(HttpMethod.GET, "/user/token/sms").permitAll()
-                    .requestMatchers("/user/register/**").permitAll()
-                    .requestMatchers("/sse").permitAll()
+                    // 允许匿名 GET 请求访问
+                    .requestMatchers(
+                        HttpMethod.GET,
+                        "/system/version", // 获取系统版本
+                        "/system/setting/register", // 是否开放注册
+                        "/file/*/download/**", // 下载文件
+                        "/user/token/sms", // 短信登录
+                    ).permitAll()
+                    // 允许匿名 POST 请求访问
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        "/user/sms", // 发送短信验证码
+                    ).permitAll()
+                    // 仅允许匿名 POST 访问
+                    .requestMatchers(
+                        HttpMethod.POST,
+                        LOGIN_URL, // 获取 Token
+                        "/user/register/**", // 注册
+                    ).anonymous()
                     .anyRequest().authenticated() // 其他请求需要认证
             }
             .csrf { it.disable() } // 关闭 CSRF
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) } // 关闭 Session
-            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加 JWT 过滤器
-//            .addFilterBefore(customPasswordHandleFilter, UsernamePasswordAuthenticationFilter::class.java) // 添加密码处理过滤器
-            .formLogin { it.disable() }
-            .logout { it.disable() }
+            .addFilterBefore(
+                tokenAuthenticationFilter,
+                UsernamePasswordAuthenticationFilter::class.java
+            ) // 添加 Token 过滤器
+            .formLogin { it.disable() } // 禁用内置的表单登录
+            .logout { it.disable() } // 禁用内置的登出
             .exceptionHandling {
                 it
                     .authenticationEntryPoint(authenticationEntryPoint)

@@ -32,4 +32,14 @@ abstract class BroadcastWebSocketHandler : AbstractWebSocketHandler() {
             }
         }
     }
+
+    /**
+     * 关闭所有连接
+     */
+    fun closeAll() {
+        val sessions = this.sessions.toList()
+        for (webSocketSession in sessions) {
+            webSocketSession.close()
+        }
+    }
 }
