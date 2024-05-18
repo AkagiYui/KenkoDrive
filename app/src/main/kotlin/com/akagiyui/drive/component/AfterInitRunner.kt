@@ -30,6 +30,7 @@ class AfterInitRunner @Autowired constructor(
             settingService.initialized = true
             log.info("Initialize success")
         }
+        initializeTasks.initMinio()
         log.debug("==================== ApplicationInitialized ====================")
     }
 }

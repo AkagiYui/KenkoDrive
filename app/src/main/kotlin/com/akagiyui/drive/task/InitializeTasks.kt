@@ -6,7 +6,11 @@ import com.akagiyui.drive.model.request.AddUserRequest
 import com.akagiyui.drive.service.RoleService
 import com.akagiyui.drive.service.SettingService
 import com.akagiyui.drive.service.UserService
+import io.minio.BucketExistsArgs
+import io.minio.MakeBucketArgs
+import io.minio.MinioClient
 import org.hibernate.query.sqm.tree.SqmNode.log
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 /**
@@ -20,6 +24,8 @@ class InitializeTasks(
     private val settingService: SettingService,
     private val roleService: RoleService,
     private val userService: UserService,
+    private val minioClient: MinioClient,
+    @Value("\${application.storage.minio.bucket}") private val bucketName: String,
 ) {
 
     fun preCheck() {
@@ -77,5 +83,18 @@ class InitializeTasks(
             )
         }
         roleService.addRole(user)
+    }
+
+    fun initMinio() {
+        log.info("Start init minio")
+        // 初始化 Minio
+        // 创建默认存储桶
+        if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+            try {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build())
+            } catch (e: Exception) {
+                log.error("Create bucket failed", e)
+            }
+        }
     }
 }
