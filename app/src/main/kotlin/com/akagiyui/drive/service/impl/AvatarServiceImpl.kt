@@ -66,9 +66,8 @@ class AvatarServiceImpl(private val storageService: StorageService) : AvatarServ
      * 默认头像缓存，避免每次都读取文件
      */
     private val defaultAvatar: ByteArray by lazy {
-        val file = FileUtil.getResourceFile(defaultAvatarPath)
         try {
-            file.toURI().toURL().openStream().use { inputStream ->
+            FileUtil.getResourceFileStream(defaultAvatarPath).use { inputStream ->
                 inputStream.readBytes()
             }
         } catch (e: IOException) {

@@ -1,6 +1,7 @@
 package com.akagiyui.common.utils
 
 import java.io.File
+import java.io.InputStream
 
 
 /**
@@ -20,6 +21,17 @@ object FileUtil {
     fun getResourceFile(path: String): File {
         val classLoader = FileUtil::class.java.classLoader
         return File(classLoader.getResource(path)?.file ?: throw NullPointerException())
+    }
+
+    /**
+     * 获取 resources 目录下的文件流（可在Jar包中使用）
+     *
+     * @param path 文件路径
+     * @return 文件流
+     */
+    fun getResourceFileStream(path: String): InputStream {
+        val classLoader = FileUtil::class.java.classLoader
+        return classLoader.getResourceAsStream(path) ?: throw NullPointerException()
     }
 
     /**
