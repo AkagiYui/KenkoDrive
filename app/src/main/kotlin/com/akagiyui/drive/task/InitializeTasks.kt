@@ -26,6 +26,7 @@ class InitializeTasks(
     private val userService: UserService,
     private val minioClient: MinioClient,
     @Value("\${application.storage.minio.bucket}") private val bucketName: String,
+    @Value("\${application.storage.minio.enable}") private val minioEnable: Boolean,
 ) {
 
     fun preCheck() {
@@ -86,6 +87,9 @@ class InitializeTasks(
     }
 
     fun initMinio() {
+        if (!minioEnable) {
+            return
+        }
         log.info("Start init minio")
         // 初始化 Minio
         // 创建默认存储桶
