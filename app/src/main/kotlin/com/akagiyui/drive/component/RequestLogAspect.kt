@@ -4,6 +4,7 @@ import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.utils.compressPackageName
 import com.akagiyui.common.utils.ellipsis
 import com.akagiyui.common.utils.toStr
+import com.akagiyui.drive.entity.User
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -112,6 +113,9 @@ class RequestLogAspect {
         }
         if (any is SseEmitter) {
             return any.toString()
+        }
+        if (any is User) {
+            return "User[${any.id}]"
         }
         return objectMapper.writeValueAsString(any)
     }
