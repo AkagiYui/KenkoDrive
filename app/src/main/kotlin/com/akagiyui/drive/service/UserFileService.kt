@@ -39,7 +39,7 @@ interface UserFileService {
     /**
      * 获取临时文件ID
      */
-    fun getTemporaryId(userId: String, userFileId: String): Pair<String, UserFile>
+    fun createTemporaryId(userId: String, userFileId: String): Pair<String, UserFile>
 
     /**
      * 根据临时文件ID获取文件信息

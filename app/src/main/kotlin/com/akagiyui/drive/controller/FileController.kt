@@ -169,7 +169,7 @@ class FileController(
     @GetMapping("/{id}/token")
     @RequirePermission
     fun createTemporaryId(@PathVariable("id") userFileId: String, @CurrentUser user: User): String {
-        val (randomId, userFile) = userFileService.getTemporaryId(user.id, userFileId)
+        val (randomId, userFile) = userFileService.createTemporaryId(user.id, userFileId)
         fileInfoService.recordDownload(userFile.fileInfo.id) // 记录下载
         return randomId
     }
@@ -191,6 +191,9 @@ class FileController(
         // 读取文件
         val userFile = userFileService.getFileInfoByTemporaryId(temporaryId)
         val fileInfo = userFile.fileInfo
+        if (fileInfo.locked) {
+            return ResponseEntity.status(HttpServletResponse.SC_FORBIDDEN).body(null)
+        }
         val fileResource = storageService.get(fileInfo.storageKey)
         val mediaLength = fileInfo.size
 

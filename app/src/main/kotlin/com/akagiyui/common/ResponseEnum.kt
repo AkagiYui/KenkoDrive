@@ -125,6 +125,11 @@ enum class ResponseEnum(val code: Int, val msg: String) {
      * 用户不存在
      */
     USER_NOT_EXIST(10023, "User not exist"),
+
+    /**
+     * 文件已锁定
+     */
+    FILE_LOCKED(10024, "File locked")
     ;
 
 }
