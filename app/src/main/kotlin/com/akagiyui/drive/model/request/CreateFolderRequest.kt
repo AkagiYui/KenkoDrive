@@ -14,5 +14,5 @@ class CreateFolderRequest {
     /**
      * 父文件夹ID
      */
-    lateinit var parent: String
+    var parent: String? = null
 }
