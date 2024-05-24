@@ -152,10 +152,10 @@ class UploadServiceImpl(
             val onlineFileStream = file.inputStream
             val cacheFile = File.createTempFile("upload", ".tmp", cacheDirectory)
             val cacheFileStream = cacheFile.outputStream()
-            val messageDigest = MessageDigest.getInstance("MD5")
+            val messageDigest = MessageDigest.getInstance("SHA-256")
             onlineFileStream.use { input ->
                 cacheFileStream.use { output ->
-                    // 逐缓冲区读取文件内容，同时计算MD5
+                    // 逐缓冲区读取文件内容，同时计算哈希值
                     val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
                     var bytes = input.read(buffer)
                     while (bytes >= 0) {
