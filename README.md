@@ -27,10 +27,14 @@
 |    API 文档     |                                                [kenkodrive.apifox.cn](https://kenkodrive.apifox.cn/)                                                 |
 |     前端仓库      |                [KenkoDriveVue](https://github.com/AkagiYui/KenkoDriveVue) / [中国大陆镜像仓库](https://gitlink.org.cn/AkagiYui/KenkoDriveVue)                |
 
+## 截屏
+
+![登录页面](docs/login.png "登录页面")
+![概览页面](docs/overview.png "概览页面")
+
 ## 业务功能一览
 
-- [x] 用户注册
-- [x] 用户名/邮箱登录
+- [x] 用户(邮箱)注册；(短信/用户名/邮箱)登录
 - [x] 个人信息设置、头像上传、密码重置
 - [x] 文件(夹)上传/下载/删除
 - [ ] 文件分享
@@ -46,7 +50,7 @@
 - [ ] 在线解压
 - [ ] 批量打包下载
 - [ ] 敏感内容审查
-- [ ] 缩略图生成：图片、视频、音频封面
+- [ ] (图片、视频、音频封面)缩略图生成
 - [ ] 系统告警通知
 - [ ] 第三方登录
 - [ ] 增值服务
