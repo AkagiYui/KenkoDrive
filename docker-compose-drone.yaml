@@ -8,6 +8,8 @@ services:
     network_mode: service:redis
     volumes:
       - /srv/kenko-drive/data:/app/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: always
     depends_on:
       - redis
@@ -18,6 +20,8 @@ services:
     image: redis:7-alpine
     volumes:
       - redis-data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     ports:
       - "16677:6677"
     restart: always
@@ -32,6 +36,8 @@ services:
     network_mode: service:redis
     volumes:
       - /srv/kenko-drive/mysql/data:/var/lib/mysql
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: always
 
   minio:
@@ -42,6 +48,8 @@ services:
       MINIO_SECRET_KEY: password
     volumes:
       - /srv/kenko-drive/minio/data:/data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     restart: always
     command:
       - server
