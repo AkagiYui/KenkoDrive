@@ -3,6 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
+import com.akagiyui.drive.model.request.MirrorFileRequest
 
 /**
  * 用户文件关联 服务接口
@@ -54,4 +55,9 @@ interface UserFileService {
      * 移动文件
      */
     fun moveFile(userId: String, fileId: String, folderId: String?)
+
+    /**
+     * 秒传文件
+     */
+    fun mirrorFile(user: User, request: MirrorFileRequest): UserFile
 }

@@ -8,6 +8,7 @@ import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.Permission
+import com.akagiyui.drive.model.request.MirrorFileRequest
 import com.akagiyui.drive.model.request.PreUploadRequest
 import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.FolderResponse
@@ -81,6 +82,23 @@ class FileController(
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     fun uploadStatus(@PathVariable hash: String): Boolean {
         return fileInfoService.existByHash(hash)
+    }
+
+    /**
+     * 秒传
+     * @param request 请求内容
+     * @param user 用户
+     * @return 是否成功
+     */
+    @PostMapping("/mirror")
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
+    fun mirrorUpload(@RequestBody request: MirrorFileRequest, @CurrentUser user: User): Boolean {
+        return try {
+            userFileService.mirrorFile(user, request)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     /**

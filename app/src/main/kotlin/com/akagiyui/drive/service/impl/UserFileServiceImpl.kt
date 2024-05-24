@@ -7,9 +7,13 @@ import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
+import com.akagiyui.drive.model.request.MirrorFileRequest
 import com.akagiyui.drive.repository.UserFileRepository
+import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserFileService
+import jakarta.annotation.Resource
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -25,6 +29,10 @@ class UserFileServiceImpl(
     private val folderService: FolderService,
     private val redisCache: RedisCache,
 ) : UserFileService {
+
+    @Lazy
+    @Resource
+    private lateinit var fileInfoService: FileInfoService
 
     override fun addAssociation(user: User, userFileName: String, fileInfo: FileInfo, folderId: String?): UserFile {
         val folder = if (folderId.hasText()) folderService.getFolderById(folderId) else null
@@ -73,6 +81,16 @@ class UserFileServiceImpl(
     override fun userDeleteFile(userId: String, id: String) {
         val userFile = getUserFileById(userId, id)
         userFileRepository.delete(userFile)
+    }
+
+    override fun mirrorFile(user: User, request: MirrorFileRequest): UserFile {
+        val fileInfo = fileInfoService.getFileInfoByHash(request.hash)
+        val folder = if (request.folder.hasText()) {
+            folderService.getFolderById(request.folder!!)
+        } else {
+            null
+        }
+        return addAssociation(user, request.name, fileInfo, folder?.id)
     }
 
     override fun moveFile(userId: String, fileId: String, folderId: String?) {

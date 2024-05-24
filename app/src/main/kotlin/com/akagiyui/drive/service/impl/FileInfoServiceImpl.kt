@@ -76,7 +76,7 @@ class FileInfoServiceImpl(
                     size = fileSize
                     type = contentType
                     this.hash = hash
-                    storageKey = hash // todo 直接使用hash作为key可能不太好？
+                    storageKey = hash
                     downloadCount = 0L
                 }
                 fileInfoRepository.save(fileInfo)
