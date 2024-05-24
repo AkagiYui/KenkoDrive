@@ -42,4 +42,16 @@ interface FolderService {
      * @return 文件夹
      */
     fun getFolderById(folderId: String): Folder
+
+    /**
+     * 删除文件夹
+     *
+     * @param folderId 文件夹ID
+     */
+    fun deleteFolder(userId: String, folderId: String)
+
+    /**
+     * 移动文件夹
+     */
+    fun moveFolder(userId: String, folderId: String, parentId: String?)
 }

@@ -43,4 +43,31 @@ class FolderController(private val folderService: FolderService) {
     fun createFolder(@RequestBody request: CreateFolderRequest, @CurrentUser user: User): FolderResponse {
         return FolderResponse(folderService.createFolder(user, request.name, request.parent))
     }
+
+    /**
+     * 删除文件夹
+     *
+     * @param folderId 文件夹ID
+     */
+    @DeleteMapping("/{folderId}")
+    @RequirePermission(Permission.FOLDER_DELETE)
+    fun deleteFolder(@PathVariable folderId: String, @CurrentUser user: User) {
+        folderService.deleteFolder(user.id, folderId)
+    }
+
+    /**
+     * 移动文件夹
+     *
+     * @param folderId 文件夹ID
+     * @param parentId 父文件夹ID
+     */
+    @PutMapping("/{folderId}/move")
+    @RequirePermission
+    fun moveFolder(
+        @PathVariable folderId: String,
+        @RequestParam("parent", required = false) parentId: String?,
+        @CurrentUser user: User,
+    ) {
+        folderService.moveFolder(user.id, folderId, parentId)
+    }
 }

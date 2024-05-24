@@ -49,4 +49,9 @@ interface UserFileService {
      * 删除用户文件
      */
     fun userDeleteFile(userId: String, id: String)
+
+    /**
+     * 移动文件
+     */
+    fun moveFile(userId: String, fileId: String, folderId: String?)
 }

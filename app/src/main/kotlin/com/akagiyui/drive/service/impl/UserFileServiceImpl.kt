@@ -74,4 +74,18 @@ class UserFileServiceImpl(
         val userFile = getUserFileById(userId, id)
         userFileRepository.delete(userFile)
     }
+
+    override fun moveFile(userId: String, fileId: String, folderId: String?) {
+        val userFile = getUserFileById(userId, fileId)
+        userFile.folder = if (folderId.hasText()) {
+            val folder = folderService.getFolderById(folderId)
+            if (folder.user.id != userId) {
+                throw CustomException(ResponseEnum.NOT_FOUND)
+            }
+            folder
+        } else {
+            null
+        }
+        userFileRepository.save(userFile)
+    }
 }

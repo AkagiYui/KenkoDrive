@@ -8,7 +8,10 @@ import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.repository.FolderRepository
 import com.akagiyui.drive.service.FolderService
+import com.akagiyui.drive.service.UserFileService
+import jakarta.annotation.Resource
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 /**
@@ -20,6 +23,10 @@ import org.springframework.stereotype.Service
 class FolderServiceImpl @Autowired constructor(
     private val folderRepository: FolderRepository,
 ) : FolderService {
+
+    @Lazy
+    @Resource
+    private lateinit var userFileService: UserFileService
 
     override fun createFolder(user: User, name: String, parentId: String?): Folder {
         val resolvedParentId = if (parentId.hasText()) parentId else null
@@ -68,5 +75,36 @@ class FolderServiceImpl @Autowired constructor(
 
     override fun getFolderById(folderId: String): Folder {
         return folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+    }
+
+    override fun deleteFolder(userId: String, folderId: String) {
+        val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        if (folder.user.id != userId) {
+            throw CustomException(ResponseEnum.NOT_FOUND)
+        }
+
+        // 删除文件夹下的文件
+        userFileService.getFiles(userId, folder.id).forEach {
+            userFileService.userDeleteFile(userId, it.id)
+        }
+
+        folderRepository.delete(folder)
+    }
+
+    override fun moveFolder(userId: String, folderId: String, parentId: String?) {
+        val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        if (folder.user.id != userId) {
+            throw CustomException(ResponseEnum.NOT_FOUND)
+        }
+
+        check(parentId == folderId) { "不能移动到自己的子文件夹" }
+        val parentFolder = if (parentId.hasText()) {
+            folderRepository.findById(parentId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        } else {
+            null
+        }
+
+        folder.parent = parentFolder
+        folderRepository.save(folder)
     }
 }

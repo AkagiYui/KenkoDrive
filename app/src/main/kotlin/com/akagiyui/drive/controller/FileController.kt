@@ -275,4 +275,19 @@ class FileController(
     fun deleteFile(@PathVariable id: String, @CurrentUser user: User) {
         userFileService.userDeleteFile(user.id, id)
     }
+
+    /**
+     * 移动文件
+     * @param id 用户文件ID
+     * @param folderId 目标文件夹ID
+     */
+    @PutMapping("/{id}/move")
+    @RequirePermission
+    fun moveFile(
+        @PathVariable id: String,
+        @RequestParam("folder", required = false) folderId: String?,
+        @CurrentUser user: User,
+    ) {
+        userFileService.moveFile(user.id, id, folderId)
+    }
 }
