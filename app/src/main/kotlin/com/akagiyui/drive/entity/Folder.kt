@@ -34,6 +34,18 @@ class Folder : BaseEntity() {
     lateinit var user: User
 
     /**
+     * 子文件
+     */
+    @OneToMany(mappedBy = "folder", fetch = FetchType.LAZY, targetEntity = UserFile::class)
+    lateinit var files: Set<UserFile>
+
+    /**
+     * 子文件夹
+     */
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, targetEntity = Folder::class)
+    lateinit var subFolders: Set<Folder>
+
+    /**
      * 是否在根目录下
      */
     val inRoot

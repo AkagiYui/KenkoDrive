@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
+import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Folder
@@ -13,6 +14,7 @@ import jakarta.annotation.Resource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 文件夹服务实现类
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service
 class FolderServiceImpl @Autowired constructor(
     private val folderRepository: FolderRepository,
 ) : FolderService {
+    private val log by LoggerDelegate()
 
     @Lazy
     @Resource
@@ -77,18 +80,23 @@ class FolderServiceImpl @Autowired constructor(
         return folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
     }
 
+    @Transactional
     override fun deleteFolder(userId: String, folderId: String) {
         val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         if (folder.user.id != userId) {
             throw CustomException(ResponseEnum.NOT_FOUND)
         }
 
-        // 删除文件夹下的文件
-        userFileService.getFiles(userId, folder.id).forEach {
+        // 删除文件夹下的文件和子文件夹
+        folder.files.forEach {
             userFileService.userDeleteFile(userId, it.id)
+        }
+        folder.subFolders.forEach {
+            deleteFolder(userId, it.id)
         }
 
         folderRepository.delete(folder)
+        log.debug("delete folder: $folderId")
     }
 
     override fun moveFolder(userId: String, folderId: String, parentId: String?) {
@@ -97,7 +105,7 @@ class FolderServiceImpl @Autowired constructor(
             throw CustomException(ResponseEnum.NOT_FOUND)
         }
 
-        check(parentId == folderId) { "不能移动到自己的子文件夹" }
+        check(parentId == folderId) { "not allowed to move folder to itself" }
         val parentFolder = if (parentId.hasText()) {
             folderRepository.findById(parentId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         } else {

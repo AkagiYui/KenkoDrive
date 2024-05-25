@@ -47,7 +47,7 @@ interface UserFileService {
     fun getFileInfoByTemporaryId(temporaryId: String): UserFile
 
     /**
-     * 删除用户文件
+     * 用户删除文件
      */
     fun userDeleteFile(userId: String, id: String)
 
