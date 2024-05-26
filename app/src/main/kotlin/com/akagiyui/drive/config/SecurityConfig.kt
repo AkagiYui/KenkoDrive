@@ -56,6 +56,7 @@ class SecurityConfig(
                         "/system/setting/register", // 是否开放注册
                         "/file/*/download/**", // 下载文件
                         "/user/token/sms", // 短信登录
+                        "/captcha", // 获取验证码
                     ).permitAll()
                     // 允许匿名 POST 请求访问
                     .requestMatchers(
