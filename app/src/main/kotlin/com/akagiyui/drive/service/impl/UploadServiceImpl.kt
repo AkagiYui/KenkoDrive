@@ -193,12 +193,12 @@ class UploadServiceImpl(
         }
         fileInfoService.addFileInfo(fileInfo)
         userFileService.addAssociation(user, fileInfo.name, fileInfo, task.folder)
-        task.merged = true
-        uploadTaskRepository.save(task)
         storageService.store(storageKey, cacheFile, task.fileType) {
             taskCacheDirectory.deleteRecursively()
             fileInfo.locked = false
             fileInfoService.addFileInfo(fileInfo)
+            task.merged = true
+            uploadTaskRepository.save(task)
         }
     }
 

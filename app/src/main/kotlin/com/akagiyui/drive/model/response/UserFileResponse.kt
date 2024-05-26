@@ -33,6 +33,11 @@ class UserFileResponse(userFile: UserFile) {
      */
     val createTime = userFile.createTime.time
 
+    /**
+     * 文件已被锁定
+     */
+    val locked = userFile.fileInfo.locked
+
     companion object {
         /**
          * 将文件列表转换为文件响应列表
