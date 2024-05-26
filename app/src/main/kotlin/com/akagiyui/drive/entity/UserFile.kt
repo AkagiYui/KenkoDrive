@@ -12,7 +12,7 @@ import org.hibernate.annotations.DynamicInsert
 @Entity
 @Table(
     name = "user_file",
-    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "file_info_id", "folder_id"])]
+    uniqueConstraints = [UniqueConstraint(columnNames = ["user_id", "name", "folder_id"])]
 )
 @DynamicInsert
 class UserFile : BaseEntity() {
