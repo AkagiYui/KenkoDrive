@@ -8,14 +8,15 @@ import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.Permission
+import com.akagiyui.drive.model.request.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.MirrorFileRequest
-import com.akagiyui.drive.model.request.PreUploadRequest
 import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.model.response.UserFileResponse
 import com.akagiyui.drive.service.*
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.Size
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.core.io.InputStreamResource
 import org.springframework.http.HttpHeaders
@@ -57,7 +58,7 @@ class FileController(
     }
 
     /**
-     * 上传文件
+     * 上传文件（单连接）
      *
      * @param files 文件列表
      * @return 文件信息
@@ -102,29 +103,34 @@ class FileController(
     }
 
     /**
-     * 请求上传文件
+     * 创建上传任务
      *
      * @param request 请求内容
      */
-    @PostMapping("/upload/request")
+    @PostMapping("/task")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
-    fun uploadRequest(@RequestBody @Validated request: PreUploadRequest, @CurrentUser user: User) {
-        uploadService.requestUpload(user, request)
+    fun createUploadTask(@RequestBody @Validated request: CreateUploadTaskRequest, @CurrentUser user: User): String {
+        return uploadService.createUploadTask(user, request).id
     }
 
     /**
      * 上传文件分片
+     *
+     * @param taskId 任务ID
+     * @param chunk 分片文件
+     * @param chunkHash 分片哈希
+     * @param chunkIndex 分片索引
      */
-    @PostMapping("/upload/{hash}/chunk")
+    @PostMapping("/task/{id}/chunk")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     fun uploadChunk(
-        @PathVariable("hash") fileHash: String,
-        @RequestParam("file") chunk: MultipartFile,
-        @RequestParam("hash") chunkHash: String,
-        @RequestParam("index") chunkIndex: @Min(1) Int,
+        @PathVariable("id") taskId: String,
+        @RequestParam("blob") chunk: MultipartFile,
+        @RequestParam("hash") @Validated @Size(min = 64, max = 64) chunkHash: String,
+        @RequestParam("index") @Validated @Min(0) chunkIndex: Int,
         @CurrentUser user: User,
     ) {
-        uploadService.uploadChunk(user, fileHash, chunk, chunkHash, chunkIndex)
+        uploadService.uploadChunk(user, taskId, chunk, chunkHash, chunkIndex)
     }
 
     /**

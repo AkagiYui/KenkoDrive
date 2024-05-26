@@ -1,7 +1,9 @@
 package com.akagiyui.drive.service.impl
 
 
+import cn.hutool.core.util.IdUtil
 import com.akagiyui.common.ResponseEnum
+import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.deleteIfExists
 import com.akagiyui.common.utils.hasText
@@ -10,16 +12,17 @@ import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
-import com.akagiyui.drive.model.ChunkedUploadInfo
-import com.akagiyui.drive.model.request.PreUploadRequest
+import com.akagiyui.drive.entity.cache.UploadTask
+import com.akagiyui.drive.model.request.CreateUploadTaskRequest
+import com.akagiyui.drive.repository.cache.UploadTaskRepository
 import com.akagiyui.drive.service.*
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.task.TaskExecutor
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.io.IOException
 import java.security.MessageDigest
 
 /**
@@ -34,95 +37,159 @@ class UploadServiceImpl(
     private val storageService: StorageService,
     private val fileInfoService: FileInfoService,
     private val userFileService: UserFileService,
+    private val uploadTaskRepository: UploadTaskRepository,
     @Qualifier("taskExecutor") private val taskExecutor: TaskExecutor,
 ) : UploadService {
+    private val idGenerator = IdUtil.getSnowflake()
+    private val log by LoggerDelegate()
 
-    private fun isInfoInRedis(userId: String, hash: String): Boolean {
-        val redisKey = "upload:$userId:$hash"
-        return redisKey in redisCache
-    }
-
-    private fun saveInfoToRedis(userId: String, hash: String, chunkedInfo: ChunkedUploadInfo) {
-        val redisKey = "upload:$userId:$hash"
-        redisCache[redisKey] = chunkedInfo
-    }
-
-    private fun getInfoFromRedis(userId: String, hash: String): ChunkedUploadInfo {
-        val redisKey = "upload:$userId:$hash"
-        return redisCache[redisKey] ?: throw CustomException(ResponseEnum.TASK_NOT_FOUND)
-    }
-
-    override fun requestUpload(user: User, preUploadRequest: PreUploadRequest) {
+    override fun createUploadTask(user: User, createUploadTaskRequest: CreateUploadTaskRequest): UploadTask {
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
-        if (preUploadRequest.filesize > uploadFileSizeLimit) {
+        if (createUploadTaskRequest.filesize > uploadFileSizeLimit) {
             throw CustomException(ResponseEnum.FILE_TOO_LARGE)
         }
 
-        // 是否已经存在上传信息
-        if (isInfoInRedis(user.id, preUploadRequest.hash)) {
-            throw CustomException(ResponseEnum.TASK_EXIST)
-        }
-        // 上传信息
-        val chunkedInfo = ChunkedUploadInfo(preUploadRequest).apply {
+        val task = UploadTask().apply {
+            id = idGenerator.nextIdStr()
             userId = user.id
+            filename = createUploadTaskRequest.filename
+            hash = createUploadTaskRequest.hash
+            size = createUploadTaskRequest.filesize
+            fileType = createUploadTaskRequest.type
+            folder = createUploadTaskRequest.folder
+            chunkSize = createUploadTaskRequest.chunkSize
+            chunkCount = createUploadTaskRequest.chunkCount
         }
-        // 保存上传信息到redis
-        saveInfoToRedis(user.id, preUploadRequest.hash, chunkedInfo)
+        for (i in 0 until task.chunkCount) {
+            redisCache.set("chunk_uploaded:${task.id}", i, false)
+        }
+        uploadTaskRepository.save(task)
+        return task
     }
 
-    override fun uploadChunk(user: User, fileHash: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int) {
-        if (chunk.isEmpty || (chunkIndex < 0) || chunkHash.isBlank()) {
-            throw CustomException(ResponseEnum.BAD_REQUEST)
+    @Transactional
+    override fun uploadChunk(user: User, taskId: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int) {
+        val task = uploadTaskRepository.findById(taskId).orElseThrow {
+            CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
-
-        if (!isInfoInRedis(user.id, fileHash)) {
+        if (task.userId != user.id) {
+            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+        }
+        if (task.chunkCount <= chunkIndex) {
+            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+        }
+        if (!task.allowUpload) {
             throw CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
 
-        val chunkedInfo = getInfoFromRedis(user.id, fileHash)
-        if (chunkedInfo.isUploadFinish()) {
-            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+        // 上传文件大小限制
+        val uploadFileSizeLimit = settingService.fileUploadMaxSize
+        if (chunk.size > uploadFileSizeLimit) {
+            throw CustomException(ResponseEnum.FILE_TOO_LARGE)
         }
 
-        // 校验分片
-        val chunkBytes = try {
-            chunk.bytes
-        } catch (e: IOException) {
-            throw RuntimeException(e)
+        // 获取缓存目录
+        val userCacheDirectory = getUserCacheDirectory(user.id)
+        val taskCacheDirectory = File(userCacheDirectory, taskId).apply { mkdirOrThrow() }
+        val localCacheFile = File(taskCacheDirectory, chunkIndex.toString()).apply { createNewFile() }
+        // 接收文件
+        val onlineFileStream = chunk.inputStream
+        val cacheFileStream = localCacheFile.outputStream()
+        val messageDigest = MessageDigest.getInstance("SHA-256")
+        onlineFileStream.use { input ->
+            cacheFileStream.use { output ->
+                // 逐缓冲区读取文件内容，同时计算哈希值
+                val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                var bytes = input.read(buffer)
+                while (bytes >= 0) {
+                    output.write(buffer, 0, bytes)
+                    messageDigest.update(buffer, 0, bytes)
+                    bytes = input.read(buffer)
+                }
+            }
         }
-        val realMd5 = MessageDigest.getInstance("MD5").digest(chunkBytes).joinToString("") { "%02x".format(it) }
-        if (realMd5 != chunkHash) {
-            throw CustomException(ResponseEnum.VERIFY_FAILED)
+        val hashString = messageDigest.digest().joinToString("") { "%02x".format(it) }
+        // 对比哈希
+        if (hashString != chunkHash) {
+            log.debug("task: $taskId, chunk: $chunkIndex, hash not match")
+            throw CustomException(ResponseEnum.GENERAL_ERROR)
         }
+        // 标记已上传
+        redisCache.set("chunk_uploaded:$taskId", chunkIndex, true)
+        val chunkMap = redisCache.getMap<Int, Boolean>("chunk_uploaded:$taskId")
+        if (chunkMap.values.all { it }) {
+            task.allowUpload = false
+            uploadTaskRepository.save(task)
+            taskExecutor.execute {
+                mergeChunks(user, task)
+            }
+        } else {
+            uploadTaskRepository.save(task)
+        }
+        log.debug("task: $taskId, chunk: $chunkIndex, upload success")
+    }
 
-        // 保存分片信息
-//        val chunksInfo = chunkedInfo.chunks
-//        val chunkInfo = chunksInfo[chunkIndex].apply {
-//            hash = chunkHash
-//            isCheckSuccess = true
-//        }
-        saveInfoToRedis(user.id, fileHash, chunkedInfo)
-
-//        storageService.saveChunk(user.id, fileHash, chunkIndex, chunkBytes)
-//        if (chunkedInfo.isUploadFinish()) {
-//            taskExecutor.execute {
-//                // 合并分片
-//                val storageFile = storageService.mergeChunk(user.id, fileHash, chunkedInfo.chunkCount)
-//                // todo 校验整个文件的md5
-//                // 保存文件信息
-//                val fileInfo = FileInfo().apply {
-//                    name = chunkedInfo.filename
-//                    size = chunkedInfo.filesize
-//                    type = storageFile.type
-//                    hash = fileHash
-//                    storageKey = storageFile.key
-//                }
-//                fileInfoService.addFileInfo(fileInfo)
-//                // 添加用户文件关联
-//                userFileService.addAssociation(user, fileInfo)
-//            }
-//        }
+    private fun mergeChunks(user: User, task: UploadTask) {
+        log.debug("task: ${task.id}, merge chunks")
+        val userCacheDirectory = getUserCacheDirectory(task.userId)
+        val taskCacheDirectory = File(userCacheDirectory, task.id)
+        val localCacheFiles = taskCacheDirectory.listFiles() ?: return
+        val cacheChunks = localCacheFiles.sortedBy { it.name.toInt() }
+        val cacheFile = File.createTempFile("upload", ".tmp", taskCacheDirectory)
+        val cacheFileStream = cacheFile.outputStream()
+        val messageDigest = MessageDigest.getInstance("SHA-256")
+        cacheFileStream.use { output ->
+            cacheChunks.forEach { file ->
+                file.inputStream().use { input ->
+                    val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                    var bytes = input.read(buffer)
+                    while (bytes >= 0) {
+                        output.write(buffer, 0, bytes)
+                        messageDigest.update(buffer, 0, bytes)
+                        bytes = input.read(buffer)
+                    }
+                }
+            }
+        }
+        val hashString = messageDigest.digest().joinToString("") { "%02x".format(it) }
+        if (hashString != task.hash) {
+            log.debug("task: ${task.id}, hash not match")
+            throw CustomException(ResponseEnum.GENERAL_ERROR)
+        }
+        // 检查文件是否已存在
+        val existFileInfo = try {
+            fileInfoService.getFileInfoByHash(hashString)
+        } catch (e: CustomException) {
+            null
+        }
+        if (existFileInfo != null) {
+            // 如果文件已存在，则直接关联
+            userFileService.addAssociation(
+                user,
+                task.filename,
+                existFileInfo,
+                task.folder
+            )
+            taskCacheDirectory.deleteRecursively()
+            return
+        }
+        val storageKey = "file/$hashString"
+        val fileInfo = FileInfo().apply {
+            name = task.filename
+            size = task.size
+            type = task.fileType
+            hash = hashString
+            this.storageKey = storageKey
+            locked = true
+        }
+        fileInfoService.addFileInfo(fileInfo)
+        userFileService.addAssociation(user, fileInfo.name, fileInfo, task.folder)
+        storageService.store(storageKey, cacheFile, task.fileType) {
+            taskCacheDirectory.deleteRecursively()
+            fileInfo.locked = false
+            fileInfoService.addFileInfo(fileInfo)
+        }
     }
 
     @Value("\${application.storage.local.cacheRoot}")
@@ -165,9 +232,9 @@ class UploadServiceImpl(
                     }
                 }
             }
-            val md5String = messageDigest.digest().joinToString("") { "%02x".format(it) }
+            val hashString = messageDigest.digest().joinToString("") { "%02x".format(it) }
             val existFileInfo = try {
-                fileInfoService.getFileInfoByHash(md5String)
+                fileInfoService.getFileInfoByHash(hashString)
             } catch (e: CustomException) {
                 null
             }
@@ -183,12 +250,12 @@ class UploadServiceImpl(
                 )
                 return@forEach
             }
-            val storageKey = "file/$md5String"
+            val storageKey = "file/$hashString"
             val fileInfo = FileInfo().apply {
                 name = file.originalFilename!!
                 size = file.size
                 type = file.contentType!!
-                hash = md5String
+                hash = hashString
                 this.storageKey = storageKey
                 locked = true
             }

@@ -9,7 +9,7 @@ class MirrorFileRequest {
     /**
      * 文件名
      */
-    lateinit var name: String
+    lateinit var filename: String
 
     /**
      * 文件大小

@@ -93,7 +93,7 @@ class UserFileServiceImpl(
         } else {
             null
         }
-        return addAssociation(user, request.name, fileInfo, folder?.id)
+        return addAssociation(user, request.filename, fileInfo, folder?.id)
     }
 
     override fun moveFile(userId: String, fileId: String, folderId: String?) {
