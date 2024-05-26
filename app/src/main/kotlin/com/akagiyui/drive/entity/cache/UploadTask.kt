@@ -65,4 +65,8 @@ class UploadTask {
      */
     var allowUpload: Boolean = true
 
+    /**
+     * 合并完成
+     */
+    var merged: Boolean = false
 }

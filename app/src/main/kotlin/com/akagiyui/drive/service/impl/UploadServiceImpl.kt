@@ -69,7 +69,13 @@ class UploadServiceImpl(
     }
 
     @Transactional
-    override fun uploadChunk(user: User, taskId: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int) {
+    override fun uploadChunk(
+        user: User,
+        taskId: String,
+        chunk: MultipartFile,
+        chunkHash: String,
+        chunkIndex: Int,
+    ): Boolean {
         val task = uploadTaskRepository.findById(taskId).orElseThrow {
             CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
@@ -115,19 +121,21 @@ class UploadServiceImpl(
             log.debug("task: $taskId, chunk: $chunkIndex, hash not match")
             throw CustomException(ResponseEnum.GENERAL_ERROR)
         }
+        log.debug("task: $taskId, chunk: $chunkIndex, upload success")
         // 标记已上传
         redisCache.set("chunk_uploaded:$taskId", chunkIndex, true)
         val chunkMap = redisCache.getMap<Int, Boolean>("chunk_uploaded:$taskId")
-        if (chunkMap.values.all { it }) {
+        return if (chunkMap.values.all { it }) {
             task.allowUpload = false
             uploadTaskRepository.save(task)
             taskExecutor.execute {
                 mergeChunks(user, task)
             }
+            true
         } else {
             uploadTaskRepository.save(task)
+            false
         }
-        log.debug("task: $taskId, chunk: $chunkIndex, upload success")
     }
 
     private fun mergeChunks(user: User, task: UploadTask) {
@@ -185,10 +193,18 @@ class UploadServiceImpl(
         }
         fileInfoService.addFileInfo(fileInfo)
         userFileService.addAssociation(user, fileInfo.name, fileInfo, task.folder)
+        task.merged = true
+        uploadTaskRepository.save(task)
         storageService.store(storageKey, cacheFile, task.fileType) {
             taskCacheDirectory.deleteRecursively()
             fileInfo.locked = false
             fileInfoService.addFileInfo(fileInfo)
+        }
+    }
+
+    override fun getUploadTask(taskId: String): UploadTask {
+        return uploadTaskRepository.findById(taskId).orElseThrow {
+            CustomException(ResponseEnum.TASK_NOT_FOUND)
         }
     }
 

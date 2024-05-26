@@ -20,10 +20,15 @@ interface UploadService {
     /**
      * 上传分片
      */
-    fun uploadChunk(user: User, taskId: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int)
+    fun uploadChunk(user: User, taskId: String, chunk: MultipartFile, chunkHash: String, chunkIndex: Int): Boolean
 
     /**
      * 接收文件
      */
     fun receiveMultipartFiles(user: User, files: List<MultipartFile>, folder: String?): List<UserFile>
+
+    /**
+     * 获取上传任务
+     */
+    fun getUploadTask(taskId: String): UploadTask
 }

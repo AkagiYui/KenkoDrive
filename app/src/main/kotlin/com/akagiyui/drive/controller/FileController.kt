@@ -12,6 +12,7 @@ import com.akagiyui.drive.model.request.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.MirrorFileRequest
 import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.FolderResponse
+import com.akagiyui.drive.model.response.UploadTaskResponse
 import com.akagiyui.drive.model.response.UserFileResponse
 import com.akagiyui.drive.service.*
 import jakarta.servlet.http.HttpServletResponse
@@ -120,6 +121,7 @@ class FileController(
      * @param chunk 分片文件
      * @param chunkHash 分片哈希
      * @param chunkIndex 分片索引
+     * @return 是否已收到该任务的所有分片
      */
     @PostMapping("/task/{id}/chunk")
     @RequirePermission(Permission.PERSONAL_UPLOAD)
@@ -129,8 +131,20 @@ class FileController(
         @RequestParam("hash") @Validated @Size(min = 64, max = 64) chunkHash: String,
         @RequestParam("index") @Validated @Min(0) chunkIndex: Int,
         @CurrentUser user: User,
-    ) {
-        uploadService.uploadChunk(user, taskId, chunk, chunkHash, chunkIndex)
+    ): Boolean {
+        return uploadService.uploadChunk(user, taskId, chunk, chunkHash, chunkIndex)
+    }
+
+    /**
+     * 获取上传任务信息
+     *
+     * @param taskId 任务ID
+     * @return 任务信息
+     */
+    @GetMapping("/task/{id}")
+    @RequirePermission(Permission.PERSONAL_UPLOAD)
+    fun getUploadTaskInfo(@PathVariable("id") taskId: String): UploadTaskResponse {
+        return UploadTaskResponse(uploadService.getUploadTask(taskId))
     }
 
     /**
