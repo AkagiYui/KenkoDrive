@@ -52,6 +52,12 @@ class UserFileServiceImpl(
         return userFileRepository.save(userFile)
     }
 
+    override fun rename(userId: String, userFileId: String, newName: String) {
+        val userFile = getUserFileById(userId, userFileId)
+        userFile.name = newName
+        userFileRepository.save(userFile)
+    }
+
     override fun getFiles(userId: String, folderId: String?): List<UserFile> {
         return userFileRepository.findByUserIdAndFolderId(userId, folderId)
     }

@@ -60,4 +60,9 @@ interface UserFileService {
      * 秒传文件
      */
     fun mirrorFile(user: User, request: MirrorFileRequest): UserFile
+
+    /**
+     * 重命名文件
+     */
+    fun rename(userId: String, userFileId: String, newName: String)
 }

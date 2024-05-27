@@ -99,6 +99,13 @@ class FolderServiceImpl @Autowired constructor(
         log.debug("delete folder: $folderId")
     }
 
+    override fun rename(userId: String, folderId: String, newName: String) {
+        val folder = folderRepository.findByUserIdAndId(userId, folderId)
+            ?: throw CustomException(ResponseEnum.NOT_FOUND)
+        folder.name = newName
+        folderRepository.save(folder)
+    }
+
     override fun moveFolder(userId: String, folderId: String, parentId: String?) {
         val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         if (folder.user.id != userId) {

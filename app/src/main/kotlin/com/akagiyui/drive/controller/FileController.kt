@@ -17,6 +17,7 @@ import com.akagiyui.drive.model.response.UserFileResponse
 import com.akagiyui.drive.service.*
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 import org.springframework.beans.factory.DisposableBean
 import org.springframework.core.io.InputStreamResource
@@ -321,6 +322,7 @@ class FileController(
      * 移动文件
      * @param id 用户文件ID
      * @param folderId 目标文件夹ID
+     * @param user 用户
      */
     @PutMapping("/{id}/move")
     @RequirePermission
@@ -330,5 +332,21 @@ class FileController(
         @CurrentUser user: User,
     ) {
         userFileService.moveFile(user.id, id, folderId)
+    }
+
+    /**
+     * 重命名文件
+     * @param id 用户文件ID
+     * @param name 新文件名
+     * @param user 用户
+     */
+    @PutMapping("/{id}/name")
+    @RequirePermission
+    fun renameFile(
+        @PathVariable id: String,
+        @RequestParam("name") @Validated @NotBlank name: String,
+        @CurrentUser user: User,
+    ) {
+        userFileService.rename(user.id, id, name)
     }
 }

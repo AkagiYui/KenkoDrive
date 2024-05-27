@@ -18,6 +18,15 @@ interface FolderRepository : JpaRepository<Folder, String> {
     fun findByUserIdAndParentId(userId: String, parentId: String?): List<Folder>
 
     /**
+     * 根据用户ID和文件夹ID获取文件夹
+     *
+     * @param userId 用户ID
+     * @param id 文件夹ID
+     * @return 文件夹
+     */
+    fun findByUserIdAndId(userId: String, id: String): Folder?
+
+    /**
      * 根据文件夹名、用户ID、父文件夹ID判断文件夹是否存在
      *
      * @param name 文件夹名

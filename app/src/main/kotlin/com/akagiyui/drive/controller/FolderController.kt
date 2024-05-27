@@ -70,4 +70,21 @@ class FolderController(private val folderService: FolderService) {
     ) {
         folderService.moveFolder(user.id, folderId, parentId)
     }
+
+    /**
+     * 重命名文件夹
+     *
+     * @param folderId 文件夹ID
+     * @param name 新文件夹名
+     * @param user 用户
+     */
+    @PutMapping("/{folderId}/name")
+    @RequirePermission
+    fun renameFolder(
+        @PathVariable folderId: String,
+        @RequestParam("name") name: String,
+        @CurrentUser user: User,
+    ) {
+        folderService.rename(user.id, folderId, name)
+    }
 }

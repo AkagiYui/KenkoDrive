@@ -54,4 +54,12 @@ interface FolderService {
      * 移动文件夹
      */
     fun moveFolder(userId: String, folderId: String, parentId: String?)
+
+    /**
+     * 重命名文件夹
+     * @param userId 用户ID
+     * @param folderId 文件夹ID
+     * @param newName 新文件夹名
+     */
+    fun rename(userId: String, folderId: String, newName: String)
 }
