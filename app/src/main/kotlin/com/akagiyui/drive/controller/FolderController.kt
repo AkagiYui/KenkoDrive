@@ -5,9 +5,11 @@ import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateFolderRequest
+import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.FolderService
+import com.akagiyui.drive.service.UserFileService
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -17,20 +19,26 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/folder")
-class FolderController(private val folderService: FolderService) {
+class FolderController(private val folderService: FolderService, private val userFileService: UserFileService) {
+
     /**
-     * 获取文件夹列表
+     * 获取文件夹内容
      *
-     * @param parentId 父文件夹ID
-     * @return 文件夹列表
+     * @param folderId 文件夹ID
+     * @return 文件夹信息
      */
-    @GetMapping("", "/")
+    @GetMapping("/{id}", "", "/")
     @RequirePermission
-    fun listFolder(
-        @RequestParam(name = "parent", required = false) parentId: String?,
+    fun getFolderContent(
+        @PathVariable(name = "id", required = false) folderId: String?,
         @CurrentUser user: User,
-    ): List<FolderResponse> {
-        return folderService.getSubFolders(user.id, parentId).toResponse()
+    ): FolderContentResponse {
+        val files = userFileService.getFiles(user.id, folderId).toResponse()
+        val folders = folderService.getSubFolders(user.id, folderId).toResponse()
+        return FolderContentResponse(
+            files,
+            folders,
+            folderId?.let { folderService.getFolderChain(user.id, it) } ?: emptyList())
     }
 
     /**

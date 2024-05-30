@@ -10,10 +10,11 @@ import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.MirrorFileRequest
-import com.akagiyui.drive.model.response.FolderContentResponse
 import com.akagiyui.drive.model.response.UploadTaskResponse
-import com.akagiyui.drive.model.response.toResponse
-import com.akagiyui.drive.service.*
+import com.akagiyui.drive.service.FileInfoService
+import com.akagiyui.drive.service.StorageService
+import com.akagiyui.drive.service.UploadService
+import com.akagiyui.drive.service.UserFileService
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -45,7 +46,6 @@ import kotlin.math.max
 class FileController(
     private val storageService: StorageService,
     private val fileInfoService: FileInfoService,
-    private val folderService: FolderService,
     private val userFileService: UserFileService,
     private val uploadService: UploadService,
 ) : DisposableBean {
@@ -145,26 +145,6 @@ class FileController(
     @RequirePermission(Permission.PERSONAL_UPLOAD)
     fun getUploadTaskInfo(@PathVariable("id") taskId: String): UploadTaskResponse {
         return UploadTaskResponse(uploadService.getUploadTask(taskId))
-    }
-
-    /**
-     * 获取用户怒文件列表
-     *
-     * @param folderId 文件夹ID
-     * @return 文件列表
-     */
-    @GetMapping("", "/")
-    @RequirePermission
-    fun getFolderContent(
-        @RequestParam(name = "folder", required = false) folderId: String?,
-        @CurrentUser user: User,
-    ): FolderContentResponse {
-        val files = userFileService.getFiles(user.id, folderId).toResponse()
-        val folders = folderService.getSubFolders(user.id, folderId).toResponse()
-        return FolderContentResponse(
-            files,
-            folders,
-            folderId?.let { folderService.getFolderChain(user.id, it) } ?: emptyList())
     }
 
     /**
