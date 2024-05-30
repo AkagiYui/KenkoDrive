@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
 import java.security.MessageDigest
+import java.util.concurrent.TimeUnit
 
 /**
  * 上传 服务实现类
@@ -123,7 +124,9 @@ class UploadServiceImpl(
         }
         log.debug("task: $taskId, chunk: $chunkIndex, upload success")
         // 标记已上传
-        redisCache.set("chunk_uploaded:$taskId", chunkIndex, true)
+        val cacheKey = "chunk_uploaded:$taskId"
+        redisCache.set(cacheKey, chunkIndex, true)
+        redisCache.expire(cacheKey, 1, TimeUnit.DAYS)
         val chunkMap = redisCache.getMap<Int, Boolean>("chunk_uploaded:$taskId")
         return if (chunkMap.values.all { it }) {
             task.allowUpload = false

@@ -180,4 +180,15 @@ class RedisCache(private val redisTemplate: RedisTemplate<String, Any?>) {
     operator fun contains(key: String): Boolean {
         return redisTemplate.hasKey(key)
     }
+
+    /**
+     * 设置过期时间
+     *
+     * @param key     键名
+     * @param timeout 过期时间
+     * @param unit    时间单位
+     */
+    fun expire(key: String, timeout: Long, unit: TimeUnit) {
+        redisTemplate.expire(key, timeout, unit)
+    }
 }
