@@ -5,6 +5,7 @@ import com.akagiyui.common.ResponseResult
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.exception.TooManyRequestsException
+import com.akagiyui.common.exception.UnAuthorizedException
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
 import jakarta.servlet.http.HttpServletRequest
@@ -124,6 +125,15 @@ class CustomExceptionHandler {
         } else {
             ResponseEntity(responseBody, HttpStatus.BAD_REQUEST) // 200 OK
         }
+    }
+
+    /**
+     * 401 未授权
+     */
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(UnAuthorizedException::class)
+    fun unAuthorizedException(e: UnAuthorizedException): ResponseResult<Any> {
+        return ResponseResult.response(ResponseEnum.UNAUTHORIZED)
     }
 
     /**

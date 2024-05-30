@@ -19,8 +19,7 @@ class SessionUserAuthentication(
     private val userAuthorities by lazy {
         user.roles
             .asSequence()
-            .map { it.permissions }
-            .flatten()
+            .flatMap { it.permissions }
             .map { GrantedAuthority { it.name } }
             .toMutableList()
     }

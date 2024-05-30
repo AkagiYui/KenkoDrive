@@ -2,6 +2,7 @@ package com.akagiyui.drive.component.permission
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
@@ -21,19 +22,25 @@ class PermissionCheckAspect {
     @Before("@annotation(requiredPermission)")
     @PreAuthorize("isAuthenticated()")
     fun checkPermission(requiredPermission: RequirePermission) {
-        // 获取当前用户的权限
+        // 检查是否登录
         val authentication = SecurityContextHolder.getContext().authentication
         if (authentication.principal == "anonymousUser") {
             throw CustomException(ResponseEnum.UNAUTHORIZED)
         }
-        val authorities: Set<Permission> = authentication.authorities.map { Permission.valueOf(it.authority) }.toSet()
 
         // 获取注解中的权限
         val permissions = requiredPermission.value
         val permissionList: Set<Permission> = permissions.toSet()
+        if (permissionList.isEmpty()) {
+            return // 无需权限
+        }
+
+        // 获取用户权限
+        val user = authentication.principal as User
+        val userPermissions = user.roles.filter { !it.disabled }.flatMap { it.permissions }.toSet()
 
         // 校验权限
-        if (!authorities.containsAll(permissionList)) {
+        if (!userPermissions.containsAll(permissionList)) {
             throw CustomException(ResponseEnum.UNAUTHORIZED)
         }
     }

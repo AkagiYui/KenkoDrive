@@ -134,6 +134,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         roleRepository.save(oldRole)
     }
 
+    @CacheEvict(cacheNames = [CacheConstants.USER_BY_ID], allEntries = true)
     override fun disable(id: String, disabled: Boolean) {
         val role = getRoleById(id)
         if (role.disabled != disabled) {
