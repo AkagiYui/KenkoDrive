@@ -6,6 +6,7 @@ import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateFolderRequest
 import com.akagiyui.drive.model.response.FolderResponse
+import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.FolderService
 import org.springframework.web.bind.annotation.*
 
@@ -29,7 +30,7 @@ class FolderController(private val folderService: FolderService) {
         @RequestParam(name = "parent", required = false) parentId: String?,
         @CurrentUser user: User,
     ): List<FolderResponse> {
-        return FolderResponse.fromFolderList(folderService.getSubFolders(user.id, parentId))
+        return folderService.getSubFolders(user.id, parentId).toResponse()
     }
 
     /**

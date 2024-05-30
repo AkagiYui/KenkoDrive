@@ -11,9 +11,8 @@ import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.MirrorFileRequest
 import com.akagiyui.drive.model.response.FolderContentResponse
-import com.akagiyui.drive.model.response.FolderResponse
 import com.akagiyui.drive.model.response.UploadTaskResponse
-import com.akagiyui.drive.model.response.UserFileResponse
+import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.*
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.constraints.Min
@@ -149,19 +148,19 @@ class FileController(
     }
 
     /**
-     * 获取文件列表
+     * 获取用户怒文件列表
      *
      * @param folderId 文件夹ID
      * @return 文件列表
      */
     @GetMapping("", "/")
     @RequirePermission
-    fun getFileList(
+    fun getFolderContent(
         @RequestParam(name = "folder", required = false) folderId: String?,
         @CurrentUser user: User,
     ): FolderContentResponse {
-        val files = UserFileResponse.fromUserFileList(userFileService.getFiles(user.id, folderId))
-        val folders = FolderResponse.fromFolderList(folderService.getSubFolders(user.id, folderId))
+        val files = userFileService.getFiles(user.id, folderId).toResponse()
+        val folders = folderService.getSubFolders(user.id, folderId).toResponse()
         return FolderContentResponse(
             files,
             folders,

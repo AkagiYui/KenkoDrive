@@ -1,60 +1,65 @@
 package com.akagiyui.drive.model.response
 
 import com.akagiyui.drive.entity.User
+import java.util.*
 
 /**
  * 用户信息响应
  *
  * @author AkagiYui
  */
-class UserInfoResponse(user: User) {
+data class UserInfoResponse(
     /**
      * 用户ID
      */
-    val id = user.id
+    val id: String,
 
     /**
      * 用户名
      */
-    val username: String? = user.username
+    val username: String,
 
     /**
      * 昵称
      */
-    val nickname = user.nickname
+    val nickname: String,
 
     /**
      * 邮箱
      */
-    val email = user.email
+    val email: String,
 
     /**
      * 已禁用
      */
-    val disabled: Boolean = user.disabled
+    val disabled: Boolean,
 
     /**
      * 注册时间
      */
-    val registerTime = user.createTime
+    val registerTime: Date,
 
     /**
      * 权限
      */
-    val permissions: List<String>
+    val permissions: List<String>,
+) {
+    constructor(user: User) : this(
+        id = user.id,
+        username = user.username ?: "",
+        nickname = user.nickname ?: user.username ?: "",
+        email = user.email ?: "",
+        disabled = user.disabled,
+        registerTime = user.createTime,
+        permissions = user.roles.flatMap { it.permissions }.map { it.name }
+    )
+}
 
-    init {
-        val roles = user.roles
-        val allPermissions = roles.stream().flatMap { it.permissions.stream() }.toList()
-        this.permissions = allPermissions.stream().map { it.name }.toList()
-    }
-
-    companion object {
-        fun fromUserList(users: List<User>): List<UserInfoResponse> {
-            return users
-                .stream()
-                .map { UserInfoResponse(it) }
-                .toList()
-        }
-    }
+/**
+ * 从用户列表转换
+ *
+ * @return 用户信息响应列表
+ */
+fun List<User>.toResponse(): List<UserInfoResponse> {
+    return this.map { UserInfoResponse(it) }.toList()
 }

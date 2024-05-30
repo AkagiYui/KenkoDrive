@@ -7,67 +7,62 @@ import com.akagiyui.drive.entity.Announcement
  *
  * @author AkagiYui
  */
-class AnnouncementResponse() {
-
+data class AnnouncementResponse(
     /**
      * 公告ID
      */
-    var id: String? = null
+    val id: String,
 
     /**
      * 标题
      */
-    var title: String? = null
+    val title: String,
 
     /**
      * 内容
      */
-    var content: String? = null
+    val content: String?,
 
     /**
      * 用户ID
      */
-    var userId: String? = null
+    val userId: String,
 
     /**
      * 用户名
      */
-    var username: String? = null
+    val username: String?,
 
     /**
      * 已启用
      */
-    var enabled = false
+    val enabled: Boolean,
 
     /**
      * 发布时间
      */
-    var createTime: Long = 0
+    val createTime: Long,
 
     /**
      * 修改时间
      */
-    var updateTime: Long = 0
+    val updateTime: Long,
+) {
+    constructor(announcement: Announcement) : this(
+        id = announcement.id,
+        title = announcement.title,
+        content = announcement.content,
+        userId = announcement.author.id,
+        username = announcement.author.username,
+        enabled = announcement.enabled,
+        createTime = announcement.createTime.time,
+        updateTime = announcement.updateTime.time
+    )
+}
 
-    constructor(announcement: Announcement) : this() {
-        this.id = announcement.id
-        this.title = announcement.title
-        this.content = announcement.content
-        this.userId = announcement.author.id
-        this.username = announcement.author.username
-        this.enabled = announcement.enabled
-        this.createTime = announcement.createTime.time
-        this.updateTime = announcement.updateTime.time
-    }
-
-    companion object {
-        /**
-         * 从公告实体列表转换
-         */
-        fun fromAnnouncementList(announcementList: List<Announcement>): List<AnnouncementResponse> {
-            return announcementList.stream()
-                .map { announcement -> AnnouncementResponse(announcement) }
-                .toList()
-        }
-    }
+/**
+ * 从公告实体列表转换
+ */
+fun List<Announcement>.toResponse(): List<AnnouncementResponse> {
+    return this.map { AnnouncementResponse(it) }.toList()
 }

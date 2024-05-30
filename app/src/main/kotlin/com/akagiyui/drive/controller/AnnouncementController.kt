@@ -7,9 +7,7 @@ import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.AddAnnouncementRequest
 import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
-import com.akagiyui.drive.model.response.AnnouncementDisplayResponse
-import com.akagiyui.drive.model.response.AnnouncementResponse
-import com.akagiyui.drive.model.response.PageResponse
+import com.akagiyui.drive.model.response.*
 import com.akagiyui.drive.service.AnnouncementService
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
@@ -50,16 +48,8 @@ class AnnouncementController(
         @RequestParam(defaultValue = "10") size: Int,
         @ModelAttribute filter: AnnouncementFilter,
     ): PageResponse<AnnouncementResponse> {
-        val announcementPage = announcementService.find(index, size, filter)
-        val announcementList = announcementPage.content
-        val responseList = AnnouncementResponse.fromAnnouncementList(announcementList)
-        return PageResponse<AnnouncementResponse>().apply {
-            page = index
-            this.size = size
-            pageCount = announcementPage.totalPages
-            total = announcementPage.totalElements
-            list = responseList
-        }
+        val page = announcementService.find(index, size, filter)
+        return PageResponse(page, page.content.toResponse())
     }
 
     /**
@@ -68,7 +58,7 @@ class AnnouncementController(
     @GetMapping("/index")
     @RequirePermission
     fun getIndexAnnouncementList(): List<AnnouncementDisplayResponse> {
-        return AnnouncementDisplayResponse.fromAnnouncementList(announcementService.getAnnouncementDisplayList())
+        return announcementService.getAnnouncementDisplayList().toDisplayResponse()
     }
 
     /**

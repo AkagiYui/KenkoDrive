@@ -7,29 +7,29 @@ import com.akagiyui.drive.model.Permission
  *
  * @author AkagiYui
  */
-class PermissionResponse(permission: Permission) {
+data class PermissionResponse(
     /**
      * 权限名
      */
-    var name = permission.name
+    val name: String,
 
     /**
      * 权限描述
      */
-    var description = permission.description
+    val description: String,
+) {
+    constructor(permission: Permission) : this(
+        name = permission.name,
+        description = permission.description
+    )
+}
 
-    companion object {
-        /**
-         * 从权限列表转换
-         *
-         * @param permissions 权限列表
-         * @return 权限响应列表
-         */
-        fun fromPermissionList(permissions: List<Permission>): List<PermissionResponse> {
-            return permissions
-                .stream()
-                .map { permission -> PermissionResponse(permission) }
-                .toList()
-        }
-    }
+
+/**
+ * 从权限列表转换
+ *
+ * @return 权限响应列表
+ */
+fun List<Permission>.toResponse(): List<PermissionResponse> {
+    return this.map { PermissionResponse(it) }.toList()
 }

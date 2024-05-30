@@ -8,53 +8,45 @@ import java.util.*
  *
  * @author AkagiYui
  */
-class AnnouncementDisplayResponse() {
+data class AnnouncementDisplayResponse(
     /**
      * 标题
      */
-    var title: String? = null
+    val title: String,
 
     /**
      * 内容
      */
-    var content: String? = null
+    val content: String?,
 
     /**
      * 发布者昵称
      */
-    var userNickname: String? = null
+    val userNickname: String,
 
     /**
      * 发布时间
      */
-    var createTime: Date? = null
+    val createTime: Date,
 
     /**
      * 修改时间
      */
-    var updateTime: Date? = null
+    val updateTime: Date,
+) {
+    constructor(announcement: Announcement) : this(
+        title = announcement.title,
+        content = announcement.content,
+        userNickname = announcement.author.nickname ?: "",
+        createTime = announcement.createTime,
+        updateTime = announcement.updateTime
+    )
+}
 
-    /**
-     * 从公告实体转换
-     *
-     * @param announcement 公告 实体
-     */
-    constructor(announcement: Announcement) : this() {
-        this.title = announcement.title
-        this.content = announcement.content
-        this.userNickname = announcement.author.nickname
-        this.createTime = announcement.createTime
-        this.updateTime = announcement.updateTime
-    }
 
-    companion object {
-        /**
-         * 从公告实体列表转换
-         */
-        fun fromAnnouncementList(announcementList: List<Announcement>): List<AnnouncementDisplayResponse> {
-            return announcementList.stream()
-                .map { announcement -> AnnouncementDisplayResponse(announcement) }
-                .toList()
-        }
-    }
+/**
+ * 从公告实体列表转换
+ */
+fun List<Announcement>.toDisplayResponse(): List<AnnouncementDisplayResponse> {
+    return this.map { AnnouncementDisplayResponse(it) }.toList()
 }

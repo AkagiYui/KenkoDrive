@@ -6,8 +6,12 @@ import com.akagiyui.drive.entity.cache.UploadTask
  * 上传任务信息响应
  * @author AkagiYui
  */
-
-class UploadTaskResponse(task: UploadTask) {
-    val id = task.id
-    val merged = task.merged
+data class UploadTaskResponse(
+    val id: String,
+    val merged: Boolean,
+) {
+    constructor(task: UploadTask) : this(
+        id = task.id,
+        merged = task.merged
+    )
 }

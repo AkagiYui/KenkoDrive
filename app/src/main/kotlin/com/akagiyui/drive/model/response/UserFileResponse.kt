@@ -7,49 +7,53 @@ import com.akagiyui.drive.entity.UserFile
  *
  * @author AkagiYui
  */
-class UserFileResponse(userFile: UserFile) {
+data class UserFileResponse(
     /**
      * 文件ID
      */
-    val id = userFile.id
+    val id: String,
 
     /**
      * 文件名
      */
-    val name: String = userFile.name
+    val name: String,
 
     /**
      * 文件大小（字节Byte）
      */
-    val size = userFile.fileInfo.size
+    val size: Long,
 
     /**
      * 文件类型
      */
-    val type: String = userFile.fileInfo.type
+    val type: String,
 
     /**
      * 创建时间
      */
-    val createTime = userFile.createTime.time
+    val createTime: Long,
 
     /**
      * 文件已被锁定
      */
-    val locked = userFile.fileInfo.locked
+    val locked: Boolean,
+) {
+    constructor(userFile: UserFile) : this(
+        id = userFile.id,
+        name = userFile.name,
+        size = userFile.fileInfo.size,
+        type = userFile.fileInfo.type,
+        createTime = userFile.createTime.time,
+        locked = userFile.fileInfo.locked
+    )
+}
 
-    companion object {
-        /**
-         * 将文件列表转换为文件响应列表
-         *
-         * @param userFiles 文件 列表
-         * @return 文件响应 列表
-         */
-        fun fromUserFileList(userFiles: List<UserFile>): List<UserFileResponse> {
-            return userFiles
-                .stream()
-                .map { UserFileResponse(it) }
-                .toList()
-        }
-    }
+
+/**
+ * 将文件列表转换为文件响应列表
+ *
+ * @return 文件响应 列表
+ */
+fun List<UserFile>.toResponse(): List<UserFileResponse> {
+    return this.map { UserFileResponse(it) }.toList()
 }

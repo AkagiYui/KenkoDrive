@@ -12,6 +12,7 @@ import com.akagiyui.drive.model.request.*
 import com.akagiyui.drive.model.response.LoginResponse
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
+import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.UserService
 import jakarta.validation.constraints.NotNull
@@ -71,17 +72,8 @@ class UserController(private val userService: UserService, private val avatarSer
         @RequestParam(defaultValue = "10") size: Int,
         @ModelAttribute filter: UserFilter?,
     ): PageResponse<UserInfoResponse> {
-        val userPage = userService.find(index, size, filter)
-        val userList = userPage.content
-        val studentResponseList = UserInfoResponse.fromUserList(userList)
-
-        return PageResponse<UserInfoResponse>().apply {
-            this.page = index
-            this.size = size
-            this.pageCount = userPage.totalPages
-            this.total = userPage.totalElements
-            this.list = studentResponseList
-        }
+        val page = userService.find(index, size, filter)
+        return PageResponse(page, page.content.toResponse())
     }
 
     /**

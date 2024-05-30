@@ -7,39 +7,35 @@ import com.akagiyui.drive.entity.Folder
  *
  * @author AkagiYui
  */
-class FolderResponse() {
+data class FolderResponse(
     /**
      * 文件夹ID
      */
-    var id: String? = null
+    val id: String,
 
     /**
      * 文件夹名
      */
-    var name: String? = null
+    val name: String,
 
     /**
      * 创建时间
      */
-    var createTime: Long = 0
+    val createTime: Long,
+) {
+    constructor(folder: Folder) : this(
+        id = folder.id,
+        name = folder.name,
+        createTime = folder.createTime.time
+    )
+}
 
-    constructor(folder: Folder) : this() {
-        this.id = folder.id
-        this.name = folder.name
-        this.createTime = folder.createTime.time
-    }
 
-    companion object {
-        /**
-         * 将文件夹列表转换为文件夹响应列表
-         *
-         * @param folderList 文件夹 列表
-         * @return 文件夹响应 列表
-         */
-        fun fromFolderList(folderList: List<Folder>): List<FolderResponse> {
-            return folderList.stream()
-                .map { folder -> FolderResponse(folder) }
-                .toList()
-        }
-    }
+/**
+ * 将文件夹列表转换为文件夹响应列表
+ *
+ * @return 文件夹响应 列表
+ */
+fun List<Folder>.toResponse(): List<FolderResponse> {
+    return this.map { FolderResponse(it) }.toList()
 }

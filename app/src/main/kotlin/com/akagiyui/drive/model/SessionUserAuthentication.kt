@@ -49,5 +49,7 @@ class SessionUserAuthentication(
         return true
     }
 
-    override fun setAuthenticated(isAuthenticated: Boolean) {}
+    override fun setAuthenticated(isAuthenticated: Boolean) {
+        throw UnsupportedOperationException("not allowed to change authenticated status")
+    }
 }

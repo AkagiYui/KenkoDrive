@@ -9,6 +9,7 @@ import com.akagiyui.drive.model.request.UpdateRoleRequest
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.PermissionResponse
 import com.akagiyui.drive.model.response.RoleInfoResponse
+import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.RoleService
 import com.akagiyui.drive.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
@@ -37,17 +38,8 @@ class RoleController(private val roleService: RoleService, private val userServi
         @RequestParam(defaultValue = "10") size: Int,
         @ModelAttribute filter: RoleFilter?,
     ): PageResponse<RoleInfoResponse> {
-        val rolePage = roleService.find(index, size, filter)
-        val roleList = rolePage.content
-        val roleResponseList = RoleInfoResponse.fromRoleList(roleList)
-
-        return PageResponse<RoleInfoResponse>().apply {
-            this.page = index
-            this.size = size
-            this.pageCount = rolePage.totalPages
-            this.total = rolePage.totalElements
-            this.list = roleResponseList
-        }
+        val page = roleService.find(index, size, filter)
+        return PageResponse(page, page.content.toResponse())
     }
 
     /**
@@ -107,7 +99,7 @@ class RoleController(private val roleService: RoleService, private val userServi
     @GetMapping("/permissions")
     @PreAuthorize("permitAll()")
     fun getPermissions(): List<PermissionResponse> {
-        return PermissionResponse.fromPermissionList(roleService.getAllPermissions())
+        return roleService.getAllPermissions().toResponse()
     }
 
     /**
