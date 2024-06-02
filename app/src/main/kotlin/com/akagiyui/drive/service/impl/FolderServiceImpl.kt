@@ -112,7 +112,7 @@ class FolderServiceImpl @Autowired constructor(
             throw CustomException(ResponseEnum.NOT_FOUND)
         }
 
-        check(parentId == folderId) { "not allowed to move folder to itself" }
+        check(parentId != folderId) { "not allowed to move folder to itself" }
         val parentFolder = if (parentId.hasText()) {
             folderRepository.findById(parentId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         } else {
