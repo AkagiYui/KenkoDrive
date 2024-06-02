@@ -31,3 +31,8 @@ class RoleFilter : ModelFilter()
  * @author AkagiYui
  */
 class UserFilter : ModelFilter()
+
+/**
+ * 文件查询筛选
+ */
+class FileInfoFilter : ModelFilter()

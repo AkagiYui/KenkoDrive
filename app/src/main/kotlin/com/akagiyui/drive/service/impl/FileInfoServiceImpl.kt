@@ -5,15 +5,20 @@ import cn.hutool.crypto.digest.Digester
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
+import com.akagiyui.drive.model.FileInfoFilter
 import com.akagiyui.drive.repository.FileInfoRepository
 import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.StorageService
 import com.akagiyui.drive.service.UserFileService
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.IOException
@@ -112,5 +117,19 @@ class FileInfoServiceImpl(
 
     override fun addFileInfo(fileInfo: FileInfo) {
         fileInfoRepository.save(fileInfo)
+    }
+
+    override fun find(pageIndex: Int, pageSize: Int, filter: FileInfoFilter?): Page<FileInfo> {
+        val pageable = PageRequest.of(pageIndex, pageSize)
+
+        // 条件查询
+        val specification = Specification<FileInfo> { root, _, cb ->
+            if (filter != null && filter.expression.hasText()) {
+                val namePredicate = cb.like(root.get("name"), "%${filter.expression}%")
+                cb.or(namePredicate)
+            } else null
+        }
+
+        return fileInfoRepository.findAll(specification, pageable)
     }
 }

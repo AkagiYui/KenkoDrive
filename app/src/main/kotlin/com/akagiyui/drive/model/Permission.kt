@@ -118,6 +118,11 @@ enum class Permission(val description: String) {
      * 获取系统信息
      */
     SYSTEM_INFO_GET("获取系统信息"),
+
+    /**
+     * 获取所有文件列表
+     */
+    FILE_LIST_ALL("获取所有文件列表"),
     ;
 
     /**

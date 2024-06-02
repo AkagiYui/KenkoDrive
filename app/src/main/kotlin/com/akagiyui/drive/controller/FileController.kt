@@ -7,10 +7,14 @@ import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
+import com.akagiyui.drive.model.FileInfoFilter
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.MirrorFileRequest
+import com.akagiyui.drive.model.response.FileInfoResponse
+import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UploadTaskResponse
+import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.StorageService
 import com.akagiyui.drive.service.UploadService
@@ -56,6 +60,20 @@ class FileController(
     override fun destroy() {
         speedBucketManager.close()
         bandwidthBucketManager.close()
+    }
+
+    /**
+     * 获取文件列表
+     */
+    @GetMapping
+    @RequirePermission(Permission.FILE_LIST_ALL)
+    fun getFileList(
+        @RequestParam(defaultValue = "0") index: Int,
+        @RequestParam(defaultValue = "10") size: Int,
+        @ModelAttribute filter: FileInfoFilter?,
+    ): PageResponse<FileInfoResponse> {
+        val page = fileInfoService.find(index, size, filter)
+        return PageResponse(page, page.content.toResponse())
     }
 
     /**

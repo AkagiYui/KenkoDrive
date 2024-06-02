@@ -2,6 +2,8 @@ package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.FileInfoFilter
+import org.springframework.data.domain.Page
 import org.springframework.web.multipart.MultipartFile
 import java.util.stream.Stream
 
@@ -56,4 +58,12 @@ interface FileInfoService {
      * 添加文件信息
      */
     fun addFileInfo(fileInfo: FileInfo)
+
+    /**
+     * 获取文件信息列表
+     * @param pageIndex 页码
+     * @param pageSize 每页数量
+     * @param filter 过滤条件
+     */
+    fun find(pageIndex: Int, pageSize: Int, filter: FileInfoFilter?): Page<FileInfo>
 }

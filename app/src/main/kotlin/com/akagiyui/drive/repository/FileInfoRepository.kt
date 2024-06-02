@@ -2,6 +2,7 @@ package com.akagiyui.drive.repository
 
 import com.akagiyui.drive.entity.FileInfo
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.transaction.annotation.Transactional
@@ -12,7 +13,7 @@ import java.util.stream.Stream
  *
  * @author AkagiYui
  */
-interface FileInfoRepository : JpaRepository<FileInfo, String> {
+interface FileInfoRepository : JpaRepository<FileInfo, String>, JpaSpecificationExecutor<FileInfo> {
     /**
      * 根据哈希查找文件
      *

@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param
  */
 interface RoleRepository : JpaRepository<Role, String>, JpaSpecificationExecutor<Role> {
     /**
-     * 找出所有默认角色
+     * 查找所有默认角色
      *
      * @return 默认角色列表
      */
