@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page
  */
 data class PageResponse<T>(
     /**
-     * 当前页
+     * 页码
      */
-    val page: Int = 0,
+    val index: Int = 0,
 
     /**
      * 每页大小
@@ -26,7 +26,7 @@ data class PageResponse<T>(
     /**
      * 总数
      */
-    val total: Long = 0,
+    val itemCount: Long = 0,
 
     /**
      * 内容
@@ -34,18 +34,18 @@ data class PageResponse<T>(
     val list: List<T> = emptyList(),
 ) {
     constructor(page: Page<T>) : this(
-        page = page.number,
+        index = page.number,
         size = page.size,
         pageCount = page.totalPages,
-        total = page.totalElements,
+        itemCount = page.totalElements,
         list = page.content
     )
 
     constructor(metadata: Page<*>, list: List<T>) : this(
-        page = metadata.number,
+        index = metadata.number,
         size = metadata.size,
         pageCount = metadata.totalPages,
-        total = metadata.totalElements,
+        itemCount = metadata.totalElements,
         list = list
     )
 }

@@ -17,15 +17,15 @@ class AddRoleRequest {
     /**
      * 角色描述
      */
-    lateinit var description: String
+    var description: String? = null
 
     /**
      * 角色权限
      */
-    lateinit var permissions: Set<String>
+    var permissions: Set<String> = emptySet()
 
     /**
      * 是否是默认角色
      */
-    var isDefault: Boolean = false
+    var default: Boolean = false
 }

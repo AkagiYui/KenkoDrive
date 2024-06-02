@@ -1,7 +1,6 @@
 package com.akagiyui.drive.model.response
 
 import com.akagiyui.drive.entity.User
-import java.util.*
 
 /**
  * 用户信息响应
@@ -37,7 +36,7 @@ data class UserInfoResponse(
     /**
      * 注册时间
      */
-    val registerTime: Date,
+    val registerTime: Long,
 
     /**
      * 权限
@@ -50,7 +49,7 @@ data class UserInfoResponse(
         nickname = user.nickname ?: user.username ?: "",
         email = user.email ?: "",
         disabled = user.disabled,
-        registerTime = user.createTime,
+        registerTime = user.createTime.time,
         permissions = user.roles.flatMap { it.permissions }.map { it.name }
     )
 }

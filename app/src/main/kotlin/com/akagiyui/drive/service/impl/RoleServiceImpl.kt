@@ -89,7 +89,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
             name = role.name
             description = role.description
             this.permissions = permissions
-            isDefault = role.isDefault == true
+            isDefault = role.default == true
         }
         roleRepository.save(newRole)
         return newRole.id
