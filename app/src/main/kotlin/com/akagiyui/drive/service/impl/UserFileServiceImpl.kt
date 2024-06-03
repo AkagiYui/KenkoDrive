@@ -58,6 +58,10 @@ class UserFileServiceImpl(
         userFileRepository.save(userFile)
     }
 
+    override fun removeAllAssociation(fileInfoId: String) {
+        userFileRepository.deleteAllByFileInfoId(fileInfoId)
+    }
+
     override fun getFiles(userId: String, folderId: String?): List<UserFile> {
         return userFileRepository.findByUserIdAndFolderId(userId, folderId)
     }

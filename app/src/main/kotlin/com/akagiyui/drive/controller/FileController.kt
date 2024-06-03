@@ -305,7 +305,7 @@ class FileController(
     }
 
     /**
-     * 删除文件
+     * 删除用户文件链接
      *
      * @param id 用户文件ID
      */
@@ -347,7 +347,6 @@ class FileController(
         userFileService.rename(user.id, id, name)
     }
 
-
     /**
      * 锁定/解锁文件
      * @param id 文件ID
@@ -360,5 +359,15 @@ class FileController(
         @RequestParam("locked") locked: Boolean,
     ) {
         fileInfoService.lock(id, locked)
+    }
+
+    /**
+     * 删除文件
+     * @param id 文件ID
+     */
+    @DeleteMapping("/{id}/real")
+    @RequirePermission(Permission.FILE_DELETE)
+    fun deleteFileReal(@PathVariable id: String) {
+        fileInfoService.delete(id)
     }
 }

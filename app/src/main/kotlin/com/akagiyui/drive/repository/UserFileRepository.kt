@@ -3,6 +3,7 @@ package com.akagiyui.drive.repository
 import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.UserFile
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 用户文件关联 操作接口
@@ -57,4 +58,11 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
      */
     fun findByUserIdAndId(userId: String, id: String): UserFile?
 
+    /**
+     * 根据文件信息ID删除用户文件
+     *
+     * @param fileInfoId 文件信息ID
+     */
+    @Transactional
+    fun deleteAllByFileInfoId(fileInfoId: String)
 }

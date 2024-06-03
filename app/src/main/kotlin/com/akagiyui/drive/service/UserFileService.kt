@@ -65,4 +65,9 @@ interface UserFileService {
      * 重命名文件
      */
     fun rename(userId: String, userFileId: String, newName: String)
+
+    /**
+     * 删除所有文件关联
+     */
+    fun removeAllAssociation(fileInfoId: String)
 }

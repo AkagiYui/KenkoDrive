@@ -128,6 +128,11 @@ enum class Permission(val description: String) {
      * 锁定/解锁文件
      */
     FILE_LOCK("锁定/解锁文件"),
+
+    /**
+     * 删除文件
+     */
+    FILE_DELETE("删除文件"),
     ;
 
     /**

@@ -71,4 +71,9 @@ interface FileInfoService {
      * 锁定文件
      */
     fun lock(fileInfoId: String, locked: Boolean)
+
+    /**
+     * 删除文件
+     */
+    fun delete(fileInfoId: String)
 }

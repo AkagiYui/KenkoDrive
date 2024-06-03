@@ -138,4 +138,14 @@ class FileInfoServiceImpl(
         fileInfo.locked = locked
         fileInfoRepository.save(fileInfo)
     }
+
+    override fun delete(fileInfoId: String) {
+        val fileInfo = getFileInfoWithoutCache(fileInfoId)
+        // 删除用户的文件关联
+        userFileService.removeAllAssociation(fileInfo.id)
+        // 删除文件本体
+        storageService.delete(fileInfo.storageKey)
+        // 删除文件记录
+        fileInfoRepository.delete(fileInfo)
+    }
 }
