@@ -45,8 +45,8 @@ data class UserInfoResponse(
 ) {
     constructor(user: User) : this(
         id = user.id,
-        username = user.username ?: "",
-        nickname = user.nickname ?: user.username ?: "",
+        username = user.username,
+        nickname = user.nickname ?: user.username,
         email = user.email ?: "",
         disabled = user.disabled,
         registerTime = user.createTime.time,

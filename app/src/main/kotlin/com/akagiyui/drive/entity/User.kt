@@ -15,10 +15,10 @@ import org.hibernate.annotations.DynamicInsert
 @DynamicInsert
 class User : BaseEntity() {
     /**
-     * 用户名
+     * 用户名，当前仅作为加密盐
      */
-    @Column(unique = true)
-    var username: String? = null
+    @Column(unique = true, nullable = false)
+    lateinit var username: String
 
     /**
      * 密码

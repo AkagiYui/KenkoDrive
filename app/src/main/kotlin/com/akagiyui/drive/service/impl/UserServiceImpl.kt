@@ -291,7 +291,7 @@ class UserServiceImpl(
 
     override fun resetPassword(id: String, newPassword: String) {
         val user = findUserByIdWithCache(id)
-        user.password = encryptPassword(user.username!!, newPassword)
+        user.password = encryptPassword(user.username, newPassword)
         repository.save(user)
     }
 
@@ -329,7 +329,7 @@ class UserServiceImpl(
             user.email = userInfo.email
         }
         if (userInfo.password.hasText()) {
-            user.password = encryptPassword(user.username!!, userInfo.password!!)
+            user.password = encryptPassword(user.username, userInfo.password!!)
         }
         repository.save(user)
     }
@@ -369,6 +369,8 @@ class UserServiceImpl(
         if (user == null) {
             // 不存在则新增用户
             val newUser = User().apply {
+                val currentTime = System.currentTimeMillis()
+                username = "phone:$phone:$currentTime"
                 this.phone = phone
                 nickname = phone
                 roles = roleService.getAllDefaultRoles()
