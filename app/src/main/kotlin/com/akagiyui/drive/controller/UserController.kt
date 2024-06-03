@@ -1,29 +1,25 @@
 package com.akagiyui.drive.controller
 
 import com.akagiyui.drive.component.CurrentUser
-import com.akagiyui.drive.component.captcha.GeetestCaptchaV4Protected
-import com.akagiyui.drive.component.limiter.Limit
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.UserFilter
-import com.akagiyui.drive.model.request.*
-import com.akagiyui.drive.model.response.LoginResponse
+import com.akagiyui.drive.model.request.AddUserRequest
+import com.akagiyui.drive.model.request.ResetPasswordRequest
+import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
 import com.akagiyui.drive.model.response.toResponse
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.UserService
-import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 
 /**
@@ -97,56 +93,6 @@ class UserController(private val userService: UserService, private val avatarSer
     @RequirePermission(Permission.USER_UPDATE)
     fun disable(@PathVariable id: String, @RequestParam disabled: Boolean) {
         userService.disable(id, disabled)
-    }
-
-    /**
-     * 获取邮件验证码
-     *
-     * @param verifyRequest 预注册请求体
-     */
-    @PostMapping("/register/email")
-    @PreAuthorize("isAnonymous()")
-    @GeetestCaptchaV4Protected
-    @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
-    fun getEmailVerifyCode(@RequestBody @Validated verifyRequest: EmailVerifyCodeRequest) {
-        userService.sendEmailVerifyCode(verifyRequest)
-    }
-
-    /**
-     * 获取短信验证码
-     *
-     * @param phone 手机号
-     */
-    @PostMapping("/sms")
-    @PreAuthorize("isAnonymous()")
-    @GeetestCaptchaV4Protected
-    @Limit(key = "getVerifyCode", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
-    fun getSmsOneTimePassword(@RequestParam("phone") phone: String) {
-        userService.sendSmsOneTimePassword(phone)
-    }
-
-    @PostMapping("/token")
-    @PreAuthorize("isAnonymous()")
-    fun getToken(@NotNull username: String, @NotNull password: String): LoginResponse {
-        return LoginResponse(userService.getAccessToken(username, password), null)
-    }
-
-    @GetMapping("/token/sms")
-    @PreAuthorize("isAnonymous()")
-    @Limit(key = "smsLogin", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
-    fun getSmsToken(@RequestParam("phone") phone: String, @RequestParam("code") code: String): LoginResponse {
-        return LoginResponse(userService.getAccessTokenBySms(phone, code), null)
-    }
-
-    /**
-     * 确认注册
-     *
-     * @param registerConfirmRequest 注册请求体
-     */
-    @PostMapping("/register")
-    @PreAuthorize("isAnonymous()")
-    fun confirmRegister(@RequestBody @Validated registerConfirmRequest: RegisterConfirmRequest) {
-        userService.confirmRegister(registerConfirmRequest)
     }
 
     /**

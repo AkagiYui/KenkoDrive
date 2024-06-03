@@ -33,7 +33,7 @@ class SecurityConfig(
     private val accessDeniedHandler: AccessDeniedHandler,
 ) {
     companion object {
-        const val LOGIN_URL: String = "/user/token"
+        const val LOGIN_URL: String = "/auth/token"
     }
 
     /**
@@ -55,19 +55,19 @@ class SecurityConfig(
                         "/system/version", // 获取系统版本
                         "/system/setting/register", // 是否开放注册
                         "/file/*/download/**", // 下载文件
-                        "/user/token/sms", // 短信登录
+                        "/auth/token/sms", // 短信登录
                         "/captcha", // 获取验证码
                     ).permitAll()
                     // 允许匿名 POST 请求访问
                     .requestMatchers(
                         HttpMethod.POST,
-                        "/user/sms", // 发送短信验证码
+                        "/auth/sms", // 发送短信验证码
                     ).permitAll()
                     // 仅允许匿名 POST 访问
                     .requestMatchers(
                         HttpMethod.POST,
                         LOGIN_URL, // 获取 Token
-                        "/user/register/**", // 注册
+                        "/auth/register/**", // 注册
                     ).anonymous()
                     .anyRequest().authenticated() // 其他请求需要认证
             }
