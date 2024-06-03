@@ -123,6 +123,11 @@ enum class Permission(val description: String) {
      * 获取所有文件列表
      */
     FILE_LIST_ALL("获取所有文件列表"),
+
+    /**
+     * 锁定/解锁文件
+     */
+    FILE_LOCK("锁定/解锁文件"),
     ;
 
     /**

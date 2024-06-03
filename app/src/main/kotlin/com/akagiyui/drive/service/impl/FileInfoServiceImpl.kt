@@ -132,4 +132,10 @@ class FileInfoServiceImpl(
 
         return fileInfoRepository.findAll(specification, pageable)
     }
+
+    override fun lock(fileInfoId: String, locked: Boolean) {
+        val fileInfo = getFileInfoWithoutCache(fileInfoId)
+        fileInfo.locked = locked
+        fileInfoRepository.save(fileInfo)
+    }
 }

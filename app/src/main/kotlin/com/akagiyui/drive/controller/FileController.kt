@@ -346,4 +346,19 @@ class FileController(
     ) {
         userFileService.rename(user.id, id, name)
     }
+
+
+    /**
+     * 锁定/解锁文件
+     * @param id 文件ID
+     * @param locked 是否锁定
+     */
+    @PutMapping("/{id}/lock")
+    @RequirePermission(Permission.FILE_LOCK)
+    fun lockFile(
+        @PathVariable id: String,
+        @RequestParam("locked") locked: Boolean,
+    ) {
+        fileInfoService.lock(id, locked)
+    }
 }

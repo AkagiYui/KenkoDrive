@@ -27,7 +27,7 @@ enum class ResponseEnum(val code: Int, val msg: String) {
     NOT_FOUND(10003, "Not found"),
 
     /**
-     * 未认证
+     * 未授权
      */
     UNAUTHORIZED(10004, "Unauthorized"),
 

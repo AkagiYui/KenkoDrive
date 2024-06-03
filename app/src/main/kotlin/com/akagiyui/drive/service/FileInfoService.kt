@@ -66,4 +66,9 @@ interface FileInfoService {
      * @param filter 过滤条件
      */
     fun find(pageIndex: Int, pageSize: Int, filter: FileInfoFilter?): Page<FileInfo>
+
+    /**
+     * 锁定文件
+     */
+    fun lock(fileInfoId: String, locked: Boolean)
 }
