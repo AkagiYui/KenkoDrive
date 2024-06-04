@@ -11,6 +11,5 @@ object CacheConstants {
     const val USER_PAGE: String = "user_page"
     const val USER_LIST: String = "user_list"
     const val USER_DETAILS: String = "user_details"
-    const val USER_LOGIN_DETAILS: String = "user_login_details"
     const val USER_EXIST: String = "user-exist"
 }

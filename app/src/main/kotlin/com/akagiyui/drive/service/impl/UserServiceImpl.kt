@@ -146,7 +146,6 @@ class UserServiceImpl(
         cacheNames = [
             CacheConstants.USER_BY_ID,
             CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
             CacheConstants.USER_PAGE,
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
@@ -280,7 +279,6 @@ class UserServiceImpl(
         cacheNames = [
             CacheConstants.USER_BY_ID,
             CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
             CacheConstants.USER_PAGE,
             CacheConstants.USER_LIST,
             CacheConstants.USER_EXIST,
@@ -318,8 +316,8 @@ class UserServiceImpl(
 
     @CacheEvict(
         cacheNames = [
+            CacheConstants.USER_BY_ID,
             CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
             CacheConstants.USER_PAGE,
             CacheConstants.USER_LIST,
         ],
@@ -356,7 +354,6 @@ class UserServiceImpl(
     @CacheEvict(
         cacheNames = [
             CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
             CacheConstants.USER_PAGE,
             CacheConstants.USER_LIST,
         ],
