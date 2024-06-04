@@ -13,7 +13,7 @@ import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.entity.cache.UploadTask
-import com.akagiyui.drive.model.request.CreateUploadTaskRequest
+import com.akagiyui.drive.model.request.upload.CreateUploadTaskRequest
 import com.akagiyui.drive.repository.cache.UploadTaskRepository
 import com.akagiyui.drive.service.*
 import org.springframework.beans.factory.annotation.Qualifier

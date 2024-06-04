@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.role
 
 import com.akagiyui.drive.model.Permission
 

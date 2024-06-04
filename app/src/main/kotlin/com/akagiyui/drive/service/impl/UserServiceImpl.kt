@@ -16,7 +16,7 @@ import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.cache.EmailRegisterInfo
-import com.akagiyui.drive.model.request.UpdateUserInfoRequest
+import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
 import com.akagiyui.drive.repository.UserRepository
 import com.akagiyui.drive.service.*
 import jakarta.annotation.Resource

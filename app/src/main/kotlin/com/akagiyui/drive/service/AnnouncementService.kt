@@ -2,7 +2,7 @@ package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.Announcement
 import com.akagiyui.drive.model.AnnouncementFilter
-import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
+import com.akagiyui.drive.model.request.announcement.UpdateAnnouncementRequest
 import org.springframework.data.domain.Page
 
 /**

@@ -1,4 +1,6 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.folder
+
+import com.akagiyui.drive.model.response.file.UserFileResponse
 
 /**
  * 文件夹内容 响应实体

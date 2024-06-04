@@ -4,10 +4,11 @@ import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.request.CreateFolderRequest
-import com.akagiyui.drive.model.response.FolderContentResponse
-import com.akagiyui.drive.model.response.FolderResponse
-import com.akagiyui.drive.model.response.toResponse
+import com.akagiyui.drive.model.request.folder.CreateFolderRequest
+import com.akagiyui.drive.model.response.file.toResponse
+import com.akagiyui.drive.model.response.folder.FolderContentResponse
+import com.akagiyui.drive.model.response.folder.FolderResponse
+import com.akagiyui.drive.model.response.folder.toResponse
 import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserFileService
 import org.springframework.web.bind.annotation.*

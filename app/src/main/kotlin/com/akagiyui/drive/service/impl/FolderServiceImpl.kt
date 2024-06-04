@@ -6,7 +6,7 @@ import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.User
-import com.akagiyui.drive.model.response.FolderResponse
+import com.akagiyui.drive.model.response.folder.FolderResponse
 import com.akagiyui.drive.repository.FolderRepository
 import com.akagiyui.drive.service.FolderService
 import com.akagiyui.drive.service.UserFileService

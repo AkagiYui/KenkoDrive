@@ -3,7 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.entity.cache.UploadTask
-import com.akagiyui.drive.model.request.CreateUploadTaskRequest
+import com.akagiyui.drive.model.request.upload.CreateUploadTaskRequest
 import org.springframework.web.multipart.MultipartFile
 
 /**

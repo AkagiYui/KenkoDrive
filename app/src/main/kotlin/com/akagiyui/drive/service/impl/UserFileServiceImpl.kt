@@ -7,7 +7,7 @@ import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
-import com.akagiyui.drive.model.request.MirrorFileRequest
+import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 import com.akagiyui.drive.repository.UserFileRepository
 import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.FolderService

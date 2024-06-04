@@ -1,18 +1,18 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.role
 
 import jakarta.validation.constraints.NotNull
 
 /**
- * 添加角色 请求
+ * 更新角色 请求
  *
  * @author AkagiYui
  */
-class AddRoleRequest {
+class UpdateRoleRequest {
     /**
      * 角色名
      */
     @NotNull(message = "{name is missing}")
-    lateinit var name: String
+    var name: String? = null
 
     /**
      * 角色描述
@@ -22,10 +22,10 @@ class AddRoleRequest {
     /**
      * 角色权限
      */
-    var permissions: Set<String> = emptySet()
+    var permissions: Set<String>? = null
 
     /**
      * 是否是默认角色
      */
-    var default: Boolean = false
+    var isDefault: Boolean? = null
 }

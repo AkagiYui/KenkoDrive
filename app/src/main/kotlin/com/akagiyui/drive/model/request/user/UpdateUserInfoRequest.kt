@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.user
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Size

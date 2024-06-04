@@ -4,12 +4,12 @@ import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.RoleFilter
-import com.akagiyui.drive.model.request.AddRoleRequest
-import com.akagiyui.drive.model.request.UpdateRoleRequest
+import com.akagiyui.drive.model.request.role.AddRoleRequest
+import com.akagiyui.drive.model.request.role.UpdateRoleRequest
 import com.akagiyui.drive.model.response.PageResponse
-import com.akagiyui.drive.model.response.PermissionResponse
-import com.akagiyui.drive.model.response.RoleInfoResponse
-import com.akagiyui.drive.model.response.toResponse
+import com.akagiyui.drive.model.response.role.PermissionResponse
+import com.akagiyui.drive.model.response.role.RoleInfoResponse
+import com.akagiyui.drive.model.response.role.toResponse
 import com.akagiyui.drive.service.RoleService
 import com.akagiyui.drive.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize

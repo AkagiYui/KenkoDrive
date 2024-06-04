@@ -9,12 +9,12 @@ import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
 import com.akagiyui.drive.model.FileInfoFilter
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.request.CreateUploadTaskRequest
-import com.akagiyui.drive.model.request.MirrorFileRequest
-import com.akagiyui.drive.model.response.FileInfoResponse
+import com.akagiyui.drive.model.request.upload.CreateUploadTaskRequest
+import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 import com.akagiyui.drive.model.response.PageResponse
-import com.akagiyui.drive.model.response.UploadTaskResponse
-import com.akagiyui.drive.model.response.toResponse
+import com.akagiyui.drive.model.response.file.FileInfoResponse
+import com.akagiyui.drive.model.response.file.toResponse
+import com.akagiyui.drive.model.response.upload.UploadTaskResponse
 import com.akagiyui.drive.service.FileInfoService
 import com.akagiyui.drive.service.StorageService
 import com.akagiyui.drive.service.UploadService

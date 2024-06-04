@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.announcement
 
 import com.akagiyui.drive.entity.Announcement
 import java.util.*

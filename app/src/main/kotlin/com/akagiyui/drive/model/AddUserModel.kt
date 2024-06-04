@@ -1,6 +1,6 @@
 package com.akagiyui.drive.model
 
-import com.akagiyui.drive.model.request.AddUserRequest
+import com.akagiyui.drive.model.request.user.AddUserRequest
 
 /**
  * 添加用户 参数模型

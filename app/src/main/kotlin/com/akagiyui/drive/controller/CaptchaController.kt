@@ -1,7 +1,7 @@
 package com.akagiyui.drive.controller
 
 import com.akagiyui.drive.component.limiter.Limit
-import com.akagiyui.drive.model.response.CaptchaResponse
+import com.akagiyui.drive.model.response.captcha.CaptchaResponse
 import com.akagiyui.drive.service.CaptchaService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping

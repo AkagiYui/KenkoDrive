@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.announcement
 
 import com.akagiyui.drive.entity.Announcement
 import jakarta.validation.constraints.NotBlank

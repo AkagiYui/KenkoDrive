@@ -2,7 +2,7 @@ package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.User
-import com.akagiyui.drive.model.response.FolderResponse
+import com.akagiyui.drive.model.response.folder.FolderResponse
 
 /**
  * 文件夹 服务接口

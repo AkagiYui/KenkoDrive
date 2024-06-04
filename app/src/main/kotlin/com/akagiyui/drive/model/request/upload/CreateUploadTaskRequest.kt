@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.upload
 
 import jakarta.validation.constraints.*
 

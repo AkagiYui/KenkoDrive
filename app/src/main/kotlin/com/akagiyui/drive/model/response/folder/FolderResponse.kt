@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.folder
 
 import com.akagiyui.drive.entity.Folder
 

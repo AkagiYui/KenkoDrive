@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.upload
 
 /**
  * 秒传文件 请求实体

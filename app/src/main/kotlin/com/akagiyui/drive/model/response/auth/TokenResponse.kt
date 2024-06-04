@@ -1,10 +1,10 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.auth
 
 /**
  * 登录响应
  * @author AkagiYui
  */
-data class LoginResponse(
+data class TokenResponse(
     /**
      * token
      */

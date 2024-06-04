@@ -6,12 +6,12 @@ import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.UserFilter
-import com.akagiyui.drive.model.request.AddUserRequest
-import com.akagiyui.drive.model.request.ResetPasswordRequest
-import com.akagiyui.drive.model.request.UpdateUserInfoRequest
+import com.akagiyui.drive.model.request.user.AddUserRequest
+import com.akagiyui.drive.model.request.user.ResetPasswordRequest
+import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
 import com.akagiyui.drive.model.response.PageResponse
-import com.akagiyui.drive.model.response.UserInfoResponse
-import com.akagiyui.drive.model.response.toResponse
+import com.akagiyui.drive.model.response.user.UserInfoResponse
+import com.akagiyui.drive.model.response.user.toResponse
 import com.akagiyui.drive.model.toModel
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.UserService

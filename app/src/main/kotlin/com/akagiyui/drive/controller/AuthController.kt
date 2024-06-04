@@ -4,7 +4,7 @@ import com.akagiyui.drive.component.captcha.GeetestCaptchaV4Protected
 import com.akagiyui.drive.component.limiter.Limit
 import com.akagiyui.drive.model.request.*
 import com.akagiyui.drive.model.request.auth.*
-import com.akagiyui.drive.model.response.LoginResponse
+import com.akagiyui.drive.model.response.auth.TokenResponse
 import com.akagiyui.drive.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
@@ -26,17 +26,17 @@ class AuthController(private val userService: UserService) {
      */
     @PostMapping("/token", "/token/password")
     @PreAuthorize("isAnonymous()")
-    fun getTokenByPassword(@RequestBody @Validated request: GetTokenByPasswordRequest): LoginResponse {
+    fun getTokenByPassword(@RequestBody @Validated request: GetTokenByPasswordRequest): TokenResponse {
         val accessToken = userService.getAccessToken(request.username, request.password)
-        return LoginResponse(accessToken, null)
+        return TokenResponse(accessToken, null)
     }
 
     @PostMapping("/token/sms")
     @PreAuthorize("isAnonymous()")
     @Limit(key = "getTokenBySms", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
-    fun getTokenBySms(@RequestBody @Validated request: GetTokenByPhoneRequest): LoginResponse {
+    fun getTokenBySms(@RequestBody @Validated request: GetTokenByPhoneRequest): TokenResponse {
         val accessToken = userService.getAccessTokenBySms(request.phone, request.otp)
-        return LoginResponse(accessToken, null)
+        return TokenResponse(accessToken, null)
     }
 
     /**

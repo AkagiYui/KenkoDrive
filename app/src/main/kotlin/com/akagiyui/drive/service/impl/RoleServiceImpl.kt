@@ -9,8 +9,8 @@ import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.RoleFilter
-import com.akagiyui.drive.model.request.AddRoleRequest
-import com.akagiyui.drive.model.request.UpdateRoleRequest
+import com.akagiyui.drive.model.request.role.AddRoleRequest
+import com.akagiyui.drive.model.request.role.UpdateRoleRequest
 import com.akagiyui.drive.repository.RoleRepository
 import com.akagiyui.drive.service.RoleService
 import org.hibernate.Hibernate

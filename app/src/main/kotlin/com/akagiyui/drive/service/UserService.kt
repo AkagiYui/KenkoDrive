@@ -4,7 +4,7 @@ import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.UserFilter
-import com.akagiyui.drive.model.request.UpdateUserInfoRequest
+import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
 import org.springframework.data.domain.Page
 
 /**

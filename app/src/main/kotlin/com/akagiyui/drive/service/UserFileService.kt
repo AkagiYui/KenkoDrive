@@ -3,7 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
-import com.akagiyui.drive.model.request.MirrorFileRequest
+import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 
 /**
  * 用户文件关联 服务接口

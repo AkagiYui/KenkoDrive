@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.response
+package com.akagiyui.drive.model.response.user
 
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.User

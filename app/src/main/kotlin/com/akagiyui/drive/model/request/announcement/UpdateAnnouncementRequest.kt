@@ -1,4 +1,4 @@
-package com.akagiyui.drive.model.request
+package com.akagiyui.drive.model.request.announcement
 
 import jakarta.validation.constraints.Size
 

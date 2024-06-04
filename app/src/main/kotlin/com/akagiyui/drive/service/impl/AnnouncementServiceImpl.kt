@@ -5,7 +5,7 @@ import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Announcement
 import com.akagiyui.drive.model.AnnouncementFilter
-import com.akagiyui.drive.model.request.UpdateAnnouncementRequest
+import com.akagiyui.drive.model.request.announcement.UpdateAnnouncementRequest
 import com.akagiyui.drive.repository.AnnouncementRepository
 import com.akagiyui.drive.service.AnnouncementService
 import org.springframework.data.domain.Page
