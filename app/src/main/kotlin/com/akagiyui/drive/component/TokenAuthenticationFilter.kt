@@ -1,4 +1,4 @@
-package com.akagiyui.drive.filter
+package com.akagiyui.drive.component
 
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.token.TokenTemplate

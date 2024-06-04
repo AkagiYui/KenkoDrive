@@ -15,7 +15,7 @@ import org.hibernate.annotations.DynamicInsert
 @DynamicInsert
 class User : BaseEntity() {
     /**
-     * 用户名，当前仅作为加密盐
+     * 用户名，当前仅作为加密盐，系统自动生成，不可修改
      */
     @Column(unique = true, nullable = false)
     lateinit var username: String
@@ -29,7 +29,8 @@ class User : BaseEntity() {
     /**
      * 昵称
      */
-    var nickname: String? = null
+    @Column(nullable = false)
+    lateinit var nickname: String
 
     /**
      * 邮箱

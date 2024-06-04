@@ -1,9 +1,7 @@
 package com.akagiyui.drive.model.request
 
-import com.akagiyui.drive.entity.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 
 /**
@@ -12,26 +10,23 @@ import jakarta.validation.constraints.Size
  * @author AkagiYui
  */
 class AddUserRequest {
+
     /**
      * 用户名
      */
-    @NotBlank(message = "{username cannot be empty}")
-    @NotNull(message = "{username is missing}")
-    @Size(min = 3, max = 20, message = "{username length must be between 3 and 20}")
-    lateinit var username: String
+    @Size(min = 5, max = 64, message = "{username length must be more than 5}")
+    var username: String? = null
 
     /**
      * 密码
      */
     @NotBlank(message = "{password cannot be empty}")
-    @NotNull(message = "{password is missing}")
     @Size(min = 5, max = 64, message = "{password length must be more than 8}")
-    lateinit var password: String
+    var password: String? = null
 
     /**
      * 昵称
      */
-    @Size(max = 20, message = "{nickname length must be less than 20}")
     var nickname: String? = null
 
     /**
@@ -41,14 +36,7 @@ class AddUserRequest {
     var email: String? = null
 
     /**
-     * 转换为用户实体
+     * 手机号
      */
-    fun toUser(): User {
-        return User().also {
-            it.username = username
-            it.password = password
-            it.nickname = nickname
-            it.email = email
-        }
-    }
+    var phone: String? = null
 }

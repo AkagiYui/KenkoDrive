@@ -1,8 +1,8 @@
 package com.akagiyui.drive.task
 
 import com.akagiyui.drive.entity.Role
+import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.Permission
-import com.akagiyui.drive.model.request.AddUserRequest
 import com.akagiyui.drive.service.RoleService
 import com.akagiyui.drive.service.SettingService
 import com.akagiyui.drive.service.UserService
@@ -62,7 +62,7 @@ class InitializeTasks(
         roleService.addRole(admin)
 
         // 添加管理员用户
-        val adminUserRequest = AddUserRequest().apply {
+        val adminUserRequest = AddUserModel().apply {
             username = "admin"
             password = "admin"
             nickname = "管理员"

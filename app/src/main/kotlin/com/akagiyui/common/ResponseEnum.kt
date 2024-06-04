@@ -129,7 +129,12 @@ enum class ResponseEnum(val code: Int, val msg: String) {
     /**
      * 文件已锁定
      */
-    FILE_LOCKED(10024, "File locked")
+    FILE_LOCKED(10024, "File locked"),
+
+    /**
+     * 手机号已存在
+     */
+    PHONE_EXIST(10025, "Phone exist"),
     ;
 
 }

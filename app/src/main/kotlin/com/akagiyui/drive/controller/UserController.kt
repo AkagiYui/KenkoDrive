@@ -12,6 +12,7 @@ import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.UserInfoResponse
 import com.akagiyui.drive.model.response.toResponse
+import com.akagiyui.drive.model.toModel
 import com.akagiyui.drive.service.AvatarService
 import com.akagiyui.drive.service.UserService
 import org.springframework.http.HttpHeaders
@@ -51,7 +52,7 @@ class UserController(private val userService: UserService, private val avatarSer
     @PostMapping("", "/")
     @RequirePermission(Permission.USER_ADD)
     fun add(@Validated @RequestBody user: AddUserRequest): String {
-        return userService.addUser(user).id
+        return userService.addUser(user.toModel()).id
     }
 
     /**

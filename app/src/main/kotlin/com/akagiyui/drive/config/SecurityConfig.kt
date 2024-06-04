@@ -1,6 +1,6 @@
 package com.akagiyui.drive.config
 
-import com.akagiyui.drive.filter.TokenAuthenticationFilter
+import com.akagiyui.drive.component.TokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -32,9 +32,22 @@ class SecurityConfig(
     private val authenticationEntryPoint: AuthenticationEntryPoint,
     private val accessDeniedHandler: AccessDeniedHandler,
 ) {
-    companion object {
-        const val LOGIN_URL: String = "/auth/token"
-    }
+    val permitAllGetMapping = arrayOf(
+        "/system/version", // 获取系统版本
+        "/system/setting/register", // 是否开放注册
+        "/file/*/download/**", // 下载文件
+        "/captcha", // 获取验证码
+    )
+    val permitAllPostMapping = emptyArray<String>()
+    val anonymousPostMapping = arrayOf(
+        "/auth/token", // 获取 Token
+        "/auth/token/password",
+        "/auth/token/sms", // 短信登录
+
+        "/auth/otp/email", // 发送邮件注册验证码
+        "/auth/otp/sms", // 发送短信注册验证码
+        "/auth/register/email", // 确认邮箱注册
+    )
 
     /**
      * 配置 Spring Security
@@ -49,26 +62,9 @@ class SecurityConfig(
         return http
             .authorizeHttpRequests {
                 it // 允许指定路径通过
-                    // 允许匿名 GET 请求访问
-                    .requestMatchers(
-                        HttpMethod.GET,
-                        "/system/version", // 获取系统版本
-                        "/system/setting/register", // 是否开放注册
-                        "/file/*/download/**", // 下载文件
-                        "/auth/token/sms", // 短信登录
-                        "/captcha", // 获取验证码
-                    ).permitAll()
-                    // 允许匿名 POST 请求访问
-                    .requestMatchers(
-                        HttpMethod.POST,
-                        "/auth/sms", // 发送短信验证码
-                    ).permitAll()
-                    // 仅允许匿名 POST 访问
-                    .requestMatchers(
-                        HttpMethod.POST,
-                        LOGIN_URL, // 获取 Token
-                        "/auth/register/**", // 注册
-                    ).anonymous()
+                    .requestMatchers(HttpMethod.GET, *permitAllGetMapping).permitAll() // 允许匿名 GET 请求访问
+                    .requestMatchers(HttpMethod.POST, *permitAllPostMapping).permitAll() // 允许匿名 POST 请求访问
+                    .requestMatchers(HttpMethod.POST, *anonymousPostMapping).anonymous() // 仅允许匿名 POST 访问
                     .anyRequest().authenticated() // 其他请求需要认证
             }
             .csrf { it.disable() } // 关闭 CSRF

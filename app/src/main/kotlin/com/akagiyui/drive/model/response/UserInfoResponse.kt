@@ -1,5 +1,6 @@
 package com.akagiyui.drive.model.response
 
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.User
 
 /**
@@ -19,6 +20,11 @@ data class UserInfoResponse(
     val username: String,
 
     /**
+     * 是否有密码
+     */
+    val hasPassword: Boolean,
+
+    /**
      * 昵称
      */
     val nickname: String,
@@ -27,6 +33,11 @@ data class UserInfoResponse(
      * 邮箱
      */
     val email: String,
+
+    /**
+     * 手机号
+     */
+    val phone: String,
 
     /**
      * 已禁用
@@ -46,8 +57,10 @@ data class UserInfoResponse(
     constructor(user: User) : this(
         id = user.id,
         username = user.username,
-        nickname = user.nickname ?: user.username,
+        nickname = user.nickname,
+        hasPassword = user.password.hasText(),
         email = user.email ?: "",
+        phone = user.phone ?: "",
         disabled = user.disabled,
         registerTime = user.createTime.time,
         permissions = user.roles.flatMap { it.permissions }.map { it.name }

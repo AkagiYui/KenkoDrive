@@ -2,10 +2,8 @@ package com.akagiyui.drive.service
 
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.UserFilter
-import com.akagiyui.drive.model.request.AddUserRequest
-import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
-import com.akagiyui.drive.model.request.RegisterConfirmRequest
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import org.springframework.data.domain.Page
 
@@ -48,12 +46,12 @@ interface UserService {
     fun find(): List<User>
 
     /**
-     * 新增用户
+     * 新增用户，此处传入所有原始数据，在该方法内进行数据处理
      *
-     * @param user 用户
+     * @param request 用户
      * @return 用户ID
      */
-    fun addUser(user: AddUserRequest): User
+    fun addUser(request: AddUserModel): User
 
     /**
      * 删除用户
@@ -72,14 +70,14 @@ interface UserService {
     /**
      * 发送邮箱验证码
      */
-    fun sendEmailVerifyCode(verifyRequest: EmailVerifyCodeRequest)
+    fun registerByEmail(email: String, password: String)
 
     /**
      * 确认注册
      *
-     * @param registerConfirmRequest 注册确认请求
+     * @param request 注册确认请求
      */
-    fun confirmRegister(registerConfirmRequest: RegisterConfirmRequest)
+    fun confirmRegister(email: String, otp: String)
 
     /**
      * 加密密码

@@ -12,11 +12,10 @@ import com.akagiyui.common.utils.random
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.UserFilter
-import com.akagiyui.drive.model.request.AddUserRequest
-import com.akagiyui.drive.model.request.EmailVerifyCodeRequest
-import com.akagiyui.drive.model.request.RegisterConfirmRequest
+import com.akagiyui.drive.model.cache.EmailRegisterInfo
 import com.akagiyui.drive.model.request.UpdateUserInfoRequest
 import com.akagiyui.drive.repository.UserRepository
 import com.akagiyui.drive.service.*
@@ -103,26 +102,37 @@ class UserServiceImpl(
         ],
         allEntries = true,
     )
-    override fun addUser(user: AddUserRequest): User {
-        if (repository.existsByUsername(user.username)) {
-            throw CustomException(ResponseEnum.USER_EXIST)
-        }
+    override fun addUser(request: AddUserModel): User {
+        val entity = User()
+        entity.roles = roleService.getAllDefaultRoles() // 添加默认角色
 
-        val realUser = user.toUser().apply {
-            if (user.email.hasText()) {
-                if (repository.existsByEmail(user.email!!)) {
-                    throw CustomException(ResponseEnum.EMAIL_EXIST)
-                }
-                email = user.email
+        val currentTimestamp = System.currentTimeMillis()
+        if (request.email.hasText()) {
+            if (repository.existsByEmail(request.email!!)) {
+                throw CustomException(ResponseEnum.EMAIL_EXIST)
             }
-            nickname = user.nickname.takeIf { it.hasText() } ?: user.username
-            password = encryptPassword(user.username, user.password)
-            disabled = false
-            roles = roleService.getAllDefaultRoles()
+            entity.email = request.email
+            entity.nickname = request.email!!
+            entity.username = "email:${request.email}:$currentTimestamp"
+        }
+        if (request.phone.hasText()) {
+            if (repository.existsByPhone(request.phone!!)) {
+                throw CustomException(ResponseEnum.PHONE_EXIST)
+            }
+            entity.phone = request.phone
+            entity.nickname = request.phone!!
+            entity.username = "phone:${request.phone}:$currentTimestamp"
         }
 
-        repository.save(realUser)
-        return realUser
+        // 密码加密
+        if (request.password.hasText()) {
+            entity.password = encryptPassword(entity.username, request.password!!)
+        }
+        // 设置昵称
+        if (request.nickname.hasText()) {
+            entity.nickname = request.nickname!!
+        }
+        return repository.save(entity)
     }
 
     @CacheEvict(
@@ -141,6 +151,7 @@ class UserServiceImpl(
             throw CustomException(ResponseEnum.NOT_FOUND)
         }
         repository.deleteById(id)
+        // todo 删除用户文件关联
     }
 
     @Cacheable(cacheNames = [CacheConstants.USER_EXIST], key = "#id")
@@ -150,43 +161,40 @@ class UserServiceImpl(
 
     @Transactional
     override fun getAccessToken(username: String, password: String): String {
-        val user = repository.getFirstByUsernameOrEmail(username) ?: throw UnAuthorizedException()
+        val user = repository.getFirstByUsernameOrEmailOrPhone(username) ?: throw UnAuthorizedException()
+        if (!user.password.hasText()) {
+            throw UnAuthorizedException()
+        }
         if (!passwordEncoder.matches(password, user.password)) {
             throw UnAuthorizedException()
         }
         return tokenTemplate.createToken(user.id)
     }
 
-    override fun sendEmailVerifyCode(verifyRequest: EmailVerifyCodeRequest) {
+    override fun registerByEmail(email: String, password: String) {
         if (!settingService.registerEnabled) {
             throw CustomException(ResponseEnum.REGISTER_DISABLED)
         }
 
-        // 检查该邮箱/用户名是否在 redis 中等待验证
-        val redisKeyEmail = "emailVerifyCode:email:${verifyRequest.email}"
-        if (redisKeyEmail in redisCache) {
+        // 检查该邮箱是否在 redis 中等待验证
+        val cacheKey = buildEmailRegisterCacheKey(email)
+        if (cacheKey in redisCache) {
             throw CustomException(ResponseEnum.EMAIL_EXIST)
-        }
-        val redisKeyUsername = "emailVerifyCode:username:${verifyRequest.username}"
-        if (redisKeyUsername in redisCache) {
-            throw CustomException(ResponseEnum.USER_EXIST)
         }
         // 检查该邮箱是否已经注册
-        if (repository.existsByEmail(verifyRequest.email)) {
+        if (repository.existsByEmail(email)) {
             throw CustomException(ResponseEnum.EMAIL_EXIST)
         }
-        // 检查用户名是否已经注册
-        if (repository.existsByUsername(verifyRequest.username)) {
-            throw CustomException(ResponseEnum.USER_EXIST)
-        }
         // 生成验证码
-        val verifyCode = RandomUtil.randomNumbers(6)
-        redisCache[redisKeyEmail, emailVerifyTimeout, TimeUnit.MINUTES] = verifyCode
-        redisCache[redisKeyUsername, emailVerifyTimeout, TimeUnit.MINUTES] = verifyCode
-        mailService.sendEmailVerifyCode(verifyRequest.email, verifyCode, emailVerifyTimeout)
+        val otp = RandomUtil.randomNumbers(6)
+        mailService.sendEmailVerifyCode(email, otp, emailVerifyTimeout)
         // 将注册信息存入 redis
-        val registerInfoKey = "registerInfo:${verifyRequest.email}"
-        redisCache[registerInfoKey, emailVerifyTimeout + 1, TimeUnit.MINUTES] = verifyRequest
+        val cacheModel = EmailRegisterInfo(email, password, otp)
+        redisCache[cacheKey, emailVerifyTimeout + 1, TimeUnit.MINUTES] = cacheModel
+    }
+
+    private fun buildEmailRegisterCacheKey(email: String): String {
+        return "emailRegisterInfo:$email"
     }
 
     /**
@@ -196,32 +204,22 @@ class UserServiceImpl(
     @Lazy
     lateinit var selfProxy: UserService
 
-    override fun confirmRegister(registerConfirmRequest: RegisterConfirmRequest) {
-        // 从 redis 取回验证码
-        val redisKeyEmail = "emailVerifyCode:email:${registerConfirmRequest.email}"
-        val verifyCode =
-            redisCache.get<String>(redisKeyEmail) ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
-        // 检查验证码是否正确
-        if (registerConfirmRequest.verifyCode != verifyCode) {
-            throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
-        }
+    override fun confirmRegister(email: String, otp: String) {
         // 从 redis 取回用户注册信息
-        val verifyRequest: EmailVerifyCodeRequest? = redisCache["registerInfo:${registerConfirmRequest.email}"]
-        if (verifyRequest == null) {
-            log.error("Register info not found: {}", registerConfirmRequest.email)
+        val cacheKey = buildEmailRegisterCacheKey(email)
+        val cacheModel = redisCache.get<EmailRegisterInfo>(cacheKey)
+            ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+        // 检查验证码是否正确
+        if (otp != cacheModel.otp) {
             throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
         // 添加用户
-        selfProxy.addUser(AddUserRequest().apply {
-            username = verifyRequest.username
-            password = verifyRequest.password
-            email = verifyRequest.email
+        selfProxy.addUser(AddUserModel().apply {
+            password = cacheModel.password
+            this.email = cacheModel.email
         })
-
-        // 删除 redis 中的验证码和注册信息
-        redisCache.delete(redisKeyEmail)
-        redisCache.delete("emailVerifyCode:username:${verifyRequest.username}")
-        redisCache.delete("registerInfo:${registerConfirmRequest.email}")
+        // 删除 redis 中的注册信息
+        redisCache.delete(cacheKey)
     }
 
     override fun encryptPassword(username: String, password: String): String {
@@ -249,7 +247,7 @@ class UserServiceImpl(
     )
     override fun updateInfo(user: User, newUserInfo: UpdateUserInfoRequest) {
         if (newUserInfo.nickname.hasText()) {
-            user.nickname = newUserInfo.nickname
+            user.nickname = newUserInfo.nickname!!
         }
         if (newUserInfo.email.hasText()) {
             user.email = newUserInfo.email
@@ -323,7 +321,7 @@ class UserServiceImpl(
     override fun updateInfo(id: String, userInfo: UpdateUserInfoRequest) {
         val user = findUserByIdWithCache(id)
         if (userInfo.nickname.hasText()) {
-            user.nickname = userInfo.nickname
+            user.nickname = userInfo.nickname!!
         }
         if (userInfo.email.hasText()) {
             user.email = userInfo.email
@@ -368,14 +366,10 @@ class UserServiceImpl(
         var user = repository.findByPhone(phone)
         if (user == null) {
             // 不存在则新增用户
-            val newUser = User().apply {
-                val currentTime = System.currentTimeMillis()
-                username = "phone:$phone:$currentTime"
+            val newUser = AddUserModel().apply {
                 this.phone = phone
-                nickname = phone
-                roles = roleService.getAllDefaultRoles()
             }
-            user = repository.save(newUser)
+            user = selfProxy.addUser(newUser)
         }
 
         return tokenTemplate.createToken(user.id)

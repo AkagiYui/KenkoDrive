@@ -18,12 +18,12 @@ interface UserRepository : JpaRepository<User, String>, JpaSpecificationExecutor
     fun getFirstByUsername(username: String): User
 
     /**
-     * 根据用户名或邮箱查找用户
+     * 根据用户名/邮箱/手机号查找用户
      * @param text 用户名或邮箱
      * @return 用户
      */
-    @Query("select u from User u where u.username = ?1 or u.email = ?1")
-    fun getFirstByUsernameOrEmail(text: String): User?
+    @Query("select u from User u where u.username = ?1 or u.email = ?1 or u.phone = ?1")
+    fun getFirstByUsernameOrEmailOrPhone(text: String): User?
 
     /**
      * 邮箱是否存在
@@ -31,6 +31,11 @@ interface UserRepository : JpaRepository<User, String>, JpaSpecificationExecutor
      * @return 是否存在
      */
     fun existsByEmail(email: String): Boolean
+
+    /**
+     * 手机号是否存在
+     */
+    fun existsByPhone(phone: String): Boolean
 
     /**
      * 用户名是否存在

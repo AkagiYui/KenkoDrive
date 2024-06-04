@@ -1,6 +1,6 @@
 package com.akagiyui.drive.service.impl
 
-import com.akagiyui.drive.model.request.AddUserRequest
+import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.repository.UserRepository
 import com.akagiyui.drive.service.UserService
 import org.junit.jupiter.api.Assertions
@@ -22,7 +22,7 @@ class UserServiceImplTests @Autowired constructor(
     @Test
     @Transactional
     fun defaultRoleTest() {
-        val addUserRequest = AddUserRequest()
+        val addUserRequest = AddUserModel()
         addUserRequest.username = "test-username"
         addUserRequest.password = "test-password"
         addUserRequest.nickname = "test-nickname"
