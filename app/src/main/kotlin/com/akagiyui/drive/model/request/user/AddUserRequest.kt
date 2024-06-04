@@ -1,7 +1,6 @@
 package com.akagiyui.drive.model.request.user
 
 import jakarta.validation.constraints.Email
-import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
 /**
@@ -20,7 +19,6 @@ class AddUserRequest {
     /**
      * 密码
      */
-    @NotBlank(message = "{password cannot be empty}")
     @Size(min = 5, max = 64, message = "{password length must be more than 8}")
     var password: String? = null
 

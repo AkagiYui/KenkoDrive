@@ -331,6 +331,9 @@ class UserServiceImpl(
         if (userInfo.email.hasText()) {
             user.email = userInfo.email
         }
+        if (userInfo.phone.hasText()) {
+            user.phone = userInfo.phone
+        }
         if (userInfo.password.hasText()) {
             user.password = encryptPassword(user.username, userInfo.password!!)
         }
