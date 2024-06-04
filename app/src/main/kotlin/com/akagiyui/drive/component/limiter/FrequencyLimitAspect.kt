@@ -2,6 +2,7 @@ package com.akagiyui.drive.component.limiter
 
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.TooManyRequestsException
+import com.akagiyui.common.utils.hasText
 import io.github.bucket4j.Bucket
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -34,10 +35,14 @@ class FrequencyLimitAspect {
         val method = signature.method
         // 获取 Limit 注解
         val limitAnnotation = method.getAnnotation(Limit::class.java)
+
         if (limitAnnotation != null) {
-            val rateLimiter = limitMap.computeIfAbsent(limitAnnotation.key) {
+            // 如果有key，使用key，否则使用类名+方法名
+            val bucketName =
+                limitAnnotation.key.takeIf { it.hasText() } ?: "${method.declaringClass.name}.${method.name}"
+            val rateLimiter = limitMap.computeIfAbsent(bucketName) {
                 // 创建令牌桶
-                log.debug("Created RateLimiter: {}", limitAnnotation.key)
+                log.debug("Created RateLimiter: {}", bucketName)
                 Bucket.builder().addLimit {
                     it.capacity(limitAnnotation.permitsPerSecond)
                         .refillGreedy(limitAnnotation.permitsPerSecond, Duration.ofSeconds(1))
