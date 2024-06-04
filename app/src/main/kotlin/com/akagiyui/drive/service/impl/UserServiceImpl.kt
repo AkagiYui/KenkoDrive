@@ -123,6 +123,13 @@ class UserServiceImpl(
             entity.nickname = request.phone!!
             entity.username = "phone:${request.phone}:$currentTimestamp"
         }
+        // 设置用户名，优先级最高，覆盖前面的设置
+        if (request.username.hasText()) {
+            if (repository.existsByUsername(request.username!!)) {
+                throw CustomException(ResponseEnum.USER_EXIST)
+            }
+            entity.username = request.username!!
+        }
 
         // 密码加密
         if (request.password.hasText()) {
