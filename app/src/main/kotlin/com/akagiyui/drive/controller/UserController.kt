@@ -113,7 +113,7 @@ class UserController(private val userService: UserService, private val avatarSer
     @PutMapping("/info")
     @RequirePermission
     fun updateLoginUserInfo(@RequestBody @Validated userInfo: UpdateUserInfoRequest, @CurrentUser user: User) {
-        userService.updateInfo(user, userInfo)
+        userService.updateInfo(user.id, userInfo)
     }
 
     /**

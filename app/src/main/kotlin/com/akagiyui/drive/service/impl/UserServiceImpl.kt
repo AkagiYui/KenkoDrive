@@ -240,27 +240,6 @@ class UserServiceImpl(
         return passwordEncoder.encode(encode)
     }
 
-    @CacheEvict(
-        cacheNames = [
-            CacheConstants.USER_BY_ID,
-            CacheConstants.USER_DETAILS,
-            CacheConstants.USER_LOGIN_DETAILS,
-            CacheConstants.USER_PAGE,
-            CacheConstants.USER_LIST,
-            CacheConstants.USER_EXIST,
-        ],
-        allEntries = true,
-    )
-    override fun updateInfo(user: User, newUserInfo: UpdateUserInfoRequest) {
-        if (newUserInfo.nickname.hasText()) {
-            user.nickname = newUserInfo.nickname!!
-        }
-        if (newUserInfo.email.hasText()) {
-            user.email = newUserInfo.email
-        }
-        repository.save(user)
-    }
-
     @Transactional
     override fun getPermission(user: User): Set<String> {
         return user.roles

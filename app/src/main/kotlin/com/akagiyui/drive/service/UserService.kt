@@ -97,13 +97,6 @@ interface UserService {
     fun encryptPassword(username: String, password: String, raw: Boolean): String
 
     /**
-     * 更新用户信息
-     *
-     * @param newUserInfo 用户信息
-     */
-    fun updateInfo(user: User, newUserInfo: UpdateUserInfoRequest)
-
-    /**
      * 获取用户权限
      * @return 权限列表
      */

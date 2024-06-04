@@ -26,4 +26,9 @@ class UpdateUserInfoRequest {
      */
     @Size(min = 5, max = 64, message = "{password length must be more than 5}")
     var password: String? = null
+
+    /**
+     * 手机号
+     */
+    var phone: String? = null
 }
