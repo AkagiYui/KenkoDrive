@@ -126,7 +126,8 @@ class FileInfoServiceImpl(
         val specification = Specification<FileInfo> { root, _, cb ->
             if (filter != null && filter.expression.hasText()) {
                 val namePredicate = cb.like(root.get("name"), "%${filter.expression}%")
-                cb.or(namePredicate)
+                val typePredicate = cb.like(root.get("type"), "%${filter.expression}%")
+                cb.or(namePredicate, typePredicate)
             } else null
         }
 
