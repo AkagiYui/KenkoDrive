@@ -114,6 +114,8 @@ fun String.toSafeFileName(): String {
 val String.Companion.BASE_NUMBER: String
     get() = "0123456789"
 
+val String.Companion.BASE_LOWER_CASE: String
+    get() = "abcdefghijklmnopqrstuvwxyz"
 
 /**
  * 生成随机字符串

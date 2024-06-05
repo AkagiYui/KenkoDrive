@@ -37,6 +37,8 @@ class SecurityConfig(
         "/system/setting/register", // 是否开放注册
         "/file/*/download/**", // 下载文件
         "/captcha", // 获取验证码
+
+        "/share/*", // 获取分享信息
     )
     val permitAllPostMapping = emptyArray<String>()
     val anonymousPostMapping = arrayOf(
