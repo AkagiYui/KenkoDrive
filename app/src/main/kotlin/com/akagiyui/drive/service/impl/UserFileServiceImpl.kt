@@ -62,6 +62,11 @@ class UserFileServiceImpl(
         userFileRepository.deleteAllByFileInfoId(fileInfoId)
     }
 
+    override fun getFileOwners(fileInfoId: String): List<User> {
+        val userList = userFileRepository.findByFileInfoId(fileInfoId).map { it.user }
+        return userList.distinctBy { it.username }
+    }
+
     override fun getFiles(userId: String, folderId: String?): List<UserFile> {
         return userFileRepository.findByUserIdAndFolderId(userId, folderId)
     }

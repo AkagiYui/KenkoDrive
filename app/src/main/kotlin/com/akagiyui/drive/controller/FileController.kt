@@ -13,6 +13,8 @@ import com.akagiyui.drive.model.request.upload.CreateUploadTaskRequest
 import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 import com.akagiyui.drive.model.response.PageResponse
 import com.akagiyui.drive.model.response.file.FileInfoResponse
+import com.akagiyui.drive.model.response.file.FileOwnerResponse
+import com.akagiyui.drive.model.response.file.toFileOwnerResponse
 import com.akagiyui.drive.model.response.file.toResponse
 import com.akagiyui.drive.model.response.upload.UploadTaskResponse
 import com.akagiyui.drive.service.FileInfoService
@@ -74,6 +76,15 @@ class FileController(
     ): PageResponse<FileInfoResponse> {
         val page = fileInfoService.find(index, size, filter)
         return PageResponse(page, page.content.toResponse())
+    }
+
+    /**
+     * 获取文件拥有者列表
+     */
+    @GetMapping("/{id}/owner")
+    @RequirePermission(Permission.FILE_LIST_ALL) // todo 临时权限
+    fun getFileOwnerList(@PathVariable("id") fileId: String): List<FileOwnerResponse> {
+        return userFileService.getFileOwners(fileId).toFileOwnerResponse()
     }
 
     /**

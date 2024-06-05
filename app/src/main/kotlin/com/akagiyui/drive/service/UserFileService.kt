@@ -70,4 +70,9 @@ interface UserFileService {
      * 删除所有文件关联
      */
     fun removeAllAssociation(fileInfoId: String)
+
+    /**
+     * 获取文件拥有者
+     */
+    fun getFileOwners(fileInfoId: String): List<User>
 }

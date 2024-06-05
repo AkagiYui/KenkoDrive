@@ -65,4 +65,12 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
      */
     @Transactional
     fun deleteAllByFileInfoId(fileInfoId: String)
+
+    /**
+     * 根据文件信息ID获取用户文件列表
+     *
+     * @param fileInfoId 文件信息ID
+     * @return 用户文件列表
+     */
+    fun findByFileInfoId(fileInfoId: String): List<UserFile>
 }
