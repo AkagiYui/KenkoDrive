@@ -1,8 +1,10 @@
 package com.akagiyui.drive.controller
 
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.component.CurrentUser
 import com.akagiyui.drive.component.permission.RequirePermission
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.model.FolderContentFilter
 import com.akagiyui.drive.model.Permission
 import com.akagiyui.drive.model.request.folder.CreateFolderRequest
 import com.akagiyui.drive.model.response.file.toResponse
@@ -32,8 +34,17 @@ class FolderController(private val folderService: FolderService, private val use
     @RequirePermission
     fun getFolderContent(
         @PathVariable(name = "id", required = false) folderId: String?,
+        @ModelAttribute filter: FolderContentFilter?,
         @CurrentUser user: User,
     ): FolderContentResponse {
+        if (filter != null && filter.expression.hasText()) {
+            return FolderContentResponse(
+                userFileService.searchFiles(user.id, filter).toResponse(),
+                emptyList(),
+                listOf(FolderResponse("-1", "搜索结果", System.currentTimeMillis()))
+            )
+        }
+
         val files = userFileService.getFiles(user.id, folderId).toResponse()
         val folders = folderService.getSubFolders(user.id, folderId).toResponse()
         return FolderContentResponse(

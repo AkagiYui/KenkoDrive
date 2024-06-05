@@ -7,6 +7,7 @@ import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
+import com.akagiyui.drive.model.FolderContentFilter
 import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 import com.akagiyui.drive.repository.UserFileRepository
 import com.akagiyui.drive.service.FileInfoService
@@ -88,6 +89,10 @@ class UserFileServiceImpl(
         val redisKey = "download:$randomId"
         redisCache[redisKey, 1, TimeUnit.HOURS] = userFile.id
         return randomId to userFile
+    }
+
+    override fun searchFiles(userId: String, filter: FolderContentFilter): List<UserFile> {
+        return userFileRepository.findByUserIdAndNameLike(userId, "%${filter.expression}%")
     }
 
     override fun getFileInfoByTemporaryId(temporaryId: String): UserFile {

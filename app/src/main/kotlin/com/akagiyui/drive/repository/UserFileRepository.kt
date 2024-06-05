@@ -73,4 +73,9 @@ interface UserFileRepository : JpaRepository<UserFile, String> {
      * @return 用户文件列表
      */
     fun findByFileInfoId(fileInfoId: String): List<UserFile>
+
+    /**
+     * 根据用户ID、文件名模糊查询用户文件列表
+     */
+    fun findByUserIdAndNameLike(userId: String, name: String): List<UserFile>
 }

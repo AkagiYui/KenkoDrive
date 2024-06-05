@@ -36,3 +36,8 @@ class UserFilter : ModelFilter()
  * 文件查询筛选
  */
 class FileInfoFilter : ModelFilter()
+
+/**
+ * 文件夹内容查询筛选
+ */
+class FolderContentFilter : ModelFilter()

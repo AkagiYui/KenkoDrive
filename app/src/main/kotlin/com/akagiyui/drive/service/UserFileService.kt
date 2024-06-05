@@ -3,6 +3,7 @@ package com.akagiyui.drive.service
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.entity.UserFile
+import com.akagiyui.drive.model.FolderContentFilter
 import com.akagiyui.drive.model.request.upload.MirrorFileRequest
 
 /**
@@ -75,4 +76,9 @@ interface UserFileService {
      * 获取文件拥有者
      */
     fun getFileOwners(fileInfoId: String): List<User>
+
+    /**
+     * 搜索文件
+     */
+    fun searchFiles(userId: String, filter: FolderContentFilter): List<UserFile>
 }
