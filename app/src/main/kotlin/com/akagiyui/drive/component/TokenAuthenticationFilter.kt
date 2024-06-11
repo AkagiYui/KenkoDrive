@@ -34,25 +34,45 @@ class TokenAuthenticationFilter @Autowired constructor(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val rawToken = request.getHeader("Authorization") // 获取 Token
-        if (rawToken.hasText() && rawToken.startsWith("Bearer ")) {
-            val token = rawToken.substring(7)
-            try {
-                val userId = tokenTemplate.getUserId(token) // 获取用户 ID
-                if (userId != null) {
-                    // 将用户信息放入 Spring Security 上下文
-                    val authentication = SessionUserAuthentication(
-                        userService.findUserById(userId),
-                        WebAuthenticationDetailsSource().buildDetails(request)
-                    )
-                    SecurityContextHolder.getContext().authentication = authentication
-                }
-            } catch (_: TokenVerifyException) {
-                // Token 验证失败
-            } catch (_: CustomException) {
-                // 找不到用户
-            }
-        }
+        val token = getTokenFromCookie(request) ?: getTokenFromHeader(request)
+        token?.let { authenticateUser(it, request) }
         filterChain.doFilter(request, response)
+    }
+
+    /**
+     * 从请求头中获取Token
+     */
+    private fun getTokenFromHeader(request: HttpServletRequest): String? {
+        val rawToken = request.getHeader("Authorization")
+        return if (rawToken.hasText() && rawToken.startsWith("Bearer ")) {
+            rawToken.substring(7)
+        } else null
+    }
+
+    /**
+     * 从Cookie中获取Token
+     */
+    private fun getTokenFromCookie(request: HttpServletRequest): String? {
+        val cookie = request.cookies?.find { it.name == "token" }
+        return cookie?.value
+    }
+
+    private fun authenticateUser(token: String, request: HttpServletRequest) {
+        try {
+            val userId = tokenTemplate.getUserId(token)
+            userId?.let {
+                // 将用户信息放入Spring Security上下文
+                val userDetails = userService.findUserById(it)
+                val authentication = SessionUserAuthentication(
+                    userDetails,
+                    WebAuthenticationDetailsSource().buildDetails(request)
+                )
+                SecurityContextHolder.getContext().authentication = authentication
+            }
+        } catch (_: TokenVerifyException) {
+            // Token验证失败
+        } catch (_: CustomException) {
+            // 找不到用户
+        }
     }
 }
