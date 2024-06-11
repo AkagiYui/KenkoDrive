@@ -63,6 +63,20 @@ fun String?.hasText(): Boolean {
 }
 
 /**
+ * 如果字符串不为空则执行操作并返回结果，否则返回null
+ *
+ * @param action 操作
+ * @return 操作的结果
+ */
+inline fun <R> String?.hasText(action: (String) -> R): R? {
+    return if (this.hasText()) {
+        action(this)
+    } else {
+        null
+    }
+}
+
+/**
  * 转换为驼峰命名
  * 例如：user_name -> userName
  *

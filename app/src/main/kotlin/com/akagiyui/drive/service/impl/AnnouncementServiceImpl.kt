@@ -52,8 +52,8 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
 
         // 条件查询
         val specification = Specification<Announcement> { root, _, cb ->
-            filter?.expression?.takeIf { it.hasText() }?.let { queryString ->
-                val likePattern = "%$queryString%"
+            filter?.expression.hasText {
+                val likePattern = "%$it%"
                 val titlePredicate = cb.like(root.get("title"), likePattern)
                 val contentPredicate = cb.like(root.get("content"), likePattern)
                 cb.or(titlePredicate, contentPredicate)
@@ -76,12 +76,8 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
 
     override fun update(id: String, request: UpdateAnnouncementRequest) {
         val announcement = getAnnouncement(id)
-        if (request.title.hasText()) {
-            announcement.title = request.title!!
-        }
-        if (request.content.hasText()) {
-            announcement.content = request.content
-        }
+        request.title.hasText { announcement.title = it }
+        request.content.hasText { announcement.content = it }
         announcementRepository.save(announcement)
     }
 }

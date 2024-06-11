@@ -32,7 +32,7 @@ class FolderServiceImpl @Autowired constructor(
     private lateinit var userFileService: UserFileService
 
     override fun createFolder(user: User, name: String, parentId: String?): Folder {
-        val resolvedParentId = if (parentId.hasText()) parentId else null
+        val resolvedParentId = parentId?.takeIf { it.hasText() }
         val parentFolder = resolvedParentId?.let {
             folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         }
@@ -51,8 +51,7 @@ class FolderServiceImpl @Autowired constructor(
     }
 
     override fun getSubFolders(userId: String, parentId: String?): List<Folder> {
-        val resolvedParentId = if (parentId.hasText()) parentId else null
-
+        val resolvedParentId = parentId?.takeIf { it.hasText() }
         return folderRepository.findByUserIdAndParentId(userId, resolvedParentId)
     }
 
@@ -113,10 +112,8 @@ class FolderServiceImpl @Autowired constructor(
         }
 
         check(parentId != folderId) { "not allowed to move folder to itself" }
-        val parentFolder = if (parentId.hasText()) {
-            folderRepository.findById(parentId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
-        } else {
-            null
+        val parentFolder = parentId.hasText {
+            folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
         }
 
         folder.parent = parentFolder

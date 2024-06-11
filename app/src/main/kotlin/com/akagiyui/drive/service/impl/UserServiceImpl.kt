@@ -107,38 +107,34 @@ class UserServiceImpl(
         entity.roles = roleService.getAllDefaultRoles() // 添加默认角色
 
         val currentTimestamp = System.currentTimeMillis()
-        if (request.email.hasText()) {
-            if (repository.existsByEmail(request.email!!)) {
+        request.email.hasText {
+            if (repository.existsByEmail(it)) {
                 throw CustomException(ResponseEnum.EMAIL_EXIST)
             }
-            entity.email = request.email
-            entity.nickname = request.email!!
-            entity.username = "email:${request.email}:$currentTimestamp"
+            entity.email = it
+            entity.nickname = it
+            entity.username = "email:$it:$currentTimestamp"
         }
-        if (request.phone.hasText()) {
-            if (repository.existsByPhone(request.phone!!)) {
+        request.phone.hasText {
+            if (repository.existsByPhone(it)) {
                 throw CustomException(ResponseEnum.PHONE_EXIST)
             }
-            entity.phone = request.phone
-            entity.nickname = request.phone!!
-            entity.username = "phone:${request.phone}:$currentTimestamp"
+            entity.phone = it
+            entity.nickname = it
+            entity.username = "phone:$it:$currentTimestamp"
         }
         // 设置用户名，优先级最高，覆盖前面的设置
-        if (request.username.hasText()) {
-            if (repository.existsByUsername(request.username!!)) {
+        request.username.hasText {
+            if (repository.existsByUsername(it)) {
                 throw CustomException(ResponseEnum.USER_EXIST)
             }
-            entity.username = request.username!!
+            entity.username = it
         }
 
         // 密码加密
-        if (request.password.hasText()) {
-            entity.password = encryptPassword(entity.username, request.password!!)
-        }
+        request.password.hasText { entity.password = encryptPassword(entity.username, it) }
         // 设置昵称
-        if (request.nickname.hasText()) {
-            entity.nickname = request.nickname!!
-        }
+        request.nickname.hasText { entity.nickname = it }
         return repository.save(entity)
     }
 
@@ -304,18 +300,10 @@ class UserServiceImpl(
     )
     override fun updateInfo(id: String, userInfo: UpdateUserInfoRequest) {
         val user = findUserByIdWithCache(id)
-        if (userInfo.nickname.hasText()) {
-            user.nickname = userInfo.nickname!!
-        }
-        if (userInfo.email.hasText()) {
-            user.email = userInfo.email
-        }
-        if (userInfo.phone.hasText()) {
-            user.phone = userInfo.phone
-        }
-        if (userInfo.password.hasText()) {
-            user.password = encryptPassword(user.username, userInfo.password!!)
-        }
+        userInfo.nickname.hasText { user.nickname = it }
+        userInfo.email.hasText { user.email = it }
+        userInfo.phone.hasText { user.phone = it }
+        userInfo.password.hasText { user.password = encryptPassword(user.username, it) }
         repository.save(user)
     }
 

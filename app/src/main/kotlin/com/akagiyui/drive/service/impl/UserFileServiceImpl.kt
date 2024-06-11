@@ -36,7 +36,7 @@ class UserFileServiceImpl(
     private lateinit var fileInfoService: FileInfoService
 
     override fun addAssociation(user: User, userFileName: String, fileInfo: FileInfo, folderId: String?): UserFile {
-        val folder = if (folderId.hasText()) folderService.getFolderById(folderId) else null
+        val folder = folderId?.let { folderService.getFolderById(it) }
         var fileName = userFileName
         while (userFileRepository.existsByUserIdAndNameAndFolder(user.id, fileName, folder)) {
             val index = fileName.lastIndexOf(".")
@@ -108,24 +108,18 @@ class UserFileServiceImpl(
 
     override fun mirrorFile(user: User, request: MirrorFileRequest): UserFile {
         val fileInfo = fileInfoService.getFileInfoByHash(request.hash)
-        val folder = if (request.folder.hasText()) {
-            folderService.getFolderById(request.folder!!)
-        } else {
-            null
-        }
+        val folder = request.folder.hasText { folderService.getFolderById(it) }
         return addAssociation(user, request.filename, fileInfo, folder?.id)
     }
 
     override fun moveFile(userId: String, fileId: String, folderId: String?) {
         val userFile = getUserFileById(userId, fileId)
-        userFile.folder = if (folderId.hasText()) {
-            val folder = folderService.getFolderById(folderId)
+        userFile.folder = folderId.hasText {
+            val folder = folderService.getFolderById(it)
             if (folder.user.id != userId) {
                 throw CustomException(ResponseEnum.NOT_FOUND)
             }
             folder
-        } else {
-            null
         }
         userFileRepository.save(userFile)
     }
