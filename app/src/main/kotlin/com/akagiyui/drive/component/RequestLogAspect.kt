@@ -3,6 +3,7 @@ package com.akagiyui.drive.component
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.utils.compressPackageName
 import com.akagiyui.common.utils.ellipsis
+import com.akagiyui.common.utils.hasText
 import com.akagiyui.common.utils.toStr
 import com.akagiyui.drive.entity.User
 import com.fasterxml.jackson.annotation.JsonAutoDetect
@@ -49,9 +50,12 @@ class RequestLogAspect {
         val requestLog = StringBuilder()
         val request = httpServletRequest ?: return joinPoint.proceed()
 
-        // 获取客户端IP
-        val clientIp: String = request.getHeader("X-Real-IP") ?: request.remoteAddr
-        requestLog.append("\n $clientIp -> [${request.method}]${request.requestURI}")
+        val clientIp: String = request.getHeader("X-Real-IP") ?: request.remoteAddr // 客户端IP
+        var requestLine = "\n $clientIp -> [${request.method}]" // HTTP请求方法
+        request.contentType.hasText { requestLine += "($it)" } // 请求类型
+        requestLine += request.requestURI // 请求路径
+        requestLog.append(requestLine)
+
         // 请求params
         request.parameterMap.also { params ->
             val paramsBuffer: String = params
