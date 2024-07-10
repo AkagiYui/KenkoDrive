@@ -78,15 +78,16 @@ class RequestLogAspect {
         requestLog.append("($paramsBuffer)")
 
         // 记录返回值与异常
-        return try {
-            val startTime = System.currentTimeMillis()
-            joinPoint.proceed().also { returnObj ->
-                val duration = System.currentTimeMillis() - startTime
-                val resultLog = anyToString(returnObj).ellipsis(500)
-                requestLog.append("\n result[${duration}ms] <- $resultLog")
-            }
+        val startTime = System.currentTimeMillis()
+        try {
+            val returnObj = joinPoint.proceed()
+            val duration = System.currentTimeMillis() - startTime
+            val resultLog = anyToString(returnObj).ellipsis(500)
+            requestLog.append("\n result[${duration}ms] <- $resultLog")
+            return returnObj
         } catch (throwable: Throwable) {
-            requestLog.append("\n error <- ${throwable.message}")
+            val duration = System.currentTimeMillis() - startTime
+            requestLog.append("\n error[${duration}ms] <- ${throwable.message}")
             throw throwable
         } finally {
             log.debug(requestLog.toString())
