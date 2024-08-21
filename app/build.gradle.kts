@@ -13,7 +13,7 @@ plugins {
      *
      * 自动为 Spring Bean 添加 open 修饰符
      */
-    kotlin("plugin.spring") version "1.9.23"
+    kotlin("plugin.spring") version "2.0.10"
 }
 
 group = "com.akagiyui" // 项目组织
