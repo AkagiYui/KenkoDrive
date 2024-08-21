@@ -47,7 +47,7 @@ class CustomResponseBodyAdvice : ResponseBodyAdvice<Any>, WebMvcConfigurer {
         selectedConverterType: Class<out HttpMessageConverter<*>>,
         request: ServerHttpRequest,
         response: ServerHttpResponse,
-    ): Any? {
+    ): Any {
         // 包装返回的数据
         return ResponseResult.success(body)
     }

@@ -13,6 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @author AkagiYui
  */
 class BucketManager(private val idleTime: Long = 1000 * 60 * 5) {
+    companion object {
+        private const val BUCKET_CLOSED_MESSAGE = "BucketManager is closed"
+    }
+
     private val log by LoggerDelegate()
 
     /**
@@ -61,7 +65,7 @@ class BucketManager(private val idleTime: Long = 1000 * 60 * 5) {
      * @param refillPerSecond 每秒填充速率
      */
     operator fun get(key: String, refillPerSecond: Long): Bucket {
-        check(!isClosed.get()) { "BucketManager is closed" }
+        check(!isClosed.get()) { BUCKET_CLOSED_MESSAGE }
         return bucketMap.computeIfAbsent(key) {
             log.debug("Create bucket: {}, refillPerSecond: {}", key, refillPerSecond)
             Bucket.builder()
@@ -83,7 +87,7 @@ class BucketManager(private val idleTime: Long = 1000 * 60 * 5) {
      * @param timeUnit 时间单位
      */
     operator fun get(key: String, refillPerUnit: Long, timeUnit: Duration): Bucket {
-        check(!isClosed.get()) { "BucketManager is closed" }
+        check(!isClosed.get()) { BUCKET_CLOSED_MESSAGE }
         return bucketMap.computeIfAbsent(key) {
             log.debug("Create bucket: {}, refillPerUnit: {}, timeUnit: {}", key, refillPerUnit, timeUnit)
             Bucket.builder()
@@ -101,7 +105,7 @@ class BucketManager(private val idleTime: Long = 1000 * 60 * 5) {
      * 关闭管理器
      */
     fun close() {
-        check(!isClosed.get()) { "BucketManager is closed" }
+        check(!isClosed.get()) { BUCKET_CLOSED_MESSAGE }
         isClosed.set(true)
         cleanerScope.cancel()
         bucketMap.clear()

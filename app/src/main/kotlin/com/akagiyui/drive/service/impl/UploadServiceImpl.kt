@@ -43,6 +43,7 @@ class UploadServiceImpl(
 ) : UploadService {
     private val idGenerator = IdUtil.getSnowflake()
     private val log by LoggerDelegate()
+    private fun createHashInstance(): MessageDigest = MessageDigest.getInstance("SHA-256")
 
     override fun createUploadTask(user: User, createUploadTaskRequest: CreateUploadTaskRequest): UploadTask {
         // 上传文件大小限制
@@ -103,7 +104,7 @@ class UploadServiceImpl(
         // 接收文件
         val onlineFileStream = chunk.inputStream
         val cacheFileStream = localCacheFile.outputStream()
-        val messageDigest = MessageDigest.getInstance("SHA-256")
+        val messageDigest = createHashInstance()
         onlineFileStream.use { input ->
             cacheFileStream.use { output ->
                 // 逐缓冲区读取文件内容，同时计算哈希值
@@ -149,7 +150,7 @@ class UploadServiceImpl(
         val cacheChunks = localCacheFiles.sortedBy { it.name.toInt() }
         val cacheFile = File.createTempFile("upload", ".tmp", taskCacheDirectory)
         val cacheFileStream = cacheFile.outputStream()
-        val messageDigest = MessageDigest.getInstance("SHA-256")
+        val messageDigest = createHashInstance()
         cacheFileStream.use { output ->
             cacheChunks.forEach { file ->
                 file.inputStream().use { input ->
@@ -238,7 +239,7 @@ class UploadServiceImpl(
             val onlineFileStream = file.inputStream
             val cacheFile = File.createTempFile("upload", ".tmp", cacheDirectory)
             val cacheFileStream = cacheFile.outputStream()
-            val messageDigest = MessageDigest.getInstance("SHA-256")
+            val messageDigest = createHashInstance()
             onlineFileStream.use { input ->
                 cacheFileStream.use { output ->
                     // 逐缓冲区读取文件内容，同时计算哈希值

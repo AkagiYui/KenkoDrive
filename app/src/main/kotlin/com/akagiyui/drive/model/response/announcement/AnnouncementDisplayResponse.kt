@@ -37,7 +37,7 @@ data class AnnouncementDisplayResponse(
     constructor(announcement: Announcement) : this(
         title = announcement.title,
         content = announcement.content,
-        userNickname = announcement.author.nickname ?: "",
+        userNickname = announcement.author.nickname,
         createTime = announcement.createTime,
         updateTime = announcement.updateTime
     )
