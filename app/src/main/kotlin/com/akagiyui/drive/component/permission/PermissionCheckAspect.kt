@@ -40,8 +40,18 @@ class PermissionCheckAspect {
         val userPermissions = user.roles.filter { !it.disabled }.flatMap { it.permissions }.toSet()
 
         // 校验权限
-        if (!userPermissions.containsAll(permissionList)) {
-            throw CustomException(ResponseEnum.UNAUTHORIZED)
+        when (requiredPermission.mode) {
+            RuleMode.AND -> {
+                if (!userPermissions.containsAll(permissionList)) {
+                    throw CustomException(ResponseEnum.UNAUTHORIZED)
+                }
+            }
+
+            RuleMode.OR -> {
+                if (userPermissions.intersect(permissionList).isEmpty()) {
+                    throw CustomException(ResponseEnum.UNAUTHORIZED)
+                }
+            }
         }
     }
 
