@@ -39,6 +39,8 @@ class SecurityConfig(
         "/captcha", // 获取验证码
 
         "/share/*", // 获取分享信息
+
+        "/auth/token/temporary/*", // 获取临时登录Token信息
     )
     val permitAllPostMapping = emptyArray<String>()
     val anonymousPostMapping = arrayOf(
@@ -49,6 +51,8 @@ class SecurityConfig(
         "/auth/otp/email", // 发送邮件注册验证码
         "/auth/otp/sms", // 发送短信注册验证码
         "/auth/register/email", // 确认邮箱注册
+
+        "/auth/token/temporary", // 申请临时登录Token
     )
 
     /**
@@ -94,11 +98,12 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            addAllowedOrigin("https://drive.akagiyui.com") // 允许指定域名通过
-            addAllowedOriginPattern("*") // 允许所有域名通过
-            addAllowedHeader("*") // 允许所有请求头通过
-            addAllowedMethod("*") // 允许所有请求方法通过
-            allowCredentials = true // 允许跨域携带cookie
+            // 以下配置仅供参考，具体配置根据实际情况修改
+            addAllowedOrigin("http://localhost:5173") // 明确指定允许的域名
+            addAllowedOriginPattern("https://*.akagiyui.com") // 使用通配符匹配允许的域名
+            addAllowedHeader("*") // 允许所有请求头
+            addAllowedMethod("*") // 允许所有请求方法
+            allowCredentials = true // 允许携带cookie
         }
         return UrlBasedCorsConfigurationSource().apply {
             registerCorsConfiguration("/**", configuration)

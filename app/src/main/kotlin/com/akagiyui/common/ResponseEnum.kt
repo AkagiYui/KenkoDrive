@@ -135,6 +135,11 @@ enum class ResponseEnum(val code: Int, val msg: String) {
      * 手机号已存在
      */
     PHONE_EXIST(10025, "Phone exist"),
+
+    /**
+     * 无效的token
+     */
+    INVALID_TOKEN(10026, "Invalid token"),
     ;
 
 }

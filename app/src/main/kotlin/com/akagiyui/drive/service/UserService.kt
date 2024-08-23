@@ -4,11 +4,14 @@ import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.UserFilter
+import com.akagiyui.drive.model.cache.TemporaryLoginInfo
 import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
+import com.akagiyui.drive.model.response.auth.ClaimedTemporaryTokenInfoResponse
 import org.springframework.data.domain.Page
 
 /**
  * 用户服务接口
+ * todo 拆分出AuthService
  * @author AkagiYui
  */
 interface UserService {
@@ -78,23 +81,6 @@ interface UserService {
      * @param request 注册确认请求
      */
     fun confirmRegister(email: String, otp: String)
-
-    /**
-     * 加密密码
-     * @param username 用户名
-     * @param password 密码明文
-     * @return 密码密文
-     */
-    fun encryptPassword(username: String, password: String): String
-
-    /**
-     * 加密密码
-     * @param username 用户名
-     * @param password 密码明文
-     * @param raw 是否不通过加密器加密
-     * @return 密码密文
-     */
-    fun encryptPassword(username: String, password: String, raw: Boolean): String
 
     /**
      * 获取用户权限
@@ -180,4 +166,54 @@ interface UserService {
      */
     fun getAccessToken(username: String, password: String): String
 
+    /**
+     * 获取访问令牌
+     *
+     * @param userId 用户ID
+     * @return 访问令牌
+     */
+    fun getAccessToken(userId: String): String
+
+    /**
+     * 生成临时登录令牌
+     *
+     * @return 临时登录令牌
+     */
+    fun generateTemporaryLoginToken(): String
+
+    /**
+     * 获取临时登录令牌状态
+     *
+     * @param token 临时登录令牌
+     * @return 临时登录令牌状态
+     */
+    fun getTemporaryLoginTokenStatus(token: String): TemporaryLoginInfo
+
+    /**
+     * 认领临时登录令牌
+     *
+     * @param token 临时登录令牌
+     * @param user 用户
+     * @param ip IP
+     * @return 认领临时登录令牌信息
+     */
+    fun claimTemporaryLoginToken(token: String, user: User, ip: String): ClaimedTemporaryTokenInfoResponse
+
+    /**
+     * 确认临时登录令牌
+     *
+     * @param temporaryToken 临时登录令牌
+     * @param takenToken 认领令牌
+     * @param user 用户
+     */
+    fun confirmTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User)
+
+    /**
+     * 取消临时登录令牌
+     *
+     * @param temporaryToken 临时登录令牌
+     * @param takenToken 认领令牌
+     * @param user 用户
+     */
+    fun cancelTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User)
 }

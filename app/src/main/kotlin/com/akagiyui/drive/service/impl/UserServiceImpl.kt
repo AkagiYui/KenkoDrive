@@ -1,6 +1,7 @@
 package com.akagiyui.drive.service.impl
 
 import cn.hutool.core.util.RandomUtil
+import cn.hutool.core.util.RandomUtil.BASE_CHAR_NUMBER
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
@@ -16,7 +17,9 @@ import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.UserFilter
 import com.akagiyui.drive.model.cache.EmailRegisterInfo
+import com.akagiyui.drive.model.cache.TemporaryLoginInfo
 import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
+import com.akagiyui.drive.model.response.auth.ClaimedTemporaryTokenInfoResponse
 import com.akagiyui.drive.repository.UserRepository
 import com.akagiyui.drive.service.*
 import jakarta.annotation.Resource
@@ -48,6 +51,7 @@ class UserServiceImpl(
     private val smsService: SmsService,
     private val settingService: SettingService,
     private val roleService: RoleService,
+    private val ipRegionService: IpRegionService,
     private val tokenTemplate: TokenTemplate,
     private val passwordEncoder: PasswordEncoder,
 ) : UserService {
@@ -170,7 +174,7 @@ class UserServiceImpl(
         if (!passwordEncoder.matches(password, user.password)) {
             throw UnAuthorizedException()
         }
-        return tokenTemplate.createToken(user.id)
+        return getAccessToken(user.id)
     }
 
     override fun registerByEmail(email: String, password: String) {
@@ -224,16 +228,33 @@ class UserServiceImpl(
         redisCache.delete(cacheKey)
     }
 
-    override fun encryptPassword(username: String, password: String): String {
+    /**
+     * 加密密码
+     * @param username 用户名
+     * @param password 密码明文
+     * @return 密码密文
+     */
+    private fun encryptPassword(username: String, password: String): String {
         return encryptPassword(username, password, false)
     }
 
-    override fun encryptPassword(username: String, password: String, raw: Boolean): String {
+    /**
+     * 加密密码
+     * @param username 用户名
+     * @param password 密码明文
+     * @param raw 是否不通过加密器加密
+     * @return 密码密文
+     */
+    private fun encryptPassword(username: String, password: String, raw: Boolean): String {
         val encode = password // 密码加密核心
         if (raw) {
             return encode
         }
         return passwordEncoder.encode(encode)
+    }
+
+    override fun getAccessToken(userId: String): String {
+        return tokenTemplate.createToken(userId)
     }
 
     @Transactional
@@ -347,5 +368,59 @@ class UserServiceImpl(
         }
 
         return tokenTemplate.createToken(user.id)
+    }
+
+    override fun generateTemporaryLoginToken(): String {
+        val token = String.random(BASE_CHAR_NUMBER, 16)
+        val redisKey = "temporaryLoginToken:$token"
+        redisCache[redisKey, 2, TimeUnit.MINUTES] = TemporaryLoginInfo(token)
+        return token
+    }
+
+    override fun getTemporaryLoginTokenStatus(token: String): TemporaryLoginInfo {
+        val redisKey = "temporaryLoginToken:$token"
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        if (info.confirmed || info.canceled) {
+            // 确认或取消后，只允许查询一次
+            redisCache.delete(redisKey)
+        }
+        return info
+    }
+
+    override fun claimTemporaryLoginToken(token: String, user: User, ip: String): ClaimedTemporaryTokenInfoResponse {
+        val redisKey = "temporaryLoginToken:$token"
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        if (info.taken) { // todo 如果这里被两个人同时请求，会怎么样？
+            throw CustomException(ResponseEnum.INVALID_TOKEN)
+        }
+
+        info.userId = user.id
+        info.taken = true
+        val takenToken = String.random(BASE_CHAR_NUMBER, 16)
+        info.takenToken = takenToken
+        redisCache[redisKey, 2, TimeUnit.MINUTES] = info // 延长有效期
+
+        val ipRegion = ipRegionService.getRegion(ip)
+        return ClaimedTemporaryTokenInfoResponse(takenToken, user.nickname, ipRegion)
+    }
+
+    override fun confirmTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User) {
+        val redisKey = "temporaryLoginToken:$temporaryToken"
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        if (!info.taken || info.userId != user.id || info.takenToken != takenToken || info.canceled) {
+            throw CustomException(ResponseEnum.INVALID_TOKEN)
+        }
+        info.confirmed = true
+        redisCache[redisKey, 2, TimeUnit.MINUTES] = info
+    }
+
+    override fun cancelTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User) {
+        val redisKey = "temporaryLoginToken:$temporaryToken"
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        if (!info.taken || info.userId != user.id || info.takenToken != takenToken || info.confirmed) {
+            throw CustomException(ResponseEnum.INVALID_TOKEN)
+        }
+        info.canceled = true
+        redisCache[redisKey, 2, TimeUnit.MINUTES] = info
     }
 }
