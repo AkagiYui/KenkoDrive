@@ -78,7 +78,7 @@
 - [x] [下载速度限制](app/src/main/kotlin/com/akagiyui/common/BucketManager.kt)
 - [x] [异步任务](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
 - [x] [邮件发送](app/src/main/kotlin/com/akagiyui/drive/service/MailService.kt)
-- [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/AddUserRequest.kt)
+- [x] [参数校验](app/src/main/kotlin/com/akagiyui/drive/model/request/user/AddUserRequest.kt)
 - [x] [权限校验](app/src/main/kotlin/com/akagiyui/drive/model/Permission.kt)
 - [x] [统一 JSON 格式返回](app/src/main/kotlin/com/akagiyui/common/ResponseResult.kt)
 - [ ] [日志记录](app/src/main/kotlin/com/akagiyui/drive/component/DatabaseLogAppender.kt)
