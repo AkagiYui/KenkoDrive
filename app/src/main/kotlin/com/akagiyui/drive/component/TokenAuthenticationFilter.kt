@@ -62,7 +62,7 @@ class TokenAuthenticationFilter @Autowired constructor(
             val userId = tokenTemplate.getUserId(token)
             userId?.let {
                 // 将用户信息放入Spring Security上下文
-                val userDetails = userService.findUserById(it)
+                val userDetails = userService.getUserById(it)
                 val authentication = SessionUserAuthentication(
                     userDetails,
                     WebAuthenticationDetailsSource().buildDetails(request)

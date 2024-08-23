@@ -23,7 +23,7 @@ class UserServiceTests @Autowired constructor(
         val filter = UserFilter().apply {
             expression = "123"
         }
-        val users = userService.find(1, 10, filter)
+        val users = userService.getUsers(1, 10, filter)
         Assertions.assertNotNull(users)
     }
 

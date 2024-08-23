@@ -40,7 +40,7 @@ class UserController(private val userService: UserService, private val avatarSer
     @GetMapping("/{id}")
     @RequirePermission(Permission.USER_VIEW)
     fun findById(@PathVariable("id") id: String): User {
-        return userService.findUserById(id)
+        return userService.getUserById(id)
     }
 
     /**
@@ -69,7 +69,7 @@ class UserController(private val userService: UserService, private val avatarSer
         @RequestParam(defaultValue = "10") size: Int,
         @ModelAttribute filter: UserFilter?,
     ): PageResponse<UserInfoResponse> {
-        val page = userService.find(index, size, filter)
+        val page = userService.getUsers(index, size, filter)
         return PageResponse(page, page.content.toResponse())
     }
 
@@ -81,7 +81,7 @@ class UserController(private val userService: UserService, private val avatarSer
     @DeleteMapping("/{id}")
     @RequirePermission(Permission.USER_DELETE)
     fun delete(@PathVariable id: String) {
-        userService.delete(id)
+        userService.deleteUser(id)
     }
 
     /**

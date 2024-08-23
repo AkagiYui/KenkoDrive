@@ -10,6 +10,7 @@ import com.akagiyui.drive.model.request.auth.*
 import com.akagiyui.drive.model.response.auth.ClaimedTemporaryTokenInfoResponse
 import com.akagiyui.drive.model.response.auth.TemporaryLoginTokenStatusResponse
 import com.akagiyui.drive.model.response.auth.TokenResponse
+import com.akagiyui.drive.service.AuthService
 import com.akagiyui.drive.service.UserService
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
@@ -23,7 +24,10 @@ import java.util.concurrent.TimeUnit
  */
 @RestController
 @RequestMapping("/auth")
-class AuthController(private val userService: UserService) {
+class AuthController(
+    private val userService: UserService,
+    private val authService: AuthService,
+) {
 
     /**
      * 使用密码获取Token
@@ -32,15 +36,19 @@ class AuthController(private val userService: UserService) {
     @PostMapping("/token", "/token/password")
     @PreAuthorize("isAnonymous()")
     fun getTokenByPassword(@RequestBody @Validated request: GetTokenByPasswordRequest): TokenResponse {
-        val accessToken = userService.getAccessToken(request.username, request.password)
+        val accessToken = authService.getAccessToken(request.username, request.password)
         return TokenResponse(accessToken, null)
     }
 
+    /**
+     * 使用短信验证码获取Token
+     * @param request 请求体
+     */
     @PostMapping("/token/sms")
     @PreAuthorize("isAnonymous()")
     @Limit(key = "getTokenBySms", permitsPerSecond = 1, timeout = 1, timeunit = TimeUnit.SECONDS)
     fun getTokenBySms(@RequestBody @Validated request: GetTokenByPhoneRequest): TokenResponse {
-        val accessToken = userService.getAccessTokenBySms(request.phone, request.otp)
+        val accessToken = authService.getAccessTokenBySms(request.phone, request.otp)
         return TokenResponse(accessToken, null)
     }
 
@@ -73,7 +81,7 @@ class AuthController(private val userService: UserService) {
             // 直接返回，不让前端知道，避免恶意攻击
             return
         }
-        userService.sendSmsOneTimePassword(request.phone)
+        authService.sendSmsOneTimePassword(request.phone)
     }
 
     /**
@@ -94,7 +102,7 @@ class AuthController(private val userService: UserService) {
     @PostMapping("/token/temporary")
     @PreAuthorize("isAnonymous()")
     fun requestTemporaryToken(): String {
-        return userService.generateTemporaryLoginToken()
+        return authService.generateTemporaryLoginToken()
     }
 
     /**
@@ -104,13 +112,13 @@ class AuthController(private val userService: UserService) {
     @GetMapping("/token/temporary/{token}")
     @PreAuthorize("isAnonymous()")
     fun getTokenStatusByTemporaryToken(@PathVariable token: String): TemporaryLoginTokenStatusResponse {
-        val info = userService.getTemporaryLoginTokenStatus(token)
+        val info = authService.getTemporaryLoginTokenStatus(token)
         val response = TemporaryLoginTokenStatusResponse(info)
         if (info.userId != null) {
-            response.nickname = userService.findUserById(info.userId!!).nickname
+            response.nickname = userService.getUserById(info.userId!!).nickname
         }
         if (!info.canceled && info.confirmed && info.userId != null) {
-            val accessToken = userService.getAccessToken(info.userId!!)
+            val accessToken = authService.getAccessToken(info.userId!!)
             response.token = TokenResponse(accessToken, null)
         }
         return response
@@ -128,7 +136,7 @@ class AuthController(private val userService: UserService) {
         @CurrentUser user: User,
         @ClientIp ip: String,
     ): ClaimedTemporaryTokenInfoResponse {
-        return userService.claimTemporaryLoginToken(token, user, ip)
+        return authService.claimTemporaryLoginToken(token, user, ip)
     }
 
     /**
@@ -146,8 +154,8 @@ class AuthController(private val userService: UserService) {
         @CurrentUser user: User,
     ) {
         val func = when (action) {
-            "confirm" -> userService::confirmTemporaryLoginToken
-            "cancel" -> userService::cancelTemporaryLoginToken
+            "confirm" -> authService::confirmTemporaryLoginToken
+            "cancel" -> authService::cancelTemporaryLoginToken
             else -> throw IllegalArgumentException("Invalid action")
         }
         func(temporaryToken, takenToken, user)
