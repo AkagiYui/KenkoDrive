@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler
@@ -158,6 +159,15 @@ class CustomExceptionHandler {
     }
 
     /**
+     * 403 过了authorizeHttpRequests但是没有过@PreAuthorize
+     */
+    @ExceptionHandler(AccessDeniedException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun accessDeniedException(e: AccessDeniedException): ResponseResult<Any> {
+        return ResponseResult.response(ResponseEnum.FORBIDDEN)
+    }
+
+    /**
      * 处理 Spring Security 请求拒绝异常
      * 如请求头不合法、请求方法不合法等
      *
@@ -177,7 +187,7 @@ class CustomExceptionHandler {
     }
 
     /**
-     * 处理 Spring Security 访问拒绝异常
+     * 处理 Spring Security 访问拒绝异常，没过authorizeHttpRequests
      *
      * @return AccessDeniedHandler
      */
@@ -194,8 +204,9 @@ class CustomExceptionHandler {
      * @return AuthenticationEntryPoint
      */
     @Bean
-    fun authenticationEntryPoint(): AuthenticationEntryPoint =
-        AuthenticationEntryPoint { _, response, _ ->
+    fun authenticationEntryPoint(): AuthenticationEntryPoint {
+        return AuthenticationEntryPoint { _, response, _ ->
             ResponseResult.writeResponse(response, HttpStatus.UNAUTHORIZED, ResponseEnum.UNAUTHORIZED)
         }
+    }
 }
