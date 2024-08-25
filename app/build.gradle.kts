@@ -6,6 +6,7 @@ plugins {
     jacoco // 代码覆盖率
     id("org.springframework.boot") version "3.2.4" // Spring Boot
     id("io.spring.dependency-management") version "1.1.4" // Spring Boot 相关依赖关系管理
+    kotlin("kapt") version "1.9.23" // Kotlin 注解处理器
     kotlin("jvm") version "1.9.23" // Kotlin 支持
     /**
      * Kotlin Spring 插件
@@ -37,6 +38,7 @@ dependencies {
     implementation("org.yaml:snakeyaml:2.0")  // 覆盖 Spring Boot 默认的 SnakeYAML 版本，解决 CVE-2022-41854
     implementation("org.jetbrains:annotations:24.0.1") // JetBrain 的注解，如 @NonNull
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")  // ORM 框架
+    kapt("org.hibernate:hibernate-jpamodelgen:6.4.4.Final") // JPA 元模型生成
     implementation("org.springframework.boot:spring-boot-starter-data-redis")  // Redis 操作
     implementation("org.springframework.boot:spring-boot-starter-cache")  // 缓存
     implementation("org.springframework.boot:spring-boot-starter-mail")  // 邮件发送
