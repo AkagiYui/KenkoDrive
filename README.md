@@ -178,6 +178,12 @@ cd KenkoDrive
 
 ## 鸣谢
 
+特别感谢JetBrains为开源项目提供支持。
+
+<a href="https://jb.gg/OpenSourceSupport">
+  <img src="https://user-images.githubusercontent.com/8643542/160519107-199319dc-e1cf-4079-94b7-01b6b8d23aa6.png" align="left" height="100" width="100"  alt="JetBrains">
+</a>
+
 - [Drone官方文档](https://docs.drone.io/)
 - [Spring官方文档: CORS](https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html)
 - [Spring官方文档: Building web applications with Spring Boot and Kotlin](https://spring.io/guides/tutorials/spring-boot-kotlin)
