@@ -4,6 +4,7 @@ import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Announcement
+import com.akagiyui.drive.entity.Announcement_
 import com.akagiyui.drive.model.AnnouncementFilter
 import com.akagiyui.drive.model.request.announcement.UpdateAnnouncementRequest
 import com.akagiyui.drive.repository.AnnouncementRepository
@@ -51,11 +52,11 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
         val pageable = PageRequest.of(index, size)
 
         // 条件查询
-        val specification = Specification<Announcement> { root, _, cb ->
+        val specification = Specification { root, _, cb ->
             filter?.expression.hasText {
                 val likePattern = "%$it%"
-                val titlePredicate = cb.like(root.get("title"), likePattern)
-                val contentPredicate = cb.like(root.get("content"), likePattern)
+                val titlePredicate = cb.like(root[Announcement_.title], likePattern)
+                val contentPredicate = cb.like(root[Announcement_.content], likePattern)
                 cb.or(titlePredicate, contentPredicate)
             }
         }

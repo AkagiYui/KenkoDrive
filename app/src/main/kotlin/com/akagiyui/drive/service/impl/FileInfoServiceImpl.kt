@@ -7,6 +7,7 @@ import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.FileInfo
+import com.akagiyui.drive.entity.FileInfo_
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.FileInfoFilter
@@ -123,12 +124,13 @@ class FileInfoServiceImpl(
         val pageable = PageRequest.of(pageIndex, pageSize)
 
         // 条件查询
-        val specification = Specification<FileInfo> { root, _, cb ->
-            if (filter != null && filter.expression.hasText()) {
-                val namePredicate = cb.like(root.get("name"), "%${filter.expression}%")
-                val typePredicate = cb.like(root.get("type"), "%${filter.expression}%")
+        val specification = Specification { root, _, cb ->
+            filter?.expression.hasText {
+                val likePattern = "%$it%"
+                val namePredicate = cb.like(root[FileInfo_.name], likePattern)
+                val typePredicate = cb.like(root[FileInfo_.type], likePattern)
                 cb.or(namePredicate, typePredicate)
-            } else null
+            }
         }
 
         return fileInfoRepository.findAll(specification, pageable)

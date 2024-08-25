@@ -5,6 +5,7 @@ import com.akagiyui.common.delegate.LoggerDelegate
 import com.akagiyui.common.exception.CustomException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Role
+import com.akagiyui.drive.entity.Role_
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.Permission
@@ -55,12 +56,13 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         val pageable = PageRequest.of(index, size)
 
         // 条件查询
-        val specification = Specification<Role> { root, _, cb ->
-            if (filter != null && filter.expression.hasText()) {
-                val namePredicate = cb.like(root.get("name"), "%${filter.expression}%")
-                val descriptionPredicate = cb.like(root.get("description"), "%${filter.expression}%")
+        val specification = Specification { root, _, cb ->
+            filter?.expression.hasText {
+                val likePattern = "%$it%"
+                val namePredicate = cb.like(root[Role_.name], likePattern)
+                val descriptionPredicate = cb.like(root[Role_.description], likePattern)
                 cb.or(namePredicate, descriptionPredicate)
-            } else null
+            }
         }
 
         return roleRepository.findAll(specification, pageable)

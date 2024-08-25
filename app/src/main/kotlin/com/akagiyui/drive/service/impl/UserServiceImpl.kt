@@ -9,6 +9,7 @@ import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.User
+import com.akagiyui.drive.entity.User_
 import com.akagiyui.drive.model.AddUserModel
 import com.akagiyui.drive.model.CacheConstants
 import com.akagiyui.drive.model.UserFilter
@@ -17,7 +18,6 @@ import com.akagiyui.drive.model.request.user.UpdateUserInfoRequest
 import com.akagiyui.drive.repository.UserRepository
 import com.akagiyui.drive.service.*
 import jakarta.annotation.Resource
-import jakarta.persistence.criteria.Predicate
 import org.jetbrains.annotations.NotNull
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
@@ -77,14 +77,14 @@ class UserServiceImpl(
     override fun getUsers(index: Int, size: Int, userFilter: UserFilter?): Page<User> {
         val pageable: Pageable = PageRequest.of(index, size)
 
-        val specification: Specification<User> = Specification { root, _, cb ->
-            if (userFilter != null && userFilter.expression.hasText()) {
-                val queryString = "%${userFilter.expression}%"
-                val usernamePredicate: Predicate = cb.like(root["username"], queryString)
-                val nicknamePredicate: Predicate = cb.like(root["nickname"], queryString)
-                val emailPredicate: Predicate = cb.like(root["email"], queryString)
+        val specification = Specification { root, _, cb ->
+            userFilter?.expression.hasText {
+                val queryString = "%$it%"
+                val usernamePredicate = cb.like(root[User_.username], queryString)
+                val nicknamePredicate = cb.like(root[User_.nickname], queryString)
+                val emailPredicate = cb.like(root[User_.email], queryString)
                 cb.or(usernamePredicate, nicknamePredicate, emailPredicate)
-            } else null
+            }
         }
 
         return repository.findAll(specification, pageable)
