@@ -101,6 +101,7 @@ class SecurityConfig(
             // 以下配置仅供参考，具体配置根据实际情况修改
             addAllowedOrigin("http://localhost:5173") // 明确指定允许的域名
             addAllowedOriginPattern("https://*.akagiyui.com") // 使用通配符匹配允许的域名
+            addAllowedOriginPattern("*") // 使用通配符匹配允许的域名
             addAllowedHeader("*") // 允许所有请求头
             addAllowedMethod("*") // 允许所有请求方法
             allowCredentials = true // 允许携带cookie
