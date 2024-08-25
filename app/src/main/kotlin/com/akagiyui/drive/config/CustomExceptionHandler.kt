@@ -22,6 +22,7 @@ import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler
 import org.springframework.security.web.firewall.RequestRejectedException
 import org.springframework.security.web.firewall.RequestRejectedHandler
+import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingRequestHeaderException
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException
 import org.springframework.web.multipart.MaxUploadSizeExceededException
 import org.springframework.web.multipart.MultipartException
+import org.springframework.web.multipart.support.MissingServletRequestPartException
 import org.springframework.web.servlet.NoHandlerFoundException
 import java.io.IOException
 
@@ -72,17 +74,28 @@ class CustomExceptionHandler {
     @ExceptionHandler(
         HttpMessageNotReadableException::class, // 请求体为空
         MissingServletRequestParameterException::class, // 缺少请求参数
+        MissingServletRequestPartException::class, // 缺少请求参数(multipart)
         MissingRequestHeaderException::class, // 缺少请求头
         MaxUploadSizeExceededException::class, // 文件过大
         MethodArgumentNotValidException::class, // 参数校验异常
         MultipartException::class, // 文件上传异常
+        HttpMediaTypeNotSupportedException::class, // 请求类型不支持
     )
     fun badRequestException(e: Exception): ResponseResult<Any> {
+        when (e) {
+            is HttpMediaTypeNotSupportedException -> {
+                return ResponseResult.response(ResponseEnum.BAD_REQUEST, "Unsupported media type")
+            }
+
+            is MismatchedInputException -> {
+                return ResponseResult.response(ResponseEnum.BAD_REQUEST, "JSON parse error")
+            }
+        }
+
         // 目前可预见的是 JSON 解析错误
         e.cause?.let {
             return when (it) {
                 is JsonParseException -> ResponseResult.response(ResponseEnum.BAD_REQUEST, "JSON parse error")
-                is MismatchedInputException -> ResponseResult.response(ResponseEnum.BAD_REQUEST, "JSON parse error")
                 else -> {
                     log.error("Bad request", it)
                     ResponseResult.response(ResponseEnum.BAD_REQUEST, it.message)
