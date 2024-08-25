@@ -8,6 +8,7 @@ import com.akagiyui.common.exception.TooManyRequestsException
 import com.akagiyui.common.exception.UnAuthorizedException
 import com.fasterxml.jackson.core.JsonParseException
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
@@ -81,6 +82,7 @@ class CustomExceptionHandler {
         e.cause?.let {
             return when (it) {
                 is JsonParseException -> ResponseResult.response(ResponseEnum.BAD_REQUEST, "JSON parse error")
+                is MismatchedInputException -> ResponseResult.response(ResponseEnum.BAD_REQUEST, "JSON parse error")
                 else -> {
                     log.error("Bad request", it)
                     ResponseResult.response(ResponseEnum.BAD_REQUEST, it.message)
