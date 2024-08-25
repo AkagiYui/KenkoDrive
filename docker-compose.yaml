@@ -10,8 +10,10 @@ services:
       - /srv/kenko-drive/data:/app/data
     restart: always
     depends_on:
-      - redis
-      - mysql
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
 
   redis:
     image: redis:7-alpine
@@ -20,6 +22,11 @@ services:
     ports:
       - "6677:6677"
     restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   mysql:
     image: mysql:8
@@ -32,6 +39,9 @@ services:
     volumes:
       - /srv/kenko-drive/mysql/data:/var/lib/mysql
     restart: always
+    healthcheck:
+      test: [ "CMD", "mysql", "-uroot", "-proot", "-e", "SELECT 1" ]
+      interval: 10s
 
   minio:
     image: minio/minio
