@@ -51,7 +51,16 @@ class RequestLogAspect {
         val request = httpServletRequest ?: return joinPoint.proceed()
 
         val clientIp: String = request.getHeader("X-Real-IP") ?: request.remoteAddr // 客户端IP
-        var requestLine = "\n $clientIp -> [${request.method}]" // HTTP请求方法
+        val clientPlatform: String? = request.getHeader("Sec-Ch-Ua-Platform").let {
+            if (!it.hasText()) {
+                null
+            } else {
+                if (it.startsWith("\"") && it.endsWith("\"")) it.substring(1, it.length - 1) else it
+            }
+        } // 客户端平台
+        val clientInfo = if (clientPlatform.hasText()) "$clientIp[$clientPlatform]" else clientIp
+
+        var requestLine = "\n $clientInfo -> [${request.method}]" // HTTP请求方法
         request.contentType.hasText { requestLine += "($it)" } // 请求类型
         requestLine += request.requestURI // 请求路径
         requestLog.append(requestLine)
