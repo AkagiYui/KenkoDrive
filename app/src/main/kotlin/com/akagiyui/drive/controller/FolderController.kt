@@ -37,20 +37,18 @@ class FolderController(private val folderService: FolderService, private val use
         @ModelAttribute filter: FolderContentFilter?,
         @CurrentUser user: User,
     ): FolderContentResponse {
-        if (filter != null && filter.expression.hasText()) {
-            return FolderContentResponse(
+        return if (filter != null && filter.expression.hasText()) {
+            FolderContentResponse(
                 userFileService.searchFiles(user.id, filter).toResponse(),
                 emptyList(),
                 listOf(FolderResponse("-1", "搜索结果", System.currentTimeMillis()))
             )
+        } else {
+            FolderContentResponse(
+                userFileService.getFiles(user.id, folderId).toResponse(),
+                folderService.getSubFolders(user.id, folderId).toResponse(),
+                folderId?.let { folderService.getFolderChain(user.id, it) } ?: emptyList())
         }
-
-        val files = userFileService.getFiles(user.id, folderId).toResponse()
-        val folders = folderService.getSubFolders(user.id, folderId).toResponse()
-        return FolderContentResponse(
-            files,
-            folders,
-            folderId?.let { folderService.getFolderChain(user.id, it) } ?: emptyList())
     }
 
     /**
