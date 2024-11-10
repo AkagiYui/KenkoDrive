@@ -22,10 +22,9 @@ abstract class BaseEntity : Serializable {
     /**
      * 记录ID
      */
-    // 主键生成策略
     @Id
-    @GeneratedValue(generator = "snowflakeId")
-    @GenericGenerator(name = "snowflakeId", type = SnowFlakeIdGenerator::class)
+    @GeneratedValue(generator = "snowflakeId") // 生成策略，使用自定义生成器
+    @GenericGenerator(name = "snowflakeId", type = SnowFlakeIdGenerator::class) // 自定义生成器
     lateinit var id: String
 
     /**

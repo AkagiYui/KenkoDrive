@@ -48,6 +48,7 @@ class CustomExceptionHandler {
 
     /**
      * 404 API未找到
+     * 大多数情况都会被SpringSecurity在authorizeHttpRequests中拦截，暂未找到未拦截的情况
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(
