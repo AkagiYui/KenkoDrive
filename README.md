@@ -145,6 +145,7 @@
 - [更新日志](docs/changelog.md)
 - [RoadMap](docs/roadmap.md)
 - [项目开发规范](docs/README.md)
+- [项目开发笔记](docs/develop.md)
 - [致谢名单](docs/thanks.md)
 
 ## 鸣谢
