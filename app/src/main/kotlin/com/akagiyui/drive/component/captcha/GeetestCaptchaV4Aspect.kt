@@ -3,7 +3,7 @@ package com.akagiyui.drive.component.captcha
 import com.akagiyui.common.GeetestCaptchaV4Template
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.exception.GeetestCaptchaValidateException
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -33,16 +33,16 @@ class GeetestCaptchaV4Aspect(
         val request = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
         try {
             geetestCaptchaV4Template.validate(
-                request.getParameter("lot_number") ?: throw CustomException(ResponseEnum.INVALID_CAPTCHA),
-                request.getParameter("captcha_output") ?: throw CustomException(ResponseEnum.INVALID_CAPTCHA),
-                request.getParameter("pass_token") ?: throw CustomException(ResponseEnum.INVALID_CAPTCHA),
-                request.getParameter("gen_time") ?: throw CustomException(ResponseEnum.INVALID_CAPTCHA),
+                request.getParameter("lot_number") ?: throw BusinessException(ResponseEnum.INVALID_CAPTCHA),
+                request.getParameter("captcha_output") ?: throw BusinessException(ResponseEnum.INVALID_CAPTCHA),
+                request.getParameter("pass_token") ?: throw BusinessException(ResponseEnum.INVALID_CAPTCHA),
+                request.getParameter("gen_time") ?: throw BusinessException(ResponseEnum.INVALID_CAPTCHA),
             ).apply {
                 log.debug("Geetest CAPTCHA Validate: {}", this)
             }
         } catch (e: GeetestCaptchaValidateException) {
             log.error("Geetest CAPTCHA Validate Error: {}", e.message)
-            throw CustomException(ResponseEnum.INVALID_CAPTCHA)
+            throw BusinessException(ResponseEnum.INVALID_CAPTCHA)
         }
         return joinPoint.proceed()
     }

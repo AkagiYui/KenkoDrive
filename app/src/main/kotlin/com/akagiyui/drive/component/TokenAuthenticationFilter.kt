@@ -1,6 +1,6 @@
 package com.akagiyui.drive.component
 
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.common.token.TokenVerifyException
 import com.akagiyui.common.utils.hasText
@@ -71,7 +71,7 @@ class TokenAuthenticationFilter @Autowired constructor(
             }
         } catch (_: TokenVerifyException) {
             // Token验证失败
-        } catch (_: CustomException) {
+        } catch (_: BusinessException) {
             // 找不到用户
         }
     }

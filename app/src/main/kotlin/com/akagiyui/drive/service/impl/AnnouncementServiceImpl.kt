@@ -1,7 +1,7 @@
 package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Announcement
 import com.akagiyui.drive.entity.Announcement_
@@ -31,7 +31,7 @@ class AnnouncementServiceImpl(private val announcementRepository: AnnouncementRe
      */
     private fun getAnnouncement(id: String): Announcement {
         return announcementRepository.findById(id).orElseThrow {
-            CustomException(ResponseEnum.NOT_FOUND)
+            BusinessException(ResponseEnum.NOT_FOUND)
         }
     }
 

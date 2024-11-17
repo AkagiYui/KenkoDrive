@@ -2,7 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Role
 import com.akagiyui.drive.entity.Role_
@@ -40,7 +40,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
     private fun getRoleById(id: String): Role {
         return roleRepository.findById(id).orElseThrow {
             log.warn("角色不存在: {}", id)
-            CustomException(ResponseEnum.ROLE_NOT_EXIST)
+            BusinessException(ResponseEnum.ROLE_NOT_EXIST)
         }
     }
 
@@ -79,13 +79,13 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
     override fun addRole(role: AddRoleRequest): String {
         // 检查角色名是否重复
         if (roleRepository.existsByName(role.name)) {
-            throw CustomException(ResponseEnum.ROLE_EXIST)
+            throw BusinessException(ResponseEnum.ROLE_EXIST)
         }
         val permissions = try {
             // 检查权限是否存在
             role.permissions.map { Permission.valueOf(it) }.toMutableSet()
         } catch (e: IllegalArgumentException) {
-            throw CustomException(ResponseEnum.PERMISSION_NOT_EXIST)
+            throw BusinessException(ResponseEnum.PERMISSION_NOT_EXIST)
         }
         val newRole = Role().apply {
             name = role.name
@@ -113,7 +113,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
         if (role.name.hasText() && oldRole.name != role.name) {
             // 检查角色名是否重复
             if (roleRepository.existsByName(role.name!!)) {
-                throw CustomException(ResponseEnum.ROLE_EXIST)
+                throw BusinessException(ResponseEnum.ROLE_EXIST)
             }
             oldRole.name = role.name!!
         }
@@ -127,7 +127,7 @@ class RoleServiceImpl(private val roleRepository: RoleRepository) : RoleService 
                 it.map { perm -> Permission.valueOf(perm) }.toMutableSet()
             } catch (e: IllegalArgumentException) {
                 log.warn("Permission not found: {}", it)
-                throw CustomException(ResponseEnum.PERMISSION_NOT_EXIST)
+                throw BusinessException(ResponseEnum.PERMISSION_NOT_EXIST)
             }
             oldRole.permissions = permissionsSet
         }

@@ -4,11 +4,11 @@ import com.akagiyui.common.ResponseEnum
 
 
 /**
- * 自定义异常
+ * 业务异常
  *
  * @author AkagiYui
  */
-class CustomException(
+class BusinessException(
     /**
      * 响应状态枚举
      */

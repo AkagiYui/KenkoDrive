@@ -1,7 +1,7 @@
 package com.akagiyui.drive.component.captcha
 
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.service.CaptchaService
 import org.aspectj.lang.ProceedingJoinPoint
@@ -27,7 +27,7 @@ class CaptchaAspect(private val captchaService: CaptchaService) {
         if (!captchaId.hasText() || !captchaText.hasText()
             || !captchaService.checkCaptcha(captchaId, captchaText)
         ) {
-            throw CustomException(ResponseEnum.INVALID_CAPTCHA)
+            throw BusinessException(ResponseEnum.INVALID_CAPTCHA)
         }
         captchaService.deleteCaptcha(captchaId)
         return joinPoint.proceed()

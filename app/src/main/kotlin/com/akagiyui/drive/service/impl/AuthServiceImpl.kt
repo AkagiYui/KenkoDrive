@@ -2,7 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import cn.hutool.core.util.RandomUtil.BASE_CHAR_NUMBER
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.exception.UnAuthorizedException
 import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.common.utils.BASE_NUMBER
@@ -71,9 +71,9 @@ class AuthServiceImpl(
     )
     override fun getAccessTokenBySms(phone: String, code: String): String {
         val redisKey = "smsCode:$phone"
-        val verifyCode = redisCache.get<String>(redisKey) ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+        val verifyCode = redisCache.get<String>(redisKey) ?: throw BusinessException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         if (verifyCode != code) {
-            throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+            throw BusinessException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
         redisCache.delete(redisKey)
         // 判断用户是否存在
@@ -98,7 +98,7 @@ class AuthServiceImpl(
 
     override fun getTemporaryLoginTokenStatus(token: String): TemporaryLoginInfo {
         val redisKey = "temporaryLoginToken:$token"
-        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw BusinessException(ResponseEnum.INVALID_TOKEN)
         if (info.confirmed || info.canceled) {
             // 确认或取消后，只允许查询一次
             redisCache.delete(redisKey)
@@ -108,9 +108,9 @@ class AuthServiceImpl(
 
     override fun claimTemporaryLoginToken(token: String, user: User, ip: String): ClaimedTemporaryTokenInfoResponse {
         val redisKey = "temporaryLoginToken:$token"
-        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw BusinessException(ResponseEnum.INVALID_TOKEN)
         if (info.taken) { // todo 如果这里被两个人同时请求，会怎么样？
-            throw CustomException(ResponseEnum.INVALID_TOKEN)
+            throw BusinessException(ResponseEnum.INVALID_TOKEN)
         }
 
         info.userId = user.id
@@ -125,9 +125,9 @@ class AuthServiceImpl(
 
     override fun confirmTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User) {
         val redisKey = "temporaryLoginToken:$temporaryToken"
-        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw BusinessException(ResponseEnum.INVALID_TOKEN)
         if (!info.taken || info.userId != user.id || info.takenToken != takenToken || info.canceled) {
-            throw CustomException(ResponseEnum.INVALID_TOKEN)
+            throw BusinessException(ResponseEnum.INVALID_TOKEN)
         }
         info.confirmed = true
         redisCache[redisKey, 2, TimeUnit.MINUTES] = info
@@ -135,9 +135,9 @@ class AuthServiceImpl(
 
     override fun cancelTemporaryLoginToken(temporaryToken: String, takenToken: String, user: User) {
         val redisKey = "temporaryLoginToken:$temporaryToken"
-        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw CustomException(ResponseEnum.INVALID_TOKEN)
+        val info = redisCache.get<TemporaryLoginInfo>(redisKey) ?: throw BusinessException(ResponseEnum.INVALID_TOKEN)
         if (!info.taken || info.userId != user.id || info.takenToken != takenToken || info.confirmed) {
-            throw CustomException(ResponseEnum.INVALID_TOKEN)
+            throw BusinessException(ResponseEnum.INVALID_TOKEN)
         }
         info.canceled = true
         redisCache[redisKey, 2, TimeUnit.MINUTES] = info

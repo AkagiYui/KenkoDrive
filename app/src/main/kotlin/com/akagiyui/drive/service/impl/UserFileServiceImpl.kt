@@ -1,7 +1,7 @@
 package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.component.RedisCache
 import com.akagiyui.drive.entity.FileInfo
@@ -77,13 +77,13 @@ class UserFileServiceImpl(
     }
 
     override fun getUserFileById(userId: String, id: String): UserFile {
-        return userFileRepository.findByUserIdAndId(userId, id) ?: throw CustomException(ResponseEnum.NOT_FOUND)
+        return userFileRepository.findByUserIdAndId(userId, id) ?: throw BusinessException(ResponseEnum.NOT_FOUND)
     }
 
     override fun createTemporaryId(userId: String, userFileId: String): Pair<String, UserFile> {
         val userFile = getUserFileById(userId, userFileId)
         if (userFile.fileInfo.locked) {
-            throw CustomException(ResponseEnum.FILE_LOCKED)
+            throw BusinessException(ResponseEnum.FILE_LOCKED)
         }
         val randomId = UUID.randomUUID().toString().replace("-", "")
         val redisKey = "download:$randomId"
@@ -97,8 +97,8 @@ class UserFileServiceImpl(
 
     override fun getFileInfoByTemporaryId(temporaryId: String): UserFile {
         val redisKey = "download:$temporaryId"
-        val userFileId: String = redisCache[redisKey] ?: throw CustomException(ResponseEnum.NOT_FOUND)
-        return userFileRepository.findById(userFileId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        val userFileId: String = redisCache[redisKey] ?: throw BusinessException(ResponseEnum.NOT_FOUND)
+        return userFileRepository.findById(userFileId).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     override fun userDeleteFile(userId: String, id: String) {
@@ -117,7 +117,7 @@ class UserFileServiceImpl(
         userFile.folder = folderId.hasText {
             val folder = folderService.getFolderById(it)
             if (folder.user.id != userId) {
-                throw CustomException(ResponseEnum.NOT_FOUND)
+                throw BusinessException(ResponseEnum.NOT_FOUND)
             }
             folder
         }

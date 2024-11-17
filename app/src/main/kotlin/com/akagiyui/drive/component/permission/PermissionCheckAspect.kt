@@ -1,7 +1,7 @@
 package com.akagiyui.drive.component.permission
 
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.drive.entity.User
 import com.akagiyui.drive.model.Permission
 import org.aspectj.lang.annotation.Aspect
@@ -25,7 +25,7 @@ class PermissionCheckAspect {
         // 检查是否登录
         val authentication = SecurityContextHolder.getContext().authentication
         if (authentication.principal == "anonymousUser") {
-            throw CustomException(ResponseEnum.UNAUTHORIZED)
+            throw BusinessException(ResponseEnum.UNAUTHORIZED)
         }
 
         // 获取注解中的权限
@@ -43,13 +43,13 @@ class PermissionCheckAspect {
         when (requiredPermission.mode) {
             RuleMode.AND -> {
                 if (!userPermissions.containsAll(permissionList)) {
-                    throw CustomException(ResponseEnum.UNAUTHORIZED)
+                    throw BusinessException(ResponseEnum.UNAUTHORIZED)
                 }
             }
 
             RuleMode.OR -> {
                 if (userPermissions.intersect(permissionList).isEmpty()) {
-                    throw CustomException(ResponseEnum.UNAUTHORIZED)
+                    throw BusinessException(ResponseEnum.UNAUTHORIZED)
                 }
             }
         }

@@ -4,7 +4,7 @@ import cn.hutool.crypto.digest.DigestAlgorithm
 import cn.hutool.crypto.digest.Digester
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.FileInfo
 import com.akagiyui.drive.entity.FileInfo_
@@ -42,11 +42,11 @@ class FileInfoServiceImpl(
 
     @Cacheable(value = [CacheConstants.FILE_INFO], key = "#id")
     override fun getFileInfo(id: String): FileInfo {
-        return fileInfoRepository.findById(id).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        return fileInfoRepository.findById(id).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     override fun getFileInfoByHash(hash: String): FileInfo {
-        return fileInfoRepository.getFirstByHash(hash) ?: throw CustomException(ResponseEnum.NOT_FOUND)
+        return fileInfoRepository.getFirstByHash(hash) ?: throw BusinessException(ResponseEnum.NOT_FOUND)
     }
 
     override fun existByHash(hash: String): Boolean {
@@ -54,7 +54,7 @@ class FileInfoServiceImpl(
     }
 
     private fun getFileInfoWithoutCache(id: String): FileInfo {
-        return fileInfoRepository.findById(id).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        return fileInfoRepository.findById(id).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     override fun saveFile(user: User, files: List<MultipartFile>): List<FileInfo> {
@@ -67,7 +67,7 @@ class FileInfoServiceImpl(
             val fileBytes = try {
                 file.inputStream.readAllBytes()
             } catch (e: IOException) {
-                throw CustomException(ResponseEnum.INTERNAL_ERROR)
+                throw BusinessException(ResponseEnum.INTERNAL_ERROR)
             }
 
             // 计算文件md5
@@ -95,7 +95,7 @@ class FileInfoServiceImpl(
             fileInfoRepository.getFirstByHash(hash)?.let { fileInfo ->
                 userFileService.addAssociation(user, filename, fileInfo, null)
                 fileInfos.add(fileInfo) // 记录返回结果
-            } ?: throw CustomException(ResponseEnum.INTERNAL_ERROR)
+            } ?: throw BusinessException(ResponseEnum.INTERNAL_ERROR)
         }
         return fileInfos
     }

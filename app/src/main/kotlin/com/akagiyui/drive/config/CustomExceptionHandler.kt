@@ -3,7 +3,7 @@ package com.akagiyui.drive.config
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.ResponseResult
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.exception.TooManyRequestsException
 import com.akagiyui.common.exception.UnAuthorizedException
 import com.fasterxml.jackson.core.JsonParseException
@@ -134,8 +134,8 @@ class CustomExceptionHandler {
     /**
      * 400/403 业务异常
      */
-    @ExceptionHandler(CustomException::class)
-    fun customException(e: CustomException): ResponseEntity<Any> {
+    @ExceptionHandler(BusinessException::class)
+    fun businessException(e: BusinessException): ResponseEntity<Any> {
         val responseBody = ResponseResult.response<Any?>(e.getStatus())
         return if (e.getStatus() == ResponseEnum.UNAUTHORIZED) {
             ResponseEntity(responseBody, HttpStatus.FORBIDDEN) // 403 Forbidden

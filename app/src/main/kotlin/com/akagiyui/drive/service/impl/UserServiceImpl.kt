@@ -3,7 +3,7 @@ package com.akagiyui.drive.service.impl
 import cn.hutool.core.util.RandomUtil
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.token.TokenTemplate
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.component.RedisCache
@@ -54,7 +54,7 @@ class UserServiceImpl(
 
     @Cacheable(value = [CacheConstants.USER_BY_ID], key = "#id")
     override fun getUserById(id: String): User {
-        return repository.findById(id).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        return repository.findById(id).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     override fun getUserByPhone(phone: String): User? {
@@ -70,7 +70,7 @@ class UserServiceImpl(
     }
 
     private fun findUserByIdWithCache(id: String): User {
-        return repository.findById(id).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        return repository.findById(id).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     @Cacheable(cacheNames = [CacheConstants.USER_PAGE], key = "{#index, #size, #userFilter }")
@@ -111,7 +111,7 @@ class UserServiceImpl(
         val currentTimestamp = System.currentTimeMillis()
         request.email.hasText {
             if (repository.existsByEmail(it)) {
-                throw CustomException(ResponseEnum.EMAIL_EXIST)
+                throw BusinessException(ResponseEnum.EMAIL_EXIST)
             }
             entity.email = it
             entity.nickname = it
@@ -119,7 +119,7 @@ class UserServiceImpl(
         }
         request.phone.hasText {
             if (repository.existsByPhone(it)) {
-                throw CustomException(ResponseEnum.PHONE_EXIST)
+                throw BusinessException(ResponseEnum.PHONE_EXIST)
             }
             entity.phone = it
             entity.nickname = it
@@ -128,7 +128,7 @@ class UserServiceImpl(
         // 设置用户名，优先级最高，覆盖前面的设置
         request.username.hasText {
             if (repository.existsByUsername(it)) {
-                throw CustomException(ResponseEnum.USER_EXIST)
+                throw BusinessException(ResponseEnum.USER_EXIST)
             }
             entity.username = it
         }
@@ -152,7 +152,7 @@ class UserServiceImpl(
     )
     override fun deleteUser(id: String) {
         if (!repository.existsById(id)) {
-            throw CustomException(ResponseEnum.NOT_FOUND)
+            throw BusinessException(ResponseEnum.NOT_FOUND)
         }
         repository.deleteById(id)
         // todo 删除用户文件关联
@@ -166,17 +166,17 @@ class UserServiceImpl(
 
     override fun registerByEmail(email: String, password: String) {
         if (!settingService.registerEnabled) {
-            throw CustomException(ResponseEnum.REGISTER_DISABLED)
+            throw BusinessException(ResponseEnum.REGISTER_DISABLED)
         }
 
         // 检查该邮箱是否在 redis 中等待验证
         val cacheKey = buildEmailRegisterCacheKey(email)
         if (cacheKey in redisCache) {
-            throw CustomException(ResponseEnum.EMAIL_EXIST)
+            throw BusinessException(ResponseEnum.EMAIL_EXIST)
         }
         // 检查该邮箱是否已经注册
         if (repository.existsByEmail(email)) {
-            throw CustomException(ResponseEnum.EMAIL_EXIST)
+            throw BusinessException(ResponseEnum.EMAIL_EXIST)
         }
         // 生成验证码
         val otp = RandomUtil.randomNumbers(6)
@@ -201,10 +201,10 @@ class UserServiceImpl(
         // 从 redis 取回用户注册信息
         val cacheKey = buildEmailRegisterCacheKey(email)
         val cacheModel = redisCache.get<EmailRegisterInfo>(cacheKey)
-            ?: throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+            ?: throw BusinessException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         // 检查验证码是否正确
         if (otp != cacheModel.otp) {
-            throw CustomException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
+            throw BusinessException(ResponseEnum.VERIFY_CODE_NOT_FOUND)
         }
         // 添加用户
         selfProxy.addUser(AddUserModel().apply {

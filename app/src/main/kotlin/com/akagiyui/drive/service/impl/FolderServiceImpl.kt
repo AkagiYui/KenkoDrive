@@ -2,7 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.drive.entity.Folder
 import com.akagiyui.drive.entity.User
@@ -34,11 +34,11 @@ class FolderServiceImpl @Autowired constructor(
     override fun createFolder(user: User, name: String, parentId: String?): Folder {
         val resolvedParentId = parentId?.takeIf { it.hasText() }
         val parentFolder = resolvedParentId?.let {
-            folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+            folderRepository.findById(it).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
         }
 
         if (folderRepository.existsByNameAndUserIdAndParentId(name, user.id, resolvedParentId)) {
-            throw CustomException(ResponseEnum.FOLDER_EXIST)
+            throw BusinessException(ResponseEnum.FOLDER_EXIST)
         }
 
         val folder = Folder().apply {
@@ -60,9 +60,9 @@ class FolderServiceImpl @Autowired constructor(
             return listOf()
         }
 
-        val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        val folder = folderRepository.findById(folderId).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
         if (folder.user.id != userId) {
-            throw CustomException(ResponseEnum.NOT_FOUND)
+            throw BusinessException(ResponseEnum.NOT_FOUND)
         }
 
         val folderChain = mutableListOf<FolderResponse>()
@@ -76,14 +76,14 @@ class FolderServiceImpl @Autowired constructor(
     }
 
     override fun getFolderById(folderId: String): Folder {
-        return folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        return folderRepository.findById(folderId).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
     }
 
     @Transactional
     override fun deleteFolder(userId: String, folderId: String) {
-        val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        val folder = folderRepository.findById(folderId).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
         if (folder.user.id != userId) {
-            throw CustomException(ResponseEnum.NOT_FOUND)
+            throw BusinessException(ResponseEnum.NOT_FOUND)
         }
 
         // 删除文件夹下的文件和子文件夹
@@ -100,20 +100,20 @@ class FolderServiceImpl @Autowired constructor(
 
     override fun rename(userId: String, folderId: String, newName: String) {
         val folder = folderRepository.findByUserIdAndId(userId, folderId)
-            ?: throw CustomException(ResponseEnum.NOT_FOUND)
+            ?: throw BusinessException(ResponseEnum.NOT_FOUND)
         folder.name = newName
         folderRepository.save(folder)
     }
 
     override fun moveFolder(userId: String, folderId: String, parentId: String?) {
-        val folder = folderRepository.findById(folderId).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+        val folder = folderRepository.findById(folderId).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
         if (folder.user.id != userId) {
-            throw CustomException(ResponseEnum.NOT_FOUND)
+            throw BusinessException(ResponseEnum.NOT_FOUND)
         }
 
         check(parentId != folderId) { "not allowed to move folder to itself" }
         val parentFolder = parentId.hasText {
-            folderRepository.findById(it).orElseThrow { CustomException(ResponseEnum.NOT_FOUND) }
+            folderRepository.findById(it).orElseThrow { BusinessException(ResponseEnum.NOT_FOUND) }
         }
 
         folder.parent = parentFolder

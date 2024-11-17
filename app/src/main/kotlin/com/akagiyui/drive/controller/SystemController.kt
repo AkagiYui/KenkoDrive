@@ -1,7 +1,7 @@
 package com.akagiyui.drive.controller
 
 import com.akagiyui.common.ResponseEnum
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.SystemInformationUtil
 import com.akagiyui.common.utils.toUnderscoreCase
 import com.akagiyui.drive.component.permission.RequirePermission
@@ -64,7 +64,7 @@ class SystemController(
         try {
             settingService.updateSetting(SettingKey.valueOf(key.toUnderscoreCase(true)), value)
         } catch (e: IllegalArgumentException) {
-            throw CustomException(ResponseEnum.BAD_REQUEST)
+            throw BusinessException(ResponseEnum.BAD_REQUEST)
         }
     }
 

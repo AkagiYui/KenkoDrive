@@ -4,7 +4,7 @@ package com.akagiyui.drive.service.impl
 import cn.hutool.core.util.IdUtil
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.deleteIfExists
 import com.akagiyui.common.utils.hasText
 import com.akagiyui.common.utils.mkdirOrThrow
@@ -49,7 +49,7 @@ class UploadServiceImpl(
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         if (createUploadTaskRequest.filesize > uploadFileSizeLimit) {
-            throw CustomException(ResponseEnum.FILE_TOO_LARGE)
+            throw BusinessException(ResponseEnum.FILE_TOO_LARGE)
         }
 
         val task = UploadTask().apply {
@@ -79,22 +79,22 @@ class UploadServiceImpl(
         chunkIndex: Int,
     ): Boolean {
         val task = uploadTaskRepository.findById(taskId).orElseThrow {
-            CustomException(ResponseEnum.TASK_NOT_FOUND)
+            BusinessException(ResponseEnum.TASK_NOT_FOUND)
         }
         if (task.userId != user.id) {
-            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+            throw BusinessException(ResponseEnum.TASK_NOT_FOUND)
         }
         if (task.chunkCount <= chunkIndex) {
-            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+            throw BusinessException(ResponseEnum.TASK_NOT_FOUND)
         }
         if (!task.allowUpload) {
-            throw CustomException(ResponseEnum.TASK_NOT_FOUND)
+            throw BusinessException(ResponseEnum.TASK_NOT_FOUND)
         }
 
         // 上传文件大小限制
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         if (chunk.size > uploadFileSizeLimit) {
-            throw CustomException(ResponseEnum.FILE_TOO_LARGE)
+            throw BusinessException(ResponseEnum.FILE_TOO_LARGE)
         }
 
         // 获取缓存目录
@@ -121,7 +121,7 @@ class UploadServiceImpl(
         // 对比哈希
         if (hashString != chunkHash) {
             log.debug("task: $taskId, chunk: $chunkIndex, hash not match")
-            throw CustomException(ResponseEnum.GENERAL_ERROR)
+            throw BusinessException(ResponseEnum.GENERAL_ERROR)
         }
         log.debug("task: $taskId, chunk: $chunkIndex, upload success")
         // 标记已上传
@@ -167,12 +167,12 @@ class UploadServiceImpl(
         val hashString = messageDigest.digest().joinToString("") { "%02x".format(it) }
         if (hashString != task.hash) {
             log.debug("task: ${task.id}, hash not match")
-            throw CustomException(ResponseEnum.GENERAL_ERROR)
+            throw BusinessException(ResponseEnum.GENERAL_ERROR)
         }
         // 检查文件是否已存在
         val existFileInfo = try {
             fileInfoService.getFileInfoByHash(hashString)
-        } catch (e: CustomException) {
+        } catch (e: BusinessException) {
             null
         }
         if (existFileInfo != null) {
@@ -208,7 +208,7 @@ class UploadServiceImpl(
 
     override fun getUploadTask(taskId: String): UploadTask {
         return uploadTaskRepository.findById(taskId).orElseThrow {
-            CustomException(ResponseEnum.TASK_NOT_FOUND)
+            BusinessException(ResponseEnum.TASK_NOT_FOUND)
         }
     }
 
@@ -223,7 +223,7 @@ class UploadServiceImpl(
         val uploadFileSizeLimit = settingService.fileUploadMaxSize
         files.forEach {
             if (it.size > uploadFileSizeLimit) {
-                throw CustomException(ResponseEnum.FILE_TOO_LARGE)
+                throw BusinessException(ResponseEnum.FILE_TOO_LARGE)
             }
         }
         // 获取缓存目录
@@ -255,7 +255,7 @@ class UploadServiceImpl(
             val hashString = messageDigest.digest().joinToString("") { "%02x".format(it) }
             val existFileInfo = try {
                 fileInfoService.getFileInfoByHash(hashString)
-            } catch (e: CustomException) {
+            } catch (e: BusinessException) {
                 null
             }
             if (existFileInfo != null) {

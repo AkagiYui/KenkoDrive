@@ -2,7 +2,7 @@ package com.akagiyui.drive.service.impl
 
 import com.akagiyui.common.ResponseEnum
 import com.akagiyui.common.delegate.LoggerDelegate
-import com.akagiyui.common.exception.CustomException
+import com.akagiyui.common.exception.BusinessException
 import com.akagiyui.common.utils.FileUtil
 import com.akagiyui.drive.model.AvatarContent
 import com.akagiyui.drive.service.AvatarService
@@ -72,7 +72,7 @@ class AvatarServiceImpl(private val storageService: StorageService) : AvatarServ
             }
         } catch (e: IOException) {
             log.error("Load default avatar failed", e)
-            throw CustomException(ResponseEnum.INTERNAL_ERROR)
+            throw BusinessException(ResponseEnum.INTERNAL_ERROR)
         }
     }
 
@@ -86,7 +86,7 @@ class AvatarServiceImpl(private val storageService: StorageService) : AvatarServ
                 }
             } catch (e: IOException) {
                 log.error("Load avatar failed", e)
-                throw CustomException(ResponseEnum.INTERNAL_ERROR)
+                throw BusinessException(ResponseEnum.INTERNAL_ERROR)
             }
         } else {
             defaultAvatar
@@ -96,20 +96,20 @@ class AvatarServiceImpl(private val storageService: StorageService) : AvatarServ
 
     override fun saveAvatar(userId: String, avatar: MultipartFile) {
         if (avatar.isEmpty) {
-            throw CustomException(ResponseEnum.BAD_REQUEST)
+            throw BusinessException(ResponseEnum.BAD_REQUEST)
         }
         if (avatar.size > AVATAR_MAX_SIZE) {
-            throw CustomException(ResponseEnum.FILE_TOO_LARGE)
+            throw BusinessException(ResponseEnum.FILE_TOO_LARGE)
         }
         if (!AVATAR_TYPES.contains(avatar.contentType)) {
-            throw CustomException(ResponseEnum.FILE_FORMAT_NOT_SUPPORT)
+            throw BusinessException(ResponseEnum.FILE_FORMAT_NOT_SUPPORT)
         }
 
         val image = try {
             ImageIO.read(avatar.inputStream)
         } catch (e: IOException) {
             log.error("Read avatar failed", e)
-            throw CustomException(ResponseEnum.INTERNAL_ERROR)
+            throw BusinessException(ResponseEnum.INTERNAL_ERROR)
         }
 
         val stream = ByteArrayOutputStream()
