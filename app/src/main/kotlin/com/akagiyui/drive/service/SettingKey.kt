@@ -21,4 +21,5 @@ enum class SettingKey(val transform: (String) -> Any = { it }) {
     ALIYUN_SMS_ACCESS_KEY_SECRET({ it }),
     ALIYUN_SMS_SIGN_NAME({ it }),
     ALIYUN_SMS_TEMPLATE_CODE({ it }),
+    ALIYUN_SMS_TEMPLATE_CODE_PARAM({ it }),
 }

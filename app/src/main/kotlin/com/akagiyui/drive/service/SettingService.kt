@@ -93,4 +93,9 @@ interface SettingService {
      * 阿里云短信服务模板
      */
     var aliyunSmsTemplateCode: String
+
+    /**
+     * 阿里云短信服务模板参数
+     */
+    var aliyunSmsTemplateCodeParam: String
 }

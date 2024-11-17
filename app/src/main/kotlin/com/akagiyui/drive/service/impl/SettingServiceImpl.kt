@@ -140,6 +140,12 @@ class SettingServiceImpl(
             saveSetting(SettingKey.ALIYUN_SMS_TEMPLATE_CODE, value)
         }
 
+    override var aliyunSmsTemplateCodeParam: String
+        get() = getSetting(SettingKey.ALIYUN_SMS_TEMPLATE_CODE_PARAM, "code")
+        set(value) {
+            saveSetting(SettingKey.ALIYUN_SMS_TEMPLATE_CODE_PARAM, value)
+        }
+
     override fun getSettings(): Map<String, Any> {
         val rawMap = mutableMapOf(
             SettingKey.REGISTER_ENABLED to registerEnabled,
@@ -156,6 +162,7 @@ class SettingServiceImpl(
             SettingKey.ALIYUN_SMS_ACCESS_KEY_SECRET to aliyunSmsAccessKeySecret,
             SettingKey.ALIYUN_SMS_SIGN_NAME to aliyunSmsSignName,
             SettingKey.ALIYUN_SMS_TEMPLATE_CODE to aliyunSmsTemplateCode,
+            SettingKey.ALIYUN_SMS_TEMPLATE_CODE_PARAM to aliyunSmsTemplateCodeParam,
         )
         return mutableMapOf<String, Any>().apply {
             rawMap.forEach { (key, value) ->

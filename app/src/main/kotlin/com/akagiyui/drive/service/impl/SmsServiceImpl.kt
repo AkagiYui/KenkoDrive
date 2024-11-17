@@ -27,7 +27,7 @@ class SmsServiceImpl(
             settingService.aliyunSmsTemplateCode
         )
         aLog.log("SYSTEM", "SMS", "send sms to $phone, otp: $otp")
-        pusher.sendSms(phone, mapOf("code" to otp))
+        pusher.sendSms(phone, mapOf(settingService.aliyunSmsTemplateCodeParam to otp))
         log.info("send sms to $phone, otp: $otp")
     }
 
