@@ -18,6 +18,7 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestAttributes
 import org.springframework.web.context.request.RequestContextHolder
@@ -60,7 +61,13 @@ class BusinessRequestLogAspect {
         } // 客户端平台
         val clientInfo = if (clientPlatform.hasText()) "$clientIp[$clientPlatform]" else clientIp
 
-        var requestLine = "\n $clientInfo -> [${request.method}]" // HTTP请求方法
+        var requestLine = "\n $clientInfo -> "
+
+        // 用户信息
+        val user = SecurityContextHolder.getContext().authentication.principal as? User
+        requestLine += user?.let { "[${it.username}(${it.id})]" } ?: "[anonymous]"
+
+        requestLine += "[${request.method}]" // HTTP请求方法
         request.contentType.hasText { requestLine += "($it)" } // 请求类型
         requestLine += request.requestURI // 请求路径
         requestLog.append(requestLine)
@@ -94,10 +101,10 @@ class BusinessRequestLogAspect {
             val resultLog = anyToString(returnObj).ellipsis(500)
             requestLog.append("\n result[${duration}ms] <- $resultLog")
             return returnObj
-        } catch (throwable: Throwable) {
+        } catch (e: Throwable) {
             val duration = System.currentTimeMillis() - startTime
-            requestLog.append("\n error[${duration}ms] <- ${throwable.message}")
-            throw throwable
+            requestLog.append("\n error[${duration}ms] <- ${e.message}")
+            throw e
         } finally {
             log.debug(requestLog.toString())
         }
