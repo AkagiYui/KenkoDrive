@@ -25,13 +25,13 @@ import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 /**
- * 请求日志 切面
+ * 业务请求日志 切面
  *
  * @author AkagiYui
  */
 @Aspect
 @Component
-class RequestLogAspect {
+class BusinessRequestLogAspect {
 
     private val log by LoggerDelegate()
     private val objectMapper = ObjectMapper().apply {

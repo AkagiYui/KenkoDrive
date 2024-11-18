@@ -125,7 +125,7 @@
 - [x] [JPA ORM 框架](app/src/main/kotlin/com/akagiyui/drive/repository)
 - [x] AOP 切面：[频率控制](app/src/main/kotlin/com/akagiyui/drive/component/limiter/FrequencyLimitAspect.kt)、
   [权限校验](app/src/main/kotlin/com/akagiyui/drive/component/permission/PermissionCheckAspect.kt)、
-  [请求日志](app/src/main/kotlin/com/akagiyui/drive/component/RequestLogAspect.kt)
+  [请求日志](app/src/main/kotlin/com/akagiyui/drive/component/BusinessRequestLogAspect.kt)
 - [x] [ApiFox 在线 API 文档](#kenkodrive-我的云盘)
 - [x] [Minio 对象存储](app/src/main/kotlin/com/akagiyui/drive/config/MinioConfig.kt)
 - [ ] 阿里云 OSS 对象存储
