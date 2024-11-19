@@ -4,6 +4,7 @@ import com.akagiyui.drive.component.TokenAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.authorization.AuthorizationDecision
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -14,6 +15,7 @@ import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.IpAddressMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -65,12 +67,22 @@ class SecurityConfig(
     @Bean
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        val localhostIpMatchers = arrayOf(
+            IpAddressMatcher("127.0.0.1"),
+            IpAddressMatcher("0:0:0:0:0:0:0:1")
+        )
+
         return http
             .authorizeHttpRequests {
                 it // 允许指定路径通过
                     .requestMatchers(HttpMethod.GET, *permitAllGetMapping).permitAll() // 允许匿名 GET 请求访问
                     .requestMatchers(HttpMethod.POST, *permitAllPostMapping).permitAll() // 允许匿名 POST 请求访问
                     .requestMatchers(HttpMethod.POST, *anonymousPostMapping).anonymous() // 仅允许匿名 POST 访问
+                    .requestMatchers("/actuator/**").access { _, context ->
+                        AuthorizationDecision(localhostIpMatchers.any { matcher ->
+                            matcher.matches(context.request.remoteAddr) // 仅允许本地访问
+                        })
+                    }
                     .anyRequest().authenticated() // 其他请求需要认证
             }
             .csrf { it.disable() } // 关闭 CSRF

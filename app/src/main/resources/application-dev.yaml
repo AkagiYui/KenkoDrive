@@ -21,6 +21,13 @@ spring:
         format_sql: true
   datasource:
     url: jdbc:mysql://localhost/drive?user=root&password=&useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=GMT%2B8
+management:
+  endpoints:
+    web:
+      exposure:
+        # 相关 actuator 监控器
+        include: "*"
+        exclude: "mail"
 application:
   storage:
     local:

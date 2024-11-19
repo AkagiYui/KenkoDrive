@@ -1,6 +1,7 @@
 package com.akagiyui.drive.config
 
 import com.akagiyui.common.ResponseResult
+import org.springframework.boot.actuate.endpoint.OperationResponseBody
 import org.springframework.core.MethodParameter
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -26,6 +27,7 @@ class CustomResponseBodyAdvice : ResponseBodyAdvice<Any>, WebMvcConfigurer {
             ResponseEntity::class.java, // 文件
             ByteArray::class.java, // 二进制数据
             ResponseResult::class.java, // 已经包装过的数据
+            OperationResponseBody::class.java, // actuator 监控数据
         )
     }
 
@@ -64,7 +66,9 @@ class CustomResponseBodyAdvice : ResponseBodyAdvice<Any>, WebMvcConfigurer {
         converterType: Class<out HttpMessageConverter<*>>,
     ): Boolean {
         val parameterType = returnType.parameterType
-        return !IGNORE_CLASSES.contains(parameterType)
+        return !IGNORE_CLASSES.any {
+            it.isAssignableFrom(parameterType)
+        }
     }
 
     override fun configureMessageConverters(converters: MutableList<HttpMessageConverter<*>>) {
